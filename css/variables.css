@@ -1,0 +1,41 @@
+:root {
+    /* Fonts */
+    --font-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+                   "Helvetica Neue", Arial, sans-serif, 
+                   "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --font-dm-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-heading: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    
+    /* Colors */
+    --color-primary: #647c3b;
+    --color-secondary: #6b8e23;
+    --color-accent: #8fbc8f;
+    --color-background: #fff;
+    --color-text: #333333;
+    --color-text-light: #666666;
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 4rem;
+    
+    /* Breakpoints */
+    --breakpoint-mobile: 480px;
+    --breakpoint-tablet: 768px;
+    --breakpoint-desktop: 1024px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-system);
+    color: var(--color-text);
+    background-color: var(--color-background);
+    line-height: 1.6;
+}

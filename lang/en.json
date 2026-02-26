@@ -1,0 +1,108 @@
+{
+  "site": {
+    "title": "Community Garden"
+  },
+  "nav": {
+    "about": "About",
+    "calendar": "Calendar",
+    "gallery": "Gallery",
+    "projects": "Projects",
+    "materials": "Materials"
+  },
+  "about": {
+    "header": "About Us",
+    "description1": "<i>Germanetes Jardins d'Emma</i> is a non-profit organization located around the boulevard of the neighborhood, the Green Axis of <i>Consell de Cent</i>. We organize around two main objectives: generating community in the neighborhood and making it more sustainable, collaborating with the environment to achieve an active community that includes residents, schools, other entities, collectives and cooperatives in the neighborhood and public institutions with social objectives.",
+    "description2": "The association's projects are as follows: <i>Germanetes Space</i>, the community garden; <i>Nur Space</i>, the community garden; <i>Aula Viva</i>, the pedagogical project; <i>Revolta Eixample</i>, community composting project; <i>Vine a Jugar</i>, children's play space, and the <i>Resource Bank</i>, a project for lending materials to neighborhood entities and collectives.",
+    "description3": "The association seeks to be as democratic, horizontal and transparent as possible. This is why each project has its own governance body, and representatives from all projects meet biweekly as a coordination team and the engine of the association; assemblies and meetings are open to everyone. Finally, each January the general assembly is held, which is the body with the most power within the association.",
+    "description4": "If you feel like participating in one of the projects, just get in touch with us!"
+  },
+  "projects": {
+    "header": "Projects",
+    "ongoing": "Ongoing Projects",
+    "temporal": "Temporal Projects",
+    "archive": "Project Archive"
+  },
+  "contact": {
+    "header": "Get in Touch",
+    "form": {
+      "nameLabel": "Name:",
+      "namePlaceholder": "Your name",
+      "emailLabel": "Email:",
+      "emailPlaceholder": "your.email@example.com",
+      "messageLabel": "Message:",
+      "messagePlaceholder": "Your message",
+      "submit": "Send Message"
+    },
+    "infoHeader": "Contact Information",
+    "email": "Email: info@communitygarden.org",
+    "phone": "Phone: (123) 456-7890",
+    "address": "Address: 123 Garden Lane, Green City, GC 12345"
+  },
+  "gallery": {
+    "header": "Gallery",
+    "description": "Explore photos from our community garden activities and events.",
+    "spring": {
+      "title": "Spring Planting 2024",
+      "description": "Community members working together to prepare the beds for the new season.",
+      "alt": "Spring Planting"
+    },
+    "summer": {
+      "title": "Summer Harvest",
+      "description": "The garden in full bloom during the peak of summer.",
+      "alt": "Summer Harvest"
+    },
+    "workshop": {
+      "title": "Community Workshop",
+      "description": "Learning about composting and sustainable gardening practices.",
+      "alt": "Workshop"
+    }
+  },
+  "materials": {
+    "header": "Materials & Resources",
+    "intro": "Find useful guides, documents, and resources for community gardening.",
+    "guides": {
+      "title": "Gardening Guides",
+      "description": "Download our comprehensive guides on organic gardening, composting, and seasonal planting schedules.",
+      "item1": "Beginner's Guide to Organic Gardening (PDF)",
+      "item2": "Composting Best Practices (PDF)",
+      "item3": "Seasonal Planting Calendar (PDF)"
+    },
+    "tools": {
+      "title": "Tool Library",
+      "description": "We have a variety of gardening tools available for community members to borrow.",
+      "item1": "Shovels, rakes, and hoes",
+      "item2": "Watering cans and hoses",
+      "item3": "Wheelbarrows and carts"
+    },
+    "seeds": {
+      "title": "Seed Exchange",
+      "description": "Share and exchange seeds with other community members. Bring your extra seeds and take home something new!"
+    }
+  },
+  "calendar": {
+    "header": "Upcoming Events",
+    "event1": {
+      "title": "Garden Workshop",
+      "date": "Date: March 15, 2023",
+      "time": "Time: 10:00 AM - 12:00 PM",
+      "description": "Description: Join us for a hands-on workshop on sustainable gardening practices."
+    },
+    "event2": {
+      "title": "Community Planting Day",
+      "date": "Date: April 22, 2023",
+      "time": "Time: 9:00 AM - 3:00 PM",
+      "description": "Description: Help us plant new flowers and vegetables in the garden."
+    },
+    "event3": {
+      "title": "Harvest Festival",
+      "date": "Date: September 30, 2023",
+      "time": "Time: 1:00 PM - 5:00 PM",
+      "description": "Description: Celebrate the harvest with food, games, and community fun!"
+    }
+  },
+  "footer": {
+    "copyright": "© 2026 Community Garden. All rights reserved.",
+    "solar": "Powered by solar energy",
+    "contact": "Contact"
+  }
+}

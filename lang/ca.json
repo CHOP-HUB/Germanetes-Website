@@ -1,0 +1,108 @@
+{
+  "site": {
+    "title": "Hort Comunitari"
+  },
+  "nav": {
+    "about": "Qui som?",
+    "calendar": "Calendari",
+    "gallery": "Galeria",
+    "projects": "Projectes",
+    "materials": "Materials"
+  },
+  "about": {
+    "header": "Qui som?",
+    "description1": "<i>Germanetes Jardins d'Emma</i> som una entitat sense ànim de lucre ubicada al voltant de la rambla del barri, l'Eix Verd de <i>Consell de Cent</i>. Ens articulem en base a dos objectius principals: generar comunitat al barri i fer-lo més sostenible, col·laborant amb l'entorn per aconseguir una comunitat activa que inclogui el veïnat, les escoles, les altres entitats, col·lectius i cooperatives del barri i institucions públiques amb objectius socials.",
+    "description2": "Els projectes de l'associació són els següents: l'<i>Espai Germanetes</i>, l'hort comunitari; l'<i>Espai Nur</i>, el jardí comunitari; <i>Aula Viva</i>, el projecte pedagògic; <i>Revolta Eixample</i>, projecte de compostatge comunitari; <i>Vine a Jugar</i>, espai de jocs per infants, i el <i>Banc de Recursos</i>, projecte de cessió de material a les entitats i col·lectius del barri.",
+    "description3": "L'associació busca que ser el més assembleària, horitzontal i transparent possible. És per això que cada projecte té el seu òrgan de governança propi, i representants del conjunt de projectes es reuneixen quinzenalment com a equip de coordinació i motor de l'associació; les assemblees i reunions estan obertes a tothom. Finalment, cada gener es realitza l'assemblea general, que és l'òrgan amb més poder dins de l'associació.",
+    "description4": "Si tens ganes de participar en un dels projectes, només cal que et posis en contacte amb nosaltres!"
+  },
+  "projects": {
+    "header": "Projectes",
+    "ongoing": "Projectes en Curs",
+    "temporal": "Projectes Temporals",
+    "archive": "Arxiu de Projectes"
+  },
+  "contact": {
+    "header": "Posa't en Contacte",
+    "form": {
+      "nameLabel": "Nom:",
+      "namePlaceholder": "El teu nom",
+      "emailLabel": "Correu electrònic:",
+      "emailPlaceholder": "el.teu.correu@exemple.cat",
+      "messageLabel": "Missatge:",
+      "messagePlaceholder": "El teu missatge",
+      "submit": "Enviar Missatge"
+    },
+    "infoHeader": "Informació de Contacte",
+    "email": "Correu: info@communitygarden.org",
+    "phone": "Telèfon: (123) 456-7890",
+    "address": "Adreça: Carrer del Jardí 123, Ciutat Verda, GC 12345"
+  },
+  "gallery": {
+    "header": "Galeria",
+    "description": "Explora fotos de les nostres activitats i esdeveniments del hort comunitari.",
+    "spring": {
+      "title": "Plantació de Primavera 2024",
+      "description": "Membres de la comunitat treballant junts per preparar els parterres per a la nova temporada.",
+      "alt": "Plantació de Primavera"
+    },
+    "summer": {
+      "title": "Collita d'Estiu",
+      "description": "L'hort en plena floració durant el màxim de l'estiu.",
+      "alt": "Collita d'Estiu"
+    },
+    "workshop": {
+      "title": "Taller Comunitari",
+      "description": "Aprenent sobre compostatge i pràctiques de jardineria sostenible.",
+      "alt": "Taller"
+    }
+  },
+  "materials": {
+    "header": "Materials i Recursos",
+    "intro": "Troba guies útils, documents i recursos per a la jardineria comunitària.",
+    "guides": {
+      "title": "Guies de Jardineria",
+      "description": "Descarrega les nostres guies completes sobre jardineria orgànica, compostatge i calendaris de plantació estacional.",
+      "item1": "Guia per a Principiants de Jardineria Orgànica (PDF)",
+      "item2": "Millors Pràctiques de Compostatge (PDF)",
+      "item3": "Calendari de Plantació Estacional (PDF)"
+    },
+    "tools": {
+      "title": "Biblioteca d'Eines",
+      "description": "Tenim una varietat d'eines de jardineria disponibles per als membres de la comunitat.",
+      "item1": "Pales, rastells i aixades",
+      "item2": "Regadores i mànegues",
+      "item3": "Carretons i carros"
+    },
+    "seeds": {
+      "title": "Intercanvi de Llavors",
+      "description": "Comparteix i intercanvia llavors amb altres membres de la comunitat. Porta les teves llavors extra i enduu-te'n alguna de nova!"
+    }
+  },
+  "calendar": {
+    "header": "Propers Esdeveniments",
+    "event1": {
+      "title": "Taller de Jardineria",
+      "date": "Data: 15 de març de 2023",
+      "time": "Hora: 10:00 - 12:00",
+      "description": "Descripció: Uneix-te a nosaltres per a un taller pràctic sobre pràctiques de jardineria sostenible."
+    },
+    "event2": {
+      "title": "Dia de Plantació Comunitària",
+      "date": "Data: 22 d'abril de 2023",
+      "time": "Hora: 9:00 - 15:00",
+      "description": "Descripció: Ajuda'ns a plantar noves flors i verdures a l'hort."
+    },
+    "event3": {
+      "title": "Festival de la Collita",
+      "date": "Data: 30 de setembre de 2023",
+      "time": "Hora: 13:00 - 17:00",
+      "description": "Descripció: Celebra la collita amb menjar, jocs i diversió comunitària!"
+    }
+  },
+  "footer": {
+    "copyright": "© 2026 Hort Comunitari. Tots els drets reservats.",
+    "solar": "Alimentat per energia solar",
+    "contact": "Contacte"
+  }
+}

@@ -1,0 +1,116 @@
+[
+  {
+    "id": "espai-germanetes",
+    "category": "ongoing",
+    "thumbnail": "assets/images/about/Bitmap_oficina.png",
+    "title": "Espai Germanetes",
+    "shortDescription": {
+      "ca": "L'hort comunitari del barri",
+      "es": "El huerto comunitario del barrio",
+      "en": "The neighborhood community garden"
+    },
+    "detail": {
+      "description": {
+        "ca": "L'Espai Germanetes és l'hort comunitari del barri, on veïns i veïnes cultiven verdures i hortalisses de manera col·lectiva. Un espai de trobada i aprenentatge.",
+        "es": "El Espacio Germanetes es el huerto comunitario del barrio, donde vecinos y vecinas cultivan verduras y hortalizas de manera colectiva. Un espacio de encuentro y aprendizaje.",
+        "en": "Germanetes Space is the neighborhood community garden, where neighbors collectively grow vegetables and produce. A space for gathering and learning."
+      },
+      "images": []
+    }
+  },
+  {
+    "id": "espai-nur",
+    "category": "ongoing",
+    "thumbnail": "assets/images/about/bitmap_asemblea-1.png",
+    "title": "Espai Nur",
+    "shortDescription": {
+      "ca": "El jardí comunitari",
+      "es": "El jardín comunitario",
+      "en": "The community garden"
+    },
+    "detail": {
+      "description": {
+        "ca": "L'Espai Nur és el jardí comunitari, un espai verd obert al barri que fomenta la biodiversitat i la convivència entre veïns.",
+        "es": "El Espacio Nur es el jardín comunitario, un espacio verde abierto al barrio que fomenta la biodiversidad y la convivencia entre vecinos.",
+        "en": "Nur Space is the community garden, a green space open to the neighborhood that promotes biodiversity and coexistence among neighbors."
+      },
+      "images": []
+    }
+  },
+  {
+    "id": "aula-viva",
+    "category": "ongoing",
+    "thumbnail": "assets/images/about/bitmap_asemblea-2.png",
+    "title": "Aula Viva",
+    "shortDescription": {
+      "ca": "El projecte pedagògic",
+      "es": "El proyecto pedagógico",
+      "en": "The pedagogical project"
+    },
+    "detail": {
+      "description": {
+        "ca": "Aula Viva és el projecte pedagògic de l'associació, que treballa amb escoles del barri per connectar l'educació amb la natura i el medi ambient urbà.",
+        "es": "Aula Viva es el proyecto pedagógico de la asociación, que trabaja con escuelas del barrio para conectar la educación con la naturaleza y el medio ambiente urbano.",
+        "en": "Aula Viva is the association's pedagogical project, working with neighborhood schools to connect education with nature and the urban environment."
+      },
+      "images": []
+    }
+  },
+  {
+    "id": "revolta-eixample",
+    "category": "ongoing",
+    "thumbnail": "assets/images/about/Bitmap_barri-verd-i-viu.png",
+    "title": "Revolta Eixample",
+    "shortDescription": {
+      "ca": "Compostatge comunitari",
+      "es": "Compostaje comunitario",
+      "en": "Community composting"
+    },
+    "detail": {
+      "description": {
+        "ca": "Revolta Eixample és el projecte de compostatge comunitari que redueix residus orgànics i genera compost de qualitat per als jardins del barri.",
+        "es": "Revolta Eixample es el proyecto de compostaje comunitario que reduce residuos orgánicos y genera compost de calidad para los jardines del barrio.",
+        "en": "Revolta Eixample is the community composting project that reduces organic waste and generates quality compost for neighborhood gardens."
+      },
+      "images": []
+    }
+  },
+  {
+    "id": "vine-a-jugar",
+    "category": "ongoing",
+    "thumbnail": "assets/images/about/Bitmap_oficina.png",
+    "title": "Vine a Jugar",
+    "shortDescription": {
+      "ca": "Espai de jocs per a infants",
+      "es": "Espacio de juegos para niños",
+      "en": "Children's play space"
+    },
+    "detail": {
+      "description": {
+        "ca": "Vine a Jugar és l'espai de jocs per a infants, on els més petits poden gaudir d'activitats lúdiques en un entorn segur i comunitari.",
+        "es": "Ven a Jugar es el espacio de juegos para niños, donde los más pequeños pueden disfrutar de actividades lúdicas en un entorno seguro y comunitario.",
+        "en": "Come and Play is the children's play space, where the little ones can enjoy recreational activities in a safe, community environment."
+      },
+      "images": []
+    }
+  },
+  {
+    "id": "banc-de-recursos",
+    "category": "ongoing",
+    "thumbnail": "assets/images/about/bitmap_asemblea-1.png",
+    "title": "Banc de Recursos",
+    "shortDescription": {
+      "ca": "Cessió de material al barri",
+      "es": "Cesión de material al barrio",
+      "en": "Lending materials to the neighborhood"
+    },
+    "detail": {
+      "description": {
+        "ca": "El Banc de Recursos és un projecte de cessió de material a les entitats i col·lectius del barri, fomentant la reutilització i la col·laboració.",
+        "es": "El Banco de Recursos es un proyecto de cesión de material a las entidades y colectivos del barrio, fomentando la reutilización y la colaboración.",
+        "en": "The Resource Bank is a project for lending materials to neighborhood entities and collectives, promoting reuse and collaboration."
+      },
+      "images": []
+    }
+  }
+]

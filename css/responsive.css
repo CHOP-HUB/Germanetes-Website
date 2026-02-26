@@ -1,0 +1,166 @@
+/* Responsive styles for the community garden website */
+
+/* Tablet portrait and below - 4rem side margins */
+@media (max-width: 768px) {
+    header {
+        width: calc(100vw - 8rem);
+        max-width: none;
+    }
+
+    nav a {
+        font-size: 1rem;
+        padding: 0.4rem 0.7rem;
+    }
+
+    main {
+        width: auto;
+        max-width: none;
+        margin: 5rem 4rem;
+    }
+
+    main #content {
+        max-width: 100%;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    h2 {
+        font-size: 1.75em;
+    }
+
+    h3 {
+        font-size: 1.3em;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    article,
+    section ul li {
+        padding: 1rem;
+    }
+
+    .language-switcher {
+        right: 4vw;
+    }
+
+    /* Grid system reverts to block layout on tablet */
+    .about-grid {
+        display: block;
+    }
+
+    .about-grid .grid-full,
+    .about-grid .grid-3,
+    .about-grid .grid-5 {
+        grid-column: auto;
+        margin-bottom: 2rem;
+    }
+
+    /* Projects grid — 2 columns on tablet */
+    .project-grid {
+        grid-template-columns: repeat(2, 1fr);
+        width: auto;
+        max-width: none;
+        margin: 0;
+    }
+
+    .project-modal-content {
+        width: calc(100vw - 4rem);
+        max-width: none;
+        padding: 2rem;
+    }
+}
+
+/* Mobile - smaller margins */
+@media (max-width: 480px) {
+    header {
+        width: calc(100vw - 4rem);
+    }
+
+    nav a {
+        font-size: 0.85rem;
+        padding: 0.3rem 0.4rem;
+    }
+
+    main {
+        width: auto;
+        margin: 5rem 2rem;
+    }
+
+    h1 {
+        font-size: 1.75em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    h3 {
+        font-size: 1.2em;
+    }
+
+    p {
+        font-size: 0.95rem;
+    }
+
+    article,
+    section ul li {
+        padding: 1rem;
+    }
+
+    section ul li strong {
+        font-size: 1.1rem;
+    }
+
+    form button {
+        width: 100%;
+        padding: 0.875rem;
+    }
+
+    .language-switcher {
+        right: 2rem;
+    }
+
+    .language-switcher .current-lang {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    /* Projects grid — 1 column on mobile */
+    .project-grid {
+        grid-template-columns: 1fr;
+        width: auto;
+        max-width: none;
+        margin: 0;
+    }
+
+    .project-modal-content {
+        width: calc(100vw - 2rem);
+        padding: 1.5rem;
+        max-height: 90vh;
+    }
+
+    .modal-project-title {
+        font-size: 1.4em;
+    }
+
+    .modal-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .footer-logo {
+        justify-content: center;
+    }
+
+    .footer-contact {
+        text-align: center;
+    }
+}

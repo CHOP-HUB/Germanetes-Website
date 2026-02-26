@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Germanetes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --green: #647c3b;
+            --green-light: #8fbc8f;
+            --bg: #f7f7f5;
+            --card: #fff;
+            --border: #e0e0e0;
+            --text: #333;
+            --text-light: #888;
+            --danger: #c0392b;
+            --radius: 6px;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        /* ── Top bar ─────────────────────────── */
+        .topbar {
+            background: var(--green);
+            color: #fff;
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar h1 { font-size: 1rem; font-weight: 600; letter-spacing: 0.02em; }
+        .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; }
+        .topbar a:hover { color: #fff; }
+
+        /* ── Layout ──────────────────────────── */
+        .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        /* ── Project list ────────────────────── */
+        .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .toolbar h2 { font-size: 1.1rem; font-weight: 600; }
+
+        .project-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .project-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.6rem 0.8rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+        .project-row:hover { border-color: var(--green); }
+        .project-row img {
+            width: 44px; height: 44px; border-radius: 4px;
+            object-fit: cover; background: #eee; flex-shrink: 0;
+        }
+        .project-row .info { flex: 1; min-width: 0; }
+        .project-row .info strong { display: block; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .project-row .info small { color: var(--text-light); font-size: 0.75rem; text-transform: uppercase; }
+        .project-row .actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+
+        /* ── Buttons ─────────────────────────── */
+        .btn {
+            font-family: inherit; font-size: 0.82rem; font-weight: 500;
+            padding: 0.4rem 0.85rem; border: 1px solid var(--border);
+            border-radius: var(--radius); background: var(--card);
+            cursor: pointer; transition: background 0.15s, border-color 0.15s;
+            white-space: nowrap;
+        }
+        .btn:hover { background: #f0f0f0; }
+        .btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+        .btn-primary:hover { background: #55692f; }
+        .btn-danger { color: var(--danger); border-color: var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+        .btn-sm { padding: 0.28rem 0.6rem; font-size: 0.78rem; }
+
+        /* ── Editor panel ────────────────────── */
+        .editor { display: none; margin-top: 1.5rem; }
+        .editor.open { display: block; }
+        .editor-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+        }
+        .editor-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+        }
+        .editor-header h3 { font-size: 1rem; font-weight: 600; }
+
+        /* ── Form fields ─────────────────────── */
+        .field { margin-bottom: 1rem; }
+        .field label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.04em; }
+        .field input[type="text"],
+        .field textarea,
+        .field select {
+            width: 100%; padding: 0.5rem 0.6rem;
+            border: 1px solid var(--border); border-radius: var(--radius);
+            font-family: inherit; font-size: 0.88rem; color: var(--text);
+            transition: border-color 0.15s;
+        }
+        .field input:focus, .field textarea:focus, .field select:focus {
+            outline: none; border-color: var(--green);
+        }
+        .field textarea { resize: vertical; min-height: 80px; }
+
+        .lang-tabs { display: flex; gap: 0; margin-bottom: 0.5rem; }
+        .lang-tab {
+            font-family: inherit; font-size: 0.78rem; font-weight: 500;
+            padding: 0.3rem 0.7rem; border: 1px solid var(--border);
+            background: var(--bg); cursor: pointer;
+            border-right: none;
+        }
+        .lang-tab:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+        .lang-tab:last-child { border-radius: 0 var(--radius) var(--radius) 0; border-right: 1px solid var(--border); }
+        .lang-tab.active { background: var(--green); color: #fff; border-color: var(--green); }
+        .lang-panel { display: none; }
+        .lang-panel.active { display: block; }
+
+        /* ── Thumbnail ───────────────────────── */
+        .thumb-area {
+            display: flex; align-items: flex-start; gap: 1rem;
+        }
+        .thumb-preview {
+            width: 120px; height: 120px; border-radius: var(--radius);
+            object-fit: cover; border: 1px solid var(--border); background: #eee;
+        }
+        .thumb-preview.empty { display: flex; align-items: center; justify-content: center; color: var(--text-light); font-size: 0.75rem; }
+        .thumb-controls { display: flex; flex-direction: column; gap: 0.4rem; }
+        .thumb-controls input[type="file"] { font-size: 0.82rem; }
+
+        /* ── Gallery ─────────────────────────── */
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.75rem; margin-bottom: 0.75rem;
+        }
+        .gallery-item {
+            position: relative; aspect-ratio: 1; border-radius: var(--radius);
+            overflow: hidden; border: 1px solid var(--border); background: #eee;
+        }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .gallery-item .remove-img {
+            position: absolute; top: 4px; right: 4px;
+            width: 22px; height: 22px; border-radius: 50%;
+            background: rgba(0,0,0,0.55); color: #fff;
+            border: none; font-size: 0.75rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.15s;
+        }
+        .gallery-item:hover .remove-img { opacity: 1; }
+
+        .gallery-add {
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        /* ── Section dividers ────────────────── */
+        .section-label {
+            font-size: 0.78rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.05em; color: var(--green); margin: 1.25rem 0 0.5rem;
+        }
+        .section-label:first-of-type { margin-top: 0; }
+
+        /* ── Toast ────────────────────────────── */
+        .toast {
+            position: fixed; bottom: 1.5rem; right: 1.5rem;
+            padding: 0.6rem 1.2rem; border-radius: var(--radius);
+            font-size: 0.85rem; font-weight: 500;
+            color: #fff; background: var(--green);
+            transform: translateY(120%); opacity: 0;
+            transition: transform 0.25s, opacity 0.25s;
+            z-index: 100;
+        }
+        .toast.error { background: var(--danger); }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* ── Responsive ──────────────────────── */
+        @media (max-width: 600px) {
+            .container { padding: 1rem; }
+            .thumb-area { flex-direction: column; }
+            .thumb-preview { width: 100%; height: auto; aspect-ratio: 16/9; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <h1>Germanetes Admin</h1>
+    <a href="/">← Tornar al web</a>
+</div>
+
+<div class="container">
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <h2>Projectes</h2>
+        <button class="btn btn-primary" id="btn-new">+ Nou projecte</button>
+    </div>
+
+    <!-- Project list -->
+    <div class="project-list" id="project-list"></div>
+
+    <!-- Editor -->
+    <div class="editor" id="editor">
+        <div class="editor-card">
+            <div class="editor-header">
+                <h3 id="editor-title">Nou Projecte</h3>
+                <button class="btn btn-sm" id="btn-close-editor">Tancar</button>
+            </div>
+
+            <form id="project-form" autocomplete="off">
+                <input type="hidden" id="f-id">
+
+                <!-- Category -->
+                <div class="field">
+                    <label for="f-category">Categoria</label>
+                    <select id="f-category">
+                        <option value="ongoing">En Curs</option>
+                        <option value="temporal">Temporal</option>
+                        <option value="archive">Arxiu</option>
+                    </select>
+                </div>
+
+                <!-- Thumbnail -->
+                <div class="section-label">Thumbnail</div>
+                <div class="thumb-area">
+                    <img id="thumb-preview" class="thumb-preview empty" src="" alt="">
+                    <div class="thumb-controls">
+                        <input type="file" id="f-thumbnail" accept="image/*">
+                        <input type="hidden" id="f-thumbnail-path">
+                    </div>
+                </div>
+
+                <!-- Titles -->
+                <div class="section-label">Títol</div>
+                <div class="field">
+                    <input type="text" id="f-title" required placeholder="Nom del projecte">
+                </div>
+
+                <!-- Description -->
+                <div class="section-label">Descripció</div>
+                <div class="lang-tabs" data-group="desc">
+                    <button type="button" class="lang-tab active" data-lang="ca">CA</button>
+                    <button type="button" class="lang-tab" data-lang="es">ES</button>
+                    <button type="button" class="lang-tab" data-lang="en">EN</button>
+                </div>
+                <div class="lang-panel active" data-group="desc" data-lang="ca">
+                    <div class="field"><textarea id="f-desc-ca" rows="5" placeholder="Descripció en català…"></textarea></div>
+                </div>
+                <div class="lang-panel" data-group="desc" data-lang="es">
+                    <div class="field"><textarea id="f-desc-es" rows="5" placeholder="Descripción en español…"></textarea></div>
+                </div>
+                <div class="lang-panel" data-group="desc" data-lang="en">
+                    <div class="field"><textarea id="f-desc-en" rows="5" placeholder="Description in English…"></textarea></div>
+                </div>
+
+                <!-- Image gallery -->
+                <div class="section-label">Galeria d'imatges</div>
+                <div class="gallery-grid" id="gallery-grid"></div>
+                <div class="gallery-add">
+                    <input type="file" id="f-add-image" accept="image/*">
+                    <button type="button" class="btn btn-sm" id="btn-add-image">Afegir</button>
+                </div>
+
+                <!-- Sort order -->
+                <div class="section-label">Ordre</div>
+                <div class="field">
+                    <input type="text" id="f-sort" value="0" inputmode="numeric" pattern="[0-9]*">
+                </div>
+
+                <!-- Save / Delete -->
+                <div style="display:flex; gap:0.5rem; margin-top:1.25rem;">
+                    <button type="submit" class="btn btn-primary">Desar</button>
+                    <button type="button" class="btn" id="btn-cancel">Cancel·lar</button>
+                    <button type="button" class="btn btn-danger btn-sm" id="btn-delete" style="margin-left:auto; display:none;">Esborrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+    'use strict';
+
+    // Use Express server for API — auto-detect if served from a different origin (e.g. Live Server)
+    const EXPRESS_PORT = 3000;
+    const API = location.port == EXPRESS_PORT ? '/api' : `http://localhost:${EXPRESS_PORT}/api`;
+    let projects = [];
+    let galleryImages = [];
+
+    // ── DOM ──────────────────────────────────
+
+    const listEl    = document.getElementById('project-list');
+    const editorEl  = document.getElementById('editor');
+    const formEl    = document.getElementById('project-form');
+
+    // ── Toast ────────────────────────────────
+
+    function toast(msg, error) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.classList.toggle('error', !!error);
+        el.classList.add('show');
+        clearTimeout(el._t);
+        el._t = setTimeout(() => el.classList.remove('show'), 3000);
+    }
+
+    // ── Load projects ────────────────────────
+
+    async function load() {
+        try {
+            const res = await fetch(`${API}/projects`);
+            projects = await res.json();
+            renderList();
+        } catch (e) {
+            toast('Error carregant projectes', true);
+        }
+    }
+
+    const catLabel = { ongoing: 'En Curs', temporal: 'Temporal', archive: 'Arxiu' };
+
+    function absPath(p) { return p && !p.startsWith('/') && !p.startsWith('http') ? '/' + p : p || ''; }
+
+    function renderList() {
+        if (!projects.length) {
+            listEl.innerHTML = '<p style="color:var(--text-light);padding:1rem 0">Cap projecte. Crea\'n un!</p>';
+            return;
+        }
+        listEl.innerHTML = projects.map(p => `
+            <div class="project-row" data-id="${p.id}">
+                <img src="${absPath(p.thumbnail)}" alt="" onerror="this.style.visibility='hidden'">
+                <div class="info">
+                    <strong>${p.title || p.id}</strong>
+                    <small>${catLabel[p.category] || p.category}</small>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-sm" data-edit="${p.id}">Editar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ── Editor ───────────────────────────────
+
+    function openEditor(project) {
+        const isNew = !project;
+        document.getElementById('editor-title').textContent = isNew ? 'Nou Projecte' : 'Editar Projecte';
+        document.getElementById('btn-delete').style.display = isNew ? 'none' : 'inline-flex';
+
+        document.getElementById('f-id').value         = project?.id || '';
+        document.getElementById('f-category').value   = project?.category || 'ongoing';
+        document.getElementById('f-thumbnail-path').value = project?.thumbnail || '';
+        document.getElementById('f-title').value    = project?.title || '';
+        document.getElementById('f-desc-ca').value    = project?.detail?.description?.ca || project?.shortDescription?.ca || '';
+        document.getElementById('f-desc-es').value    = project?.detail?.description?.es || project?.shortDescription?.es || '';
+        document.getElementById('f-desc-en').value    = project?.detail?.description?.en || project?.shortDescription?.en || '';
+        document.getElementById('f-sort').value       = project?.sortOrder ?? 0;
+        document.getElementById('f-thumbnail').value  = '';
+
+        // Thumbnail preview
+        const preview = document.getElementById('thumb-preview');
+        if (project?.thumbnail) {
+            preview.src = absPath(project.thumbnail);
+            preview.classList.remove('empty');
+        } else {
+            preview.src = '';
+            preview.classList.add('empty');
+        }
+
+        // Gallery
+        galleryImages = project?.detail?.images ? project.detail.images.map(i => ({ ...i })) : [];
+        renderGallery();
+
+        editorEl.classList.add('open');
+        editorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function closeEditor() {
+        editorEl.classList.remove('open');
+        galleryImages = [];
+    }
+
+    function renderGallery() {
+        const grid = document.getElementById('gallery-grid');
+        grid.innerHTML = galleryImages.map((img, i) => `
+            <div class="gallery-item">
+                <img src="${absPath(img.src)}" alt="">
+                <button type="button" class="remove-img" data-idx="${i}">&times;</button>
+            </div>
+        `).join('');
+    }
+
+    // ── Upload helper ────────────────────────
+
+    async function uploadFile(file) {
+        const fd = new FormData();
+        fd.append('image', file);
+        const res = await fetch(`${API}/upload`, { method: 'POST', body: fd });
+        if (!res.ok) throw new Error('Upload failed');
+        return (await res.json()).path;
+    }
+
+    // ── Save ─────────────────────────────────
+
+    async function save(e) {
+        e.preventDefault();
+        const id = document.getElementById('f-id').value;
+
+        let thumb = document.getElementById('f-thumbnail-path').value;
+        const thumbFile = document.getElementById('f-thumbnail').files[0];
+        if (thumbFile) {
+            try { thumb = await uploadFile(thumbFile); }
+            catch { toast('Error pujant thumbnail', true); return; }
+        }
+
+        const data = {
+            category:    document.getElementById('f-category').value,
+            thumbnail:   thumb,
+            title:       document.getElementById('f-title').value.trim(),
+            short_desc_ca: document.getElementById('f-desc-ca').value.trim(),
+            short_desc_es: document.getElementById('f-desc-es').value.trim(),
+            short_desc_en: document.getElementById('f-desc-en').value.trim(),
+            detail_desc_ca: document.getElementById('f-desc-ca').value.trim(),
+            detail_desc_es: document.getElementById('f-desc-es').value.trim(),
+            detail_desc_en: document.getElementById('f-desc-en').value.trim(),
+            sort_order:  parseInt(document.getElementById('f-sort').value) || 0
+        };
+
+        try {
+            let res;
+            if (id) {
+                res = await fetch(`${API}/projects/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+            } else {
+                res = await fetch(`${API}/projects`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+            }
+            if (!res.ok) throw new Error((await res.json()).error || 'Save failed');
+            const saved = await res.json();
+
+            // Save gallery images
+            await fetch(`${API}/projects/${saved.id}/images`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ images: galleryImages })
+            });
+
+            toast(id ? 'Projecte actualitzat' : 'Projecte creat');
+            closeEditor();
+            await load();
+        } catch (err) {
+            toast(err.message, true);
+        }
+    }
+
+    // ── Delete ───────────────────────────────
+
+    async function deleteProject() {
+        const id = document.getElementById('f-id').value;
+        if (!id) return;
+        const name = document.getElementById('f-title-ca').value || id;
+        if (!confirm(`Esborrar "${name}"?`)) return;
+        try {
+            const res = await fetch(`${API}/projects/${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Delete failed');
+            toast('Projecte esborrat');
+            closeEditor();
+            await load();
+        } catch (err) {
+            toast(err.message, true);
+        }
+    }
+
+    // ── Events ───────────────────────────────
+
+    document.getElementById('btn-new').addEventListener('click', () => openEditor());
+    document.getElementById('btn-close-editor').addEventListener('click', closeEditor);
+    document.getElementById('btn-cancel').addEventListener('click', closeEditor);
+    document.getElementById('btn-delete').addEventListener('click', deleteProject);
+    formEl.addEventListener('submit', save);
+
+    // Thumbnail preview
+    document.getElementById('f-thumbnail').addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const p = document.getElementById('thumb-preview');
+        p.src = URL.createObjectURL(file);
+        p.classList.remove('empty');
+    });
+
+    // Add gallery image
+    document.getElementById('btn-add-image').addEventListener('click', async () => {
+        const input = document.getElementById('f-add-image');
+        const file = input.files[0];
+        if (!file) return;
+        try {
+            const path = await uploadFile(file);
+            galleryImages.push({ src: path, caption: { ca: '', es: '', en: '' }, sortOrder: galleryImages.length });
+            renderGallery();
+            input.value = '';
+        } catch { toast('Error pujant imatge', true); }
+    });
+
+    // Remove gallery image (delegated)
+    document.getElementById('gallery-grid').addEventListener('click', e => {
+        const btn = e.target.closest('.remove-img');
+        if (!btn) return;
+        galleryImages.splice(parseInt(btn.dataset.idx), 1);
+        renderGallery();
+    });
+
+    // Edit project (delegated)
+    listEl.addEventListener('click', e => {
+        const btn = e.target.closest('[data-edit]');
+        if (!btn) return;
+        const p = projects.find(x => x.id === btn.dataset.edit);
+        if (p) openEditor(p);
+    });
+
+    // Lang tabs
+    document.querySelectorAll('.lang-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const group = tab.parentElement.dataset.group;
+            tab.parentElement.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.querySelectorAll(`.lang-panel[data-group="${group}"]`).forEach(p => {
+                p.classList.toggle('active', p.dataset.lang === tab.dataset.lang);
+            });
+        });
+    });
+
+    // ── Init ─────────────────────────────────
+    load();
+})();
+</script>
+</body>
+</html>
