@@ -104,7 +104,7 @@ nav a:hover {
 
 nav a.active {
     text-decoration: none;
-    color: var(--color-primary);
+    color: var(--color-background);
 }
 
 nav a.active:hover {
