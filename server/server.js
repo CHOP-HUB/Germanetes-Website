@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 const SITE_ROOT = path.join(__dirname, '..');
 const UPLOADS_DIR = path.join(SITE_ROOT, 'assets', 'images', 'projects');
 
-// Ensure uploads directory exists
+// Ensure uploads directory is existing
 if (!fs.existsSync(UPLOADS_DIR)) {
     fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
