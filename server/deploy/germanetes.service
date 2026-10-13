@@ -1,0 +1,27 @@
+[Unit]
+Description=Germanetes website and CMS
+After=network.target
+
+[Service]
+Type=simple
+User=germanetes
+Group=germanetes
+WorkingDirectory=/opt/germanetes/server
+EnvironmentFile=-/etc/germanetes/germanetes.env
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=3000
+Environment=DATA_DIR=/var/lib/germanetes
+Environment=UPLOADS_DIR=/var/lib/germanetes/uploads
+Environment=NODE_PATH=/var/lib/germanetes/nodejs/current/node_modules
+ExecStart=/usr/bin/node /opt/germanetes/server/server.js
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/germanetes
+
+[Install]
+WantedBy=multi-user.target

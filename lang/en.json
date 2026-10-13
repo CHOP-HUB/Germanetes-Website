@@ -12,7 +12,7 @@
   "about": {
     "header": "About Us",
     "description1": "<i>Germanetes Jardins d'Emma</i> is a non-profit organization located around the boulevard of the neighborhood, the Green Axis of <i>Consell de Cent</i>. We organize around two main objectives: generating community in the neighborhood and making it more sustainable, collaborating with the environment to achieve an active community that includes residents, schools, other entities, collectives and cooperatives in the neighborhood and public institutions with social objectives.",
-    "description2": "The association's projects are as follows: <i>Germanetes Space</i>, the community garden; <i>Nur Space</i>, the community garden; <i>Aula Viva</i>, the pedagogical project; <i>Revolta Eixample</i>, community composting project; <i>Vine a Jugar</i>, children's play space, and the <i>Resource Bank</i>, a project for lending materials to neighborhood entities and collectives.",
+    "description2": "The association's projects are as follows: <i>Espai Germanetes</i>, the community garden; <i>Espai Nur</i>, the community garden; <i>Aula Viva</i>, the pedagogical project; <i>Revolta Eixample</i>, community composting project; <i>Vine a Jugar</i>, children's play space, and the <i>Banc de Recursos</i>, a project for lending materials to neighborhood entities and collectives.",
     "description3": "The association seeks to be as democratic, horizontal and transparent as possible. This is why each project has its own governance body, and representatives from all projects meet biweekly as a coordination team and the engine of the association; assemblies and meetings are open to everyone. Finally, each January the general assembly is held, which is the body with the most power within the association.",
     "description4": "If you feel like participating in one of the projects, just get in touch with us!"
   },
@@ -80,7 +80,17 @@
     }
   },
   "calendar": {
-    "header": "Upcoming Events",
+    "header": "Community calendar",
+    "previous": "Previous month",
+    "next": "Next month",
+    "today": "Today",
+    "loading": "Loading calendar…",
+    "notConfigured": "The calendar feed has not been connected yet.",
+    "stale": "Showing the last saved calendar update.",
+    "noEvents": "No events this month.",
+    "error": "Unable to load calendar events.",
+    "allDay": "All day",
+    "untitled": "Untitled event",
     "event1": {
       "title": "Garden Workshop",
       "date": "Date: March 15, 2023",
@@ -103,6 +113,12 @@
   "footer": {
     "copyright": "© 2026 Community Garden. All rights reserved.",
     "solar": "Powered by solar energy",
-    "contact": "Contact"
+    "contact": "Contact",
+    "mapTitle": "Community area map",
+    "openMap": "Enlarge community area map",
+    "closeMap": "Close map",
+    "privacy": "Privacy policy",
+    "privacyTitle": "Privacy policy",
+    "closePrivacy": "Close privacy policy"
   }
 }

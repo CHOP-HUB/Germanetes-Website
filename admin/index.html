@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin — Germanetes</title>
+    <link rel="icon" type="image/png" href="/assets/icons/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -296,11 +297,16 @@
 (function () {
     'use strict';
 
-    // Use Express server for API — auto-detect if served from a different origin (e.g. Live Server)
-    const EXPRESS_PORT = 3000;
-    const API = location.port == EXPRESS_PORT ? '/api' : `http://localhost:${EXPRESS_PORT}/api`;
+    // Use Express directly when previewing through Live Server.
+    const isLiveServer = ['localhost', '127.0.0.1'].includes(location.hostname) && location.port === '5500';
+    const API_ORIGIN = isLiveServer ? 'http://localhost:3000' : location.origin;
+    const API = `${API_ORIGIN}/api`;
     let projects = [];
     let galleryImages = [];
+
+    function apiFetch(path, options = {}) {
+        return fetch(`${API}${path}`, { ...options, credentials: 'include' });
+    }
 
     // ── DOM ──────────────────────────────────
 
@@ -323,7 +329,8 @@
 
     async function load() {
         try {
-            const res = await fetch(`${API}/projects`);
+            const res = await apiFetch('/projects');
+            if (!res.ok) throw new Error(`API returned ${res.status}`);
             projects = await res.json();
             renderList();
         } catch (e) {
@@ -333,7 +340,17 @@
 
     const catLabel = { ongoing: 'En Curs', temporal: 'Temporal', archive: 'Arxiu' };
 
-    function absPath(p) { return p && !p.startsWith('/') && !p.startsWith('http') ? '/' + p : p || ''; }
+    function absPath(path) {
+        if (!path) return '';
+        if (path.startsWith('/uploads/')) return `${API_ORIGIN}${path}`;
+        return path.startsWith('/') || path.startsWith('http') ? path : `/${path}`;
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, character => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[character]);
+    }
 
     function renderList() {
         if (!projects.length) {
@@ -342,13 +359,13 @@
         }
         listEl.innerHTML = projects.map(p => `
             <div class="project-row" data-id="${p.id}">
-                <img src="${absPath(p.thumbnail)}" alt="" onerror="this.style.visibility='hidden'">
+                <img src="${escapeHtml(absPath(p.thumbnail))}" alt="" onerror="this.style.visibility='hidden'">
                 <div class="info">
-                    <strong>${p.title || p.id}</strong>
-                    <small>${catLabel[p.category] || p.category}</small>
+                    <strong>${escapeHtml(p.title || p.id)}</strong>
+                    <small>${escapeHtml(catLabel[p.category] || p.category)}</small>
                 </div>
                 <div class="actions">
-                    <button class="btn btn-sm" data-edit="${p.id}">Editar</button>
+                    <button class="btn btn-sm" data-edit="${escapeHtml(p.id)}">Editar</button>
                 </div>
             </div>
         `).join('');
@@ -398,7 +415,7 @@
         const grid = document.getElementById('gallery-grid');
         grid.innerHTML = galleryImages.map((img, i) => `
             <div class="gallery-item">
-                <img src="${absPath(img.src)}" alt="">
+                <img src="${escapeHtml(absPath(img.src))}" alt="">
                 <button type="button" class="remove-img" data-idx="${i}">&times;</button>
             </div>
         `).join('');
@@ -409,7 +426,7 @@
     async function uploadFile(file) {
         const fd = new FormData();
         fd.append('image', file);
-        const res = await fetch(`${API}/upload`, { method: 'POST', body: fd });
+        const res = await apiFetch('/upload', { method: 'POST', body: fd });
         if (!res.ok) throw new Error('Upload failed');
         return (await res.json()).path;
     }
@@ -443,13 +460,13 @@
         try {
             let res;
             if (id) {
-                res = await fetch(`${API}/projects/${id}`, {
+                res = await apiFetch(`/projects/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
             } else {
-                res = await fetch(`${API}/projects`, {
+                res = await apiFetch('/projects', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
@@ -459,11 +476,12 @@
             const saved = await res.json();
 
             // Save gallery images
-            await fetch(`${API}/projects/${saved.id}/images`, {
+            const imagesResponse = await apiFetch(`/projects/${saved.id}/images`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ images: galleryImages })
             });
+            if (!imagesResponse.ok) throw new Error('Failed to save project images');
 
             toast(id ? 'Projecte actualitzat' : 'Projecte creat');
             closeEditor();
@@ -478,10 +496,10 @@
     async function deleteProject() {
         const id = document.getElementById('f-id').value;
         if (!id) return;
-        const name = document.getElementById('f-title-ca').value || id;
+        const name = document.getElementById('f-title').value || id;
         if (!confirm(`Esborrar "${name}"?`)) return;
         try {
-            const res = await fetch(`${API}/projects/${id}`, { method: 'DELETE' });
+            const res = await apiFetch(`/projects/${id}`, { method: 'DELETE' });
             if (!res.ok) throw new Error('Delete failed');
             toast('Projecte esborrat');
             closeEditor();

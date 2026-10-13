@@ -1,0 +1,10 @@
+[Unit]
+Description=Check for Germanetes website updates
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=-/etc/germanetes/germanetes.env
+ExecStart=/bin/bash /opt/germanetes/server/deploy/update.sh
+TimeoutStartSec=30min

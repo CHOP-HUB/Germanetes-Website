@@ -2,94 +2,194 @@
   {
     "id": "espai-germanetes",
     "category": "ongoing",
-    "thumbnail": "assets/images/about/Bitmap_oficina.png",
+    "thumbnail": "assets/images/projects/espai-germanetes-garden.jpg",
     "title": "Espai Germanetes",
     "shortDescription": {
-      "ca": "L'hort comunitari del barri",
-      "es": "El huerto comunitario del barrio",
-      "en": "The neighborhood community garden"
+      "ca": "Un hort comunitari obert per cultivar, aprendre i fer barri.",
+      "es": "Un huerto comunitario abierto para cultivar, aprender y hacer barrio.",
+      "en": "An open community garden for growing, learning and building community."
     },
     "detail": {
       "description": {
-        "ca": "L'Espai Germanetes és l'hort comunitari del barri, on veïns i veïnes cultiven verdures i hortalisses de manera col·lectiva. Un espai de trobada i aprenentatge.",
-        "es": "El Espacio Germanetes es el huerto comunitario del barrio, donde vecinos y vecinas cultivan verduras y hortalizas de manera colectiva. Un espacio de encuentro y aprendizaje.",
-        "en": "Germanetes Space is the neighborhood community garden, where neighbors collectively grow vegetables and produce. A space for gathering and learning."
+        "ca": "Germanetes és un espai obert on el veïnat pot cultivar, tenir cura de les plantes, trobar-se, jugar o simplement gaudir de l'entorn. És el projecte d'on va néixer l'associació.\n\nL'espai actual és fruit de la reivindicació veïnal iniciada amb el moviment del 15M per aconseguir espais públics de qualitat. Avui hi participen veïnat, joves de l'Institut Viladomat, escoles del barri i CPB Serveis de Salut Mental. L'hort compta amb parcel·les de cultiu, una zona de joc, un espai d'estada i un lloc de reunió per a les entitats.\n\nL'assemblea dels horts se celebra el tercer dissabte de cada mes a les 11 h. Les tasques col·lectives tenen lloc els dimarts a la tarda i els dissabtes al matí.",
+        "es": "Germanetes es un espacio abierto donde el vecindario puede cultivar, cuidar las plantas, reunirse, jugar o simplemente disfrutar del entorno. Es el proyecto del que nació la asociación.\n\nEl espacio actual es fruto de la reivindicación vecinal iniciada con el movimiento del 15M para conseguir espacios públicos de calidad. Hoy participan vecinos y vecinas, jóvenes del Institut Viladomat, escuelas del barrio y CPB Serveis de Salut Mental. El huerto cuenta con parcelas de cultivo, una zona de juego, un espacio para estar y un lugar de reunión para las entidades.\n\nLa asamblea del huerto se celebra el tercer sábado de cada mes a las 11 h. Las tareas colectivas tienen lugar los martes por la tarde y los sábados por la mañana.",
+        "en": "Germanetes is an open space where neighbours can grow plants, care for the garden, meet, play or simply spend time outdoors. It is the project from which the association grew.\n\nThe current space grew out of neighbourhood organising begun with the 15M movement, which called for high-quality public spaces. Today it brings together local residents, students from Institut Viladomat, neighbourhood schools and CPB Serveis de Salut Mental. The garden includes growing plots, a play area, a place to spend time and a meeting space for local groups.\n\nThe garden assembly meets on the third Saturday of each month at 11 a.m. Collective gardening sessions take place on Tuesday afternoons and Saturday mornings."
       },
-      "images": []
+      "images": [
+        {
+          "src": "assets/images/projects/espai-germanetes-learning.jpg",
+          "caption": {
+            "ca": "Infants participant en activitats a l'espai comunitari.",
+            "es": "Niños y niñas participan en actividades en el espacio comunitario.",
+            "en": "Children taking part in activities in the community space."
+          }
+        },
+        {
+          "src": "assets/images/projects/whatsapp-image-2025-08-19-at-22-22-21-1772123475517-403.jpeg",
+          "caption": {
+            "ca": "Activitat comunitària a Germanetes.",
+            "es": "Actividad comunitaria en Germanetes.",
+            "en": "A community activity at Germanetes."
+          }
+        },
+        {
+          "src": "assets/images/projects/whatsapp-image-2025-09-18-at-14-31-54-1772123483547-973.jpeg",
+          "caption": {
+            "ca": "Vida i activitats a l'hort.",
+            "es": "Vida y actividades en el huerto.",
+            "en": "Life and activities in the garden."
+          }
+        },
+        {
+          "src": "assets/images/projects/whatsapp-image-2025-09-20-at-11-42-17-1772123490129-419.jpeg",
+          "caption": {
+            "ca": "Veïnat compartint l'espai.",
+            "es": "Vecinos y vecinas compartiendo el espacio.",
+            "en": "Neighbours sharing the space."
+          }
+        },
+        {
+          "src": "assets/images/projects/whatsapp-image-2025-10-07-at-20-36-15-1772123494987-607.jpeg",
+          "caption": {
+            "ca": "Una jornada col·lectiva a Germanetes.",
+            "es": "Una jornada colectiva en Germanetes.",
+            "en": "A community workday at Germanetes."
+          }
+        },
+        {
+          "src": "assets/images/projects/whatsapp-image-2025-10-07-at-23-37-10-1772123503120-835.jpeg",
+          "caption": {
+            "ca": "Cura compartida de l'hort.",
+            "es": "Cuidado compartido del huerto.",
+            "en": "Looking after the garden together."
+          }
+        }
+      ]
     }
   },
   {
     "id": "espai-nur",
     "category": "ongoing",
-    "thumbnail": "assets/images/about/bitmap_asemblea-1.png",
+    "thumbnail": "assets/images/projects/espai-nur-garden.jpg",
     "title": "Espai Nur",
     "shortDescription": {
-      "ca": "El jardí comunitari",
-      "es": "El jardín comunitario",
-      "en": "The community garden"
+      "ca": "Un jardí comunitari i oasi verd al carrer Calàbria.",
+      "es": "Un jardín comunitario y oasis verde en la calle Calàbria.",
+      "en": "A community garden and green oasis on Carrer de Calàbria."
     },
     "detail": {
       "description": {
-        "ca": "L'Espai Nur és el jardí comunitari, un espai verd obert al barri que fomenta la biodiversitat i la convivència entre veïns.",
-        "es": "El Espacio Nur es el jardín comunitario, un espacio verde abierto al barrio que fomenta la biodiversidad y la convivencia entre vecinos.",
-        "en": "Nur Space is the community garden, a green space open to the neighborhood that promotes biodiversity and coexistence among neighbors."
+        "ca": "L'Espai Nur és un jardí comunitari al carrer Calàbria amb Consell de Cent, cuidat per un grup divers de voluntariat i obert a tothom. La seva vegetació i els espais per seure l'han convertit en un punt de trobada del barri.\n\nEl projecte va començar el 2019 amb l'ocupació veïnal d'un solar que havia allotjat aules provisionals i un equipament per a joves migrants. El nom Nur significa «llum» en àrab i recorda les persones que hi van viure.\n\nS'hi fan tasques de voluntariat, tallers, xerrades, concerts i cinema a la fresca. L'horari de voluntariat indicat actualment és dijous de 17 a 19 h, i els dilluns a les 12 h s'hi celebra el Dilluns del Benestar.",
+        "es": "Espai Nur es un jardín comunitario en la calle Calàbria con Consell de Cent, cuidado por un grupo diverso de voluntariado y abierto a todo el mundo. Su vegetación y sus espacios para sentarse lo han convertido en un punto de encuentro del barrio.\n\nEl proyecto comenzó en 2019 con la ocupación vecinal de un solar que había albergado aulas provisionales y un equipamiento para jóvenes migrantes. El nombre Nur significa «luz» en árabe y recuerda a las personas que vivieron allí.\n\nSe organizan jornadas de voluntariado, talleres, charlas, conciertos y cine al aire libre. El horario de voluntariado indicado actualmente es los jueves de 17 a 19 h, y los lunes a las 12 h se celebra el Dilluns del Benestar.",
+        "en": "Espai Nur is a community garden at the intersection of Carrer de Calàbria and Carrer del Consell de Cent, cared for by a diverse volunteer group and open to everyone. Its planting and places to sit have made it a neighbourhood meeting point.\n\nThe project began in 2019 when local residents occupied a vacant site that had housed temporary classrooms and a facility for young migrants. Nur means “light” in Arabic and honours the young people who lived there.\n\nThe garden hosts volunteer sessions, workshops, talks, concerts and outdoor film screenings. The currently listed volunteer hours are Thursdays from 5 to 7 p.m.; the weekly Dilluns del Benestar gathering takes place on Mondays at noon."
       },
-      "images": []
+      "images": [
+        {
+          "src": "assets/images/projects/espai-nur-community.jpg",
+          "caption": {
+            "ca": "El jardí de Nur com a espai verd i de trobada.",
+            "es": "El jardín de Nur como espacio verde y de encuentro.",
+            "en": "Nur garden as a green gathering place."
+          }
+        }
+      ]
     }
   },
   {
     "id": "aula-viva",
     "category": "ongoing",
-    "thumbnail": "assets/images/about/bitmap_asemblea-2.png",
+    "thumbnail": "assets/images/projects/aula-viva-activity.jpg",
     "title": "Aula Viva",
     "shortDescription": {
-      "ca": "El projecte pedagògic",
-      "es": "El proyecto pedagógico",
-      "en": "The pedagogical project"
+      "ca": "Educació ecosocial i ambiental amb les escoles del barri.",
+      "es": "Educación ecosocial y ambiental con las escuelas del barrio.",
+      "en": "Ecosocial and environmental education with neighbourhood schools."
     },
     "detail": {
       "description": {
-        "ca": "Aula Viva és el projecte pedagògic de l'associació, que treballa amb escoles del barri per connectar l'educació amb la natura i el medi ambient urbà.",
-        "es": "Aula Viva es el proyecto pedagógico de la asociación, que trabaja con escuelas del barrio para conectar la educación con la naturaleza y el medio ambiente urbano.",
-        "en": "Aula Viva is the association's pedagogical project, working with neighborhood schools to connect education with nature and the urban environment."
+        "ca": "Des del 2017, Aula Viva treballa per a la transformació ecosocial de l'entorn mitjançant l'educació vivencial i comunitària. Amb el veïnat i una xarxa de 12 escoles, promou la biodiversitat, la cura de l'entorn i l'enverdiment dels centres educatius.\n\nLes activitats connecten l'alumnat i la comunitat educativa amb els horts de Germanetes, l'Espai Nur i la compostadora Revolta. Un dels eixos és l'Escola Agroecològica, que incorpora la producció, la transformació i el consum d'aliments al currículum escolar.\n\n<a href=\"assets/documents/projects/aula-viva-activitats.pdf\" target=\"_blank\" rel=\"noopener\">Consulta el document d'activitats i recursos d'Aula Viva (PDF)</a>.",
+        "es": "Desde 2017, Aula Viva trabaja por la transformación ecosocial del entorno mediante una educación vivencial y comunitaria. Junto con el vecindario y una red de 12 escuelas, promueve la biodiversidad, el cuidado del entorno y el reverdecimiento de los centros educativos.\n\nLas actividades conectan al alumnado y a la comunidad educativa con los huertos de Germanetes, el Espai Nur y la compostadora Revolta. Uno de sus ejes es la Escola Agroecològica, que incorpora la producción, la transformación y el consumo de alimentos al currículo escolar.\n\n<a href=\"assets/documents/projects/aula-viva-activitats.pdf\" target=\"_blank\" rel=\"noopener\">Consulta el documento de actividades y recursos de Aula Viva (PDF)</a>.",
+        "en": "Since 2017, Aula Viva has worked towards ecosocial change through hands-on, community-based education. Together with local residents and a network of 12 schools, it promotes biodiversity, care for the local environment and greener school grounds.\n\nActivities connect students and school communities with the Germanetes gardens, Espai Nur and the Revolta composter. One focus is the Escola Agroecològica, which brings food production, preparation and consumption into the school curriculum.\n\n<a href=\"assets/documents/projects/aula-viva-activitats.pdf\" target=\"_blank\" rel=\"noopener\">View the Aula Viva activities and resources document (PDF)</a>."
       },
-      "images": []
+      "images": [
+        {
+          "src": "assets/images/projects/aula-viva-workshop.jpg",
+          "caption": {
+            "ca": "Taller educatiu a l'entorn de Germanetes.",
+            "es": "Taller educativo en el entorno de Germanetes.",
+            "en": "An educational workshop in the Germanetes area."
+          }
+        },
+        {
+          "src": "assets/images/projects/aula-viva-school.jpg",
+          "caption": {
+            "ca": "Alumnat participant en activitats d'Aula Viva.",
+            "es": "Alumnado participante en actividades de Aula Viva.",
+            "en": "Students taking part in Aula Viva activities."
+          }
+        }
+      ]
     }
   },
   {
     "id": "revolta-eixample",
     "category": "ongoing",
-    "thumbnail": "assets/images/about/Bitmap_barri-verd-i-viu.png",
+    "thumbnail": "assets/images/projects/revolta-composting.jpg",
     "title": "Revolta Eixample",
     "shortDescription": {
-      "ca": "Compostatge comunitari",
-      "es": "Compostaje comunitario",
-      "en": "Community composting"
+      "ca": "Compostatge comunitari per reduir residus i nodrir els jardins.",
+      "es": "Compostaje comunitario para reducir residuos y nutrir los jardines.",
+      "en": "Community composting that reduces waste and nourishes local gardens."
     },
     "detail": {
       "description": {
-        "ca": "Revolta Eixample és el projecte de compostatge comunitari que redueix residus orgànics i genera compost de qualitat per als jardins del barri.",
-        "es": "Revolta Eixample es el proyecto de compostaje comunitario que reduce residuos orgánicos y genera compost de calidad para los jardines del barrio.",
-        "en": "Revolta Eixample is the community composting project that reduces organic waste and generates quality compost for neighborhood gardens."
+        "ca": "Revolta és un projecte comunitari iniciat el 2020 al Parc de Paula Montal. Transforma les restes orgàniques en compost per als horts de Germanetes, l'Espai Nur, les escoles del barri i el veïnat.\n\nMés de 30 llars hi aporten residus, juntament amb centres educatius i la Cuina Comunitària de Sant Antoni. La compostadora deshidrata les restes i, després, el precompost es barreja amb material estructurant perquè maduri i es converteixi en compost.\n\n<a href=\"https://www.youtube.com/watch?v=Dvf9G1Elik8\" target=\"_blank\" rel=\"noopener\">Mira el vídeo sobre el projecte Revolta</a>.",
+        "es": "Revolta es un proyecto comunitario iniciado en 2020 en el Parc de Paula Montal. Transforma restos orgánicos en compost para los huertos de Germanetes, el Espai Nur, las escuelas del barrio y el vecindario.\n\nMás de 30 hogares aportan residuos, junto con centros educativos y la Cuina Comunitària de Sant Antoni. La compostadora deshidrata los restos y, después, el precompost se mezcla con material estructurante para que madure y se convierta en compost.\n\n<a href=\"https://www.youtube.com/watch?v=Dvf9G1Elik8\" target=\"_blank\" rel=\"noopener\">Mira el vídeo sobre el proyecto Revolta</a>.",
+        "en": "Revolta is a community project launched in 2020 at Parc de Paula Montal. It turns organic waste into compost for the Germanetes gardens, Espai Nur, neighbourhood schools and local residents.\n\nMore than 30 households contribute food scraps, alongside schools and the Cuina Comunitària de Sant Antoni. The composter dehydrates the waste; the resulting pre-compost is then mixed with structural material so it can mature into finished compost.\n\n<a href=\"https://www.youtube.com/watch?v=Dvf9G1Elik8\" target=\"_blank\" rel=\"noopener\">Watch the video about Revolta</a>."
       },
-      "images": []
+      "images": [
+        {
+          "src": "assets/images/projects/revolta-compost.jpg",
+          "caption": {
+            "ca": "El procés comunitari de compostatge.",
+            "es": "El proceso comunitario de compostaje.",
+            "en": "The community composting process."
+          }
+        },
+        {
+          "src": "assets/images/projects/revolta-community.jpg",
+          "caption": {
+            "ca": "Persones del barri participant en el projecte.",
+            "es": "Personas del barrio participando en el proyecto.",
+            "en": "Local residents taking part in the project."
+          }
+        },
+        {
+          "src": "assets/images/projects/whatsapp-image-2025-12-16-at-10-41-36-1772128031207-385.jpeg",
+          "caption": {
+            "ca": "Una activitat vinculada a Revolta.",
+            "es": "Una actividad vinculada a Revolta.",
+            "en": "An activity connected with Revolta."
+          }
+        }
+      ]
     }
   },
   {
     "id": "vine-a-jugar",
     "category": "ongoing",
-    "thumbnail": "assets/images/about/Bitmap_oficina.png",
-    "title": "Vine a Jugar",
+    "thumbnail": "assets/images/projects/vine-a-jugar-play.jpg",
+    "title": "Vine a Jugar!",
     "shortDescription": {
-      "ca": "Espai de jocs per a infants",
-      "es": "Espacio de juegos para niños",
-      "en": "Children's play space"
+      "ca": "Espais de joc comunitaris per a infants i famílies.",
+      "es": "Espacios de juego comunitarios para niños, niñas y familias.",
+      "en": "Community play spaces for children and families."
     },
     "detail": {
       "description": {
-        "ca": "Vine a Jugar és l'espai de jocs per a infants, on els més petits poden gaudir d'activitats lúdiques en un entorn segur i comunitari.",
-        "es": "Ven a Jugar es el espacio de juegos para niños, donde los más pequeños pueden disfrutar de actividades lúdicas en un entorno seguro y comunitario.",
-        "en": "Come and Play is the children's play space, where the little ones can enjoy recreational activities in a safe, community environment."
+        "ca": "Vine a jugar! és una proposta comunitària que activa zones de joc temporals a la plaça del Mercat de Pagès, l'Espai Nur i els horts de Germanetes. Les criatures i les seves famílies hi troben joguines, juguen, es relacionen i tenen cura dels materials en espais públics pacificats.\n\nL'Associació Germanetes Jardins d'Emma i la Xarxa de Consum Solidari impulsen la iniciativa amb el suport de persones voluntàries, treballadores i usuàries. A la plaça del Mercat de Germanetes, l'espai de joc s'obre entre setmana a partir de les 16.30 h i els dissabtes a partir de les 10 h. A Nur i als horts, s'hi pot jugar mentre els espais són oberts.",
+        "es": "¡Vine a jugar! es una propuesta comunitaria que activa zonas de juego temporales en la plaza del Mercat de Pagès, el Espai Nur y los huertos de Germanetes. Niños, niñas y sus familias encuentran juguetes, juegan, se relacionan y cuidan los materiales en espacios públicos pacificados.\n\nLa Associació Germanetes Jardins d'Emma y la Xarxa de Consum Solidari impulsan la iniciativa con el apoyo de personas voluntarias, trabajadoras y usuarias. En la plaza del Mercat de Germanetes, el espacio de juego abre entre semana a partir de las 16:30 y los sábados a partir de las 10 h. En Nur y en los huertos se puede jugar mientras los espacios están abiertos.",
+        "en": "Vine a jugar! is a community initiative that sets up temporary play areas at the farmers' market square, Espai Nur and the Germanetes gardens. Children and their families can find toys, play, spend time together and help care for the materials in traffic-calmed public spaces.\n\nThe Associació Germanetes Jardins d'Emma and Xarxa de Consum Solidari lead the initiative with support from volunteers, staff and participants. At the Germanetes market square, play sessions start at 4:30 p.m. on weekdays and 10 a.m. on Saturdays. At Nur and the gardens, play is available while the spaces are open."
       },
       "images": []
     }
@@ -98,17 +198,181 @@
     "id": "banc-de-recursos",
     "category": "ongoing",
     "thumbnail": "assets/images/about/bitmap_asemblea-1.png",
-    "title": "Banc de Recursos",
+    "title": "Banc de Recursos Comunitari",
     "shortDescription": {
-      "ca": "Cessió de material al barri",
-      "es": "Cesión de material al barrio",
-      "en": "Lending materials to the neighborhood"
+      "ca": "Préstec comunitari de material per a entitats del barri.",
+      "es": "Préstamo comunitario de material para entidades del barrio.",
+      "en": "A community lending bank for local groups and organisations."
     },
     "detail": {
       "description": {
-        "ca": "El Banc de Recursos és un projecte de cessió de material a les entitats i col·lectius del barri, fomentant la reutilització i la col·laboració.",
-        "es": "El Banco de Recursos es un proyecto de cesión de material a las entidades y colectivos del barrio, fomentando la reutilización y la colaboración.",
-        "en": "The Resource Bank is a project for lending materials to neighborhood entities and collectives, promoting reuse and collaboration."
+        "ca": "Des de finals del 2017, el Banc de Recursos Comunitari gestiona material públic que poden utilitzar les entitats i els col·lectius de l'Esquerra de l'Eixample. El servei facilita l'organització d'activitats, enforteix la xarxa veïnal i promou la reutilització.\n\nEl material inclou equip de so i micròfons, cadires i taules, fogonets, paelles i estris de cuina. Per mantenir-lo en bon estat, se sol·licita una quota simbòlica a les entitats que el fan servir. Per demanar material en préstec, escriu a <a href=\"mailto:germanetesje@gmail.com\">germanetesje@gmail.com</a>.",
+        "es": "Desde finales de 2017, el Banc de Recursos Comunitari gestiona material público que pueden utilizar las entidades y colectivos de la Esquerra de l'Eixample. El servicio facilita la organización de actividades, fortalece la red vecinal y promueve la reutilización.\n\nEl material incluye equipo de sonido y micrófonos, sillas y mesas, hornillos, paelleras y utensilios de cocina. Para mantenerlo en buen estado, se solicita una cuota simbólica a las entidades que lo utilizan. Para pedir material en préstamo, escribe a <a href=\"mailto:germanetesje@gmail.com\">germanetesje@gmail.com</a>.",
+        "en": "Since late 2017, the Banc de Recursos Comunitari has managed public equipment that groups and organisations in Esquerra de l'Eixample can borrow. The service helps local groups run activities, strengthens neighbourhood networks and encourages reuse.\n\nAvailable items include sound equipment and microphones, chairs and tables, burners, pans and kitchen utensils. A small contribution is requested from borrowing groups to help keep the equipment in good condition. To borrow items, email <a href=\"mailto:germanetesje@gmail.com\">germanetesje@gmail.com</a>."
+      },
+      "images": []
+    }
+  },
+  {
+    "id": "comunitats-sembra-aigua",
+    "category": "ongoing",
+    "thumbnail": "assets/images/projects/sembra-aigua-garden.jpg",
+    "title": "Comunitats de Sembra d'Aigua",
+    "shortDescription": {
+      "ca": "Recuperació comunitària d'aigües grises per cuidar el verd urbà.",
+      "es": "Recuperación comunitaria de aguas grises para cuidar el verde urbano.",
+      "en": "Community reuse of greywater to care for urban green spaces."
+    },
+    "detail": {
+      "description": {
+        "ca": "Comunitats de Sembra d'Aigua és una xarxa comunitària que recull i tracta aigües grises d'equipaments públics per regar horts i jardins propers. El cicle combina quatre fases: recollir, fitodepurar, emmagatzemar i sembrar. Les solucions són de petita escala, baix cost i fàcils de mantenir i replicar.\n\nA l'entorn de Germanetes, la comunitat reuneix l'Escola Diputació, l'Institut Viladomat, l'Escola Llorers, projectes de l'associació i veïnat. L'alumnat recupera aigua de les gerres del menjador i la porta a fitodepuradores instal·lades a l'escola i als horts; un cop neta, s'emmagatzema i s'utilitza per regar.\n\n<a href=\"assets/documents/projects/comunitats-sembra-aigua-guia.pdf\" target=\"_blank\" rel=\"noopener\">Guia de codi obert del projecte (PDF)</a><br><a href=\"assets/documents/projects/comunitats-sembra-aigua-manual-escoles.pdf\" target=\"_blank\" rel=\"noopener\">Manual de manteniment per a escoles (PDF)</a>.",
+        "es": "Comunitats de Sembra d'Aigua es una red comunitaria que recoge y trata aguas grises de equipamientos públicos para regar huertos y jardines cercanos. El ciclo comprende cuatro fases: recoger, fitodepurar, almacenar y sembrar. Las soluciones son de pequeña escala, bajo coste y fáciles de mantener y replicar.\n\nEn el entorno de Germanetes, la comunidad reúne a la Escola Diputació, el Institut Viladomat, la Escola Llorers, proyectos de la asociación y vecinos y vecinas. El alumnado recupera agua de las jarras del comedor y la lleva a fitodepuradoras instaladas en la escuela y en los huertos; una vez limpia, se almacena y se utiliza para regar.\n\n<a href=\"assets/documents/projects/comunitats-sembra-aigua-guia.pdf\" target=\"_blank\" rel=\"noopener\">Guía de código abierto del proyecto (PDF)</a><br><a href=\"assets/documents/projects/comunitats-sembra-aigua-manual-escoles.pdf\" target=\"_blank\" rel=\"noopener\">Manual de mantenimiento para escuelas (PDF)</a>.",
+        "en": "Comunitats de Sembra d'Aigua is a community network that collects and treats greywater from public facilities to irrigate nearby gardens. Its cycle has four stages: collect, treat through planted filters, store and use. The solutions are small-scale, low-cost and designed to be easy to maintain and adapt.\n\nAround Germanetes, the community includes Escola Diputació, Institut Viladomat, Escola Llorers, association projects and local residents. Students collect leftover drinking water from the school dining room and take it to planted filters at the school and gardens. Once treated, the water is stored and used for irrigation.\n\n<a href=\"assets/documents/projects/comunitats-sembra-aigua-guia.pdf\" target=\"_blank\" rel=\"noopener\">Open-source project guide (PDF)</a><br><a href=\"assets/documents/projects/comunitats-sembra-aigua-manual-escoles.pdf\" target=\"_blank\" rel=\"noopener\">School maintenance manual (PDF)</a>."
+      },
+      "images": [
+        {
+          "src": "assets/images/projects/sembra-aigua-school.jpg",
+          "caption": {
+            "ca": "Alumnat participant en activitats de sembra d'aigua.",
+            "es": "Alumnado participante en actividades de siembra de agua.",
+            "en": "Students taking part in water-sowing activities."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "plantem-i-respectem",
+    "category": "temporal",
+    "thumbnail": "assets/images/projects/plantem-planting.jpg",
+    "title": "Plantem i Respectem",
+    "shortDescription": {
+      "ca": "Campanyes veïnals per plantar i protegir el verd dels Eixos Verds.",
+      "es": "Campañas vecinales para plantar y proteger el verde de los Ejes Verdes.",
+      "en": "Neighbourhood campaigns to plant and protect the Eixos Verds greenery."
+    },
+    "detail": {
+      "description": {
+        "ca": "Plantem i Respectem van ser dues campanyes veïnals a l'Eix Verd de Consell de Cent per denunciar l'abandonament dels parterres i reclamar una millor cura del verd urbà. Les iniciatives es van coordinar amb la plataforma Consell de Cent Verd i Viu i entitats del barri.\n\nLes jornades Plantem van reunir el veïnat per replantar parterres i implicar-hi escoles, col·lectius i entitats. Després de les accions, l'Ajuntament va replantar els Eixos Verds, va anunciar proteccions més resistents i va obrir la porta a la participació veïnal en el manteniment. Respectem va continuar la reivindicació amb una jornada festiva el febrer del 2026 per demanar que es respectessin les zones de càrrega i descàrrega i els espais verds.\n\n<a href=\"https://conselldecentverdiviu.cat/salvem-el-verd-de-leix-verd/\" target=\"_blank\" rel=\"noopener\">Llegeix el manifest per protegir el verd de l'Eix Verd</a>.",
+        "es": "Plantem i Respectem fueron dos campañas vecinales en el Eix Verd de Consell de Cent para denunciar el abandono de los parterres y reclamar un mejor cuidado del verde urbano. Las iniciativas se coordinaron con la plataforma Consell de Cent Verd i Viu y entidades del barrio.\n\nLas jornadas Plantem reunieron al vecindario para replantar parterres e implicaron a escuelas, colectivos y entidades. Tras las acciones, el Ayuntamiento replantó los Eixos Verds, anunció protecciones más resistentes y abrió la puerta a la participación vecinal en el mantenimiento. Respectem continuó la reivindicación con una jornada festiva en febrero de 2026 para pedir que se respetaran las zonas de carga y descarga y los espacios verdes.\n\n<a href=\"https://conselldecentverdiviu.cat/salvem-el-verd-de-leix-verd/\" target=\"_blank\" rel=\"noopener\">Lee el manifiesto para proteger el verde del Eix Verd</a>.",
+        "en": "Plantem and Respectem were two neighbourhood campaigns on the Consell de Cent green axis, denouncing neglected planting beds and calling for better care of urban greenery. The initiatives were coordinated with the Consell de Cent Verd i Viu platform and local groups.\n\nPlantem gatherings brought residents together to replant beds, with schools, community groups and organisations helping to care for them. Following the actions, the city replanted the green axes, announced stronger protections for planting beds and opened maintenance to local participation. Respectem continued the campaign with a community celebration in February 2026, calling for loading zones and green spaces to be respected.\n\n<a href=\"https://conselldecentverdiviu.cat/salvem-el-verd-de-leix-verd/\" target=\"_blank\" rel=\"noopener\">Read the campaign manifesto to protect the green axis</a>."
+      },
+      "images": [
+        {
+          "src": "assets/images/projects/plantem-neighbourhood.jpg",
+          "caption": {
+            "ca": "Veïnat plantant als parterres de l'Eix Verd.",
+            "es": "Vecinos y vecinas plantando en los parterres del Eix Verd.",
+            "en": "Residents planting in the Eix Verd beds."
+          }
+        },
+        {
+          "src": "assets/images/projects/whatsapp-image-2025-12-13-at-15-13-44-1-1772123754924-134.jpeg",
+          "caption": {
+            "ca": "Una jornada de plantació veïnal.",
+            "es": "Una jornada de plantación vecinal.",
+            "en": "A neighbourhood planting day."
+          }
+        },
+        {
+          "src": "assets/images/projects/whatsapp-image-2025-12-11-at-15-03-21-1-1772123758460-208.jpeg",
+          "caption": {
+            "ca": "Cura col·lectiva dels parterres.",
+            "es": "Cuidado colectivo de los parterres.",
+            "en": "Community care for the planting beds."
+          }
+        },
+        {
+          "src": "assets/images/projects/whatsapp-image-2025-10-04-at-19-01-17-1772123762681-240.jpeg",
+          "caption": {
+            "ca": "Acció veïnal per recuperar el verd urbà.",
+            "es": "Acción vecinal para recuperar el verde urbano.",
+            "en": "A neighbourhood action to restore urban greenery."
+          }
+        },
+        {
+          "src": "assets/images/projects/whatsapp-image-2025-12-13-at-15-13-44-1772123764332-285.jpeg",
+          "caption": {
+            "ca": "Plantació d'un escocell a l'Eix Verd.",
+            "es": "Plantación en un alcorque del Eix Verd.",
+            "en": "Planting a tree pit on the Eix Verd."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "coordinadora-entitats",
+    "category": "ongoing",
+    "thumbnail": "assets/images/projects/coordinadora-meeting.jpg",
+    "title": "Coordinadora d'Entitats de l'Esquerra de l'Eixample",
+    "shortDescription": {
+      "ca": "Una federació d'entitats per enfortir la xarxa i la veu del barri.",
+      "es": "Una federación de entidades para fortalecer la red y la voz del barrio.",
+      "en": "A federation of local groups strengthening neighbourhood connections and representation."
+    },
+    "detail": {
+      "description": {
+        "ca": "Des del maig del 2026, la Coordinadora d'Entitats de l'Esquerra de l'Eixample és una federació sense ànim de lucre formada per 11 entitats i col·lectius, oberta a noves incorporacions.\n\nLa coordinadora facilita que les entitats treballin en xarxa, organitzin les festes del barri, comparteixin recursos i tinguin més capacitat d'incidència i interlocució amb el Districte.",
+        "es": "Desde mayo de 2026, la Coordinadora d'Entitats de l'Esquerra de l'Eixample es una federación sin ánimo de lucro formada por 11 entidades y colectivos, abierta a nuevas incorporaciones.\n\nLa coordinadora facilita el trabajo en red, la organización de las fiestas del barrio, el intercambio de recursos y una mayor capacidad de incidencia e interlocución con el Distrito.",
+        "en": "Since May 2026, the Coordinadora d'Entitats de l'Esquerra de l'Eixample has been a non-profit federation of 11 local organisations and groups, open to new members.\n\nThe federation helps local groups work together, organise neighbourhood celebrations, share resources and strengthen their collective voice with the District."
+      },
+      "images": []
+    }
+  },
+  {
+    "id": "mural-comunitari",
+    "category": "archive",
+    "thumbnail": "assets/images/projects/mural-comunitari.jpg",
+    "title": "Mural Comunitari",
+    "shortDescription": {
+      "ca": "Un mural creat amb la participació del veïnat i les entitats.",
+      "es": "Un mural creado con la participación del vecindario y las entidades.",
+      "en": "A mural created with the participation of local residents and groups."
+    },
+    "detail": {
+      "description": {
+        "ca": "El mural comunitari de Germanetes va ser un projecte obert impulsat per Germanetes i la Xarxa CESCA, amb la participació del veïnat i d'una desena d'entitats i col·lectius.\n\nEl procés participatiu va començar a la tardor del 2024. En diverses sessions, les artistes Lau López i Raquel Marcos van acompanyar el veïnat a proposar temes i colors, escollir el disseny i pintar el mural. El procés va enfortir els vincles i el sentiment de pertinença al barri.\n\n<a href=\"https://drive.google.com/file/d/1nISCh6nn88xNw-rMJdswENRtx7vQ1CnQ/view?usp=drive_link\" target=\"_blank\" rel=\"noopener\">Mira el vídeo resum del procés participatiu</a>.",
+        "es": "El mural comunitario de Germanetes fue un proyecto abierto impulsado por Germanetes y la Xarxa CESCA, con la participación del vecindario y de una decena de entidades y colectivos.\n\nEl proceso participativo comenzó en otoño de 2024. En varias sesiones, las artistas Lau López y Raquel Marcos acompañaron al vecindario para proponer temas y colores, elegir el diseño y pintar el mural. El proceso fortaleció los vínculos y el sentimiento de pertenencia al barrio.\n\n<a href=\"https://drive.google.com/file/d/1nISCh6nn88xNw-rMJdswENRtx7vQ1CnQ/view?usp=drive_link\" target=\"_blank\" rel=\"noopener\">Mira el vídeo resumen del proceso participativo</a>.",
+        "en": "The Germanetes community mural was an open project led by Germanetes and Xarxa CESCA, with residents and around ten local organisations and groups taking part.\n\nThe participatory process began in autumn 2024. Across several sessions, artists Lau López and Raquel Marcos helped residents propose themes and colours, choose a design and paint the mural. The process strengthened local connections and a sense of belonging.\n\n<a href=\"https://drive.google.com/file/d/1nISCh6nn88xNw-rMJdswENRtx7vQ1CnQ/view?usp=drive_link\" target=\"_blank\" rel=\"noopener\">Watch a video recap of the participatory process</a>."
+      },
+      "images": []
+    }
+  },
+  {
+    "id": "apacheta",
+    "category": "archive",
+    "thumbnail": "assets/images/projects/apacheta.jpg",
+    "title": "Apacheta",
+    "shortDescription": {
+      "ca": "Projecte d'educació ambiental i jardineria comunitària (2020–2023).",
+      "es": "Proyecto de educación ambiental y jardinería comunitaria (2020–2023).",
+      "en": "Environmental education and community gardening project (2020–2023)."
+    },
+    "detail": {
+      "description": {
+        "ca": "Apacheta va ser un projecte d'educació ambiental iniciat el 2020 en una illeta de l'avinguda de Roma, entre Viladomat, Comte Borrell i el carrer de València. Va començar amb l'Escola Llorers i va créixer amb la participació del veïnat durant la pandèmia.\n\nEl grup va convertir l'espai en un oasi verd amb parterres i materials reutilitzats. El projecte va tancar el 2023 després de dificultats per mantenir l'estructura i manca de coordinació amb el Districte. En conservem la història i agraïm la feina de totes les persones que hi van participar.",
+        "es": "Apacheta fue un proyecto de educación ambiental iniciado en 2020 en una isleta de la avenida de Roma, entre Viladomat, Comte Borrell y la calle de València. Comenzó con la Escola Llorers y creció con la participación vecinal durante la pandemia.\n\nEl grupo convirtió el espacio en un oasis verde con parterres y materiales reutilizados. El proyecto cerró en 2023 tras afrontar dificultades para mantener la estructura y falta de coordinación con el Distrito. Conservamos su historia y agradecemos el trabajo de todas las personas que participaron.",
+        "en": "Apacheta was an environmental education project launched in 2020 on a traffic island on Avinguda de Roma, between Viladomat, Comte Borrell and Carrer de València. It began with Escola Llorers and grew to include local residents during the pandemic.\n\nThe group turned the space into a green oasis with planting beds and reused materials. The project closed in 2023 after facing maintenance challenges and a lack of coordination with the District. We preserve its story and thank everyone who took part."
+      },
+      "images": []
+    }
+  },
+  {
+    "id": "cultivem-0-18",
+    "category": "archive",
+    "thumbnail": "assets/images/about/bitmap_asemblea-2.png",
+    "title": "Cultivem 0-18",
+    "shortDescription": {
+      "ca": "Participació d'infants i joves en la transformació ecosocial del barri.",
+      "es": "Participación de niños, niñas y jóvenes en la transformación ecosocial del barrio.",
+      "en": "Children and young people shaping the neighbourhood's ecosocial future."
+    },
+    "detail": {
+      "description": {
+        "ca": "Cultivem 0-18 va ser una associació de segon grau formada per Germanetes Jardins d'Emma, LEMUR, l'Escola Diputació i la Xarxa de Consum Solidari. Entre el 2023 i el 2026 va promoure la participació activa d'infants i joves en la transició ecosocial de l'Esquerra de l'Eixample.\n\nEl projecte defensava el dret dels infants i joves a la ciutat, a la salut i al contacte amb la natura, i els incorporava als processos de decisió sobre el seu entorn. Entre les iniciatives hi havia la Superilla Plaça Infància i el taller de fanzín «Vilazine» sobre la transició ecosocial al barri.\n\nLes quatre entitats participants continuen treballant aquests objectius des d'altres projectes i aliances.",
+        "es": "Cultivem 0-18 fue una asociación de segundo grado formada por Germanetes Jardins d'Emma, LEMUR, la Escola Diputació y la Xarxa de Consum Solidari. Entre 2023 y 2026 promovió la participación activa de niños, niñas y jóvenes en la transición ecosocial de la Esquerra de l'Eixample.\n\nEl proyecto defendía el derecho de la infancia y la juventud a la ciudad, a la salud y al contacto con la naturaleza, y las incorporaba a los procesos de decisión sobre su entorno. Entre sus iniciativas estaban la Superilla Plaça Infància y el taller de fanzine «Vilazine» sobre la transición ecosocial en el barrio.\n\nLas cuatro entidades participantes siguen trabajando en estos objetivos mediante otros proyectos y alianzas.",
+        "en": "Cultivem 0-18 was a second-tier association formed by Germanetes Jardins d'Emma, LEMUR, Escola Diputació and Xarxa de Consum Solidari. From 2023 to 2026, it supported children and young people to take an active role in the ecosocial transition of Esquerra de l'Eixample.\n\nThe project championed young people's rights to the city, to health and to contact with nature, bringing their perspectives into decisions about their surroundings. Its initiatives included the Superilla Plaça Infància and “Vilazine”, a zine workshop on the neighbourhood's ecosocial transition.\n\nThe four participating organisations continue to pursue these goals through other projects and partnerships."
       },
       "images": []
     }

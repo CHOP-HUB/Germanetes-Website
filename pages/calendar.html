@@ -1,23 +1,30 @@
-<section>
-    <h2 data-i18n="calendar.header">Upcoming Events</h2>
-    <ul>
-        <li>
-            <strong data-i18n="calendar.event1.title">Garden Workshop</strong><br>
-            <span data-i18n="calendar.event1.date">Date: March 15, 2023</span><br>
-            <span data-i18n="calendar.event1.time">Time: 10:00 AM - 12:00 PM</span><br>
-            <span data-i18n="calendar.event1.description">Description: Join us for a hands-on workshop on sustainable gardening practices.</span>
-        </li>
-        <li>
-            <strong data-i18n="calendar.event2.title">Community Planting Day</strong><br>
-            <span data-i18n="calendar.event2.date">Date: April 22, 2023</span><br>
-            <span data-i18n="calendar.event2.time">Time: 9:00 AM - 3:00 PM</span><br>
-            <span data-i18n="calendar.event2.description">Description: Help us plant new flowers and vegetables in the garden.</span>
-        </li>
-        <li>
-            <strong data-i18n="calendar.event3.title">Harvest Festival</strong><br>
-            <span data-i18n="calendar.event3.date">Date: September 30, 2023</span><br>
-            <span data-i18n="calendar.event3.time">Time: 1:00 PM - 5:00 PM</span><br>
-            <span data-i18n="calendar.event3.description">Description: Celebrate the harvest with food, games, and community fun!</span>
-        </li>
-    </ul>
+<section class="events-calendar" aria-labelledby="calendar-heading">
+    <div class="calendar-topline">
+        <h2 id="calendar-heading" data-i18n="calendar.header">Calendari d'activitats</h2>
+        <div class="calendar-controls" aria-label="Calendar navigation">
+            <button type="button" class="calendar-control" id="calendar-previous" aria-label="Previous month">&#8592;</button>
+            <button type="button" class="calendar-control calendar-today" id="calendar-today" data-i18n="calendar.today">Avui</button>
+            <button type="button" class="calendar-control" id="calendar-next" aria-label="Next month">&#8594;</button>
+        </div>
+    </div>
+
+    <div class="calendar-month-row">
+        <h3 class="calendar-month-title" id="calendar-month-title"></h3>
+        <div class="calendar-legend" id="calendar-legend" aria-label="Event categories"></div>
+    </div>
+
+    <p class="calendar-status" id="calendar-status" role="status" aria-live="polite"></p>
+
+    <div class="calendar-scroll" tabindex="0" aria-label="Monthly events calendar">
+        <div class="calendar-board" id="calendar-board" role="grid" aria-labelledby="calendar-month-title"></div>
+    </div>
+
+    <aside class="calendar-event-detail" id="calendar-event-detail" hidden aria-live="polite">
+        <button type="button" class="calendar-detail-close" id="calendar-detail-close" aria-label="Close event details">&times;</button>
+        <p class="calendar-detail-date" id="calendar-detail-date"></p>
+        <h3 id="calendar-detail-title"></h3>
+        <p id="calendar-detail-time"></p>
+        <p id="calendar-detail-location"></p>
+        <p class="calendar-detail-description" id="calendar-detail-description"></p>
+    </aside>
 </section>

@@ -21,6 +21,7 @@ const languageSwitcher = (() => {
                 currentTranslations = translations;
                 applyTranslations();
                 document.documentElement.lang = language;
+                document.dispatchEvent(new CustomEvent('site-language-changed', { detail: { language } }));
             })
             .catch(error => console.error('Error loading language:', error));
     };
@@ -50,6 +51,22 @@ const languageSwitcher = (() => {
             const translation = getNestedProperty(currentTranslations, key);
             if (translation) {
                 element.title = translation;
+            }
+        });
+
+        document.querySelectorAll('[data-i18n-aria-label]').forEach(element => {
+            const key = element.getAttribute('data-i18n-aria-label');
+            const translation = getNestedProperty(currentTranslations, key);
+            if (translation) {
+                element.setAttribute('aria-label', translation);
+            }
+        });
+
+        document.querySelectorAll('[data-i18n-alt]').forEach(element => {
+            const key = element.getAttribute('data-i18n-alt');
+            const translation = getNestedProperty(currentTranslations, key);
+            if (translation) {
+                element.alt = translation;
             }
         });
 
@@ -99,6 +116,7 @@ const languageSwitcher = (() => {
         init,
         changeLanguage,
         reapply: applyTranslations,
+        getText: key => getNestedProperty(currentTranslations, key),
         getCurrentLang: () => localStorage.getItem('preferredLanguage') || 'ca'
     };
 })();

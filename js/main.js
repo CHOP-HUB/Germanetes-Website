@@ -70,6 +70,10 @@ async function loadPage(pageName) {
         if (pageName === 'projects' && window.projectsModule) {
             await window.projectsModule.init();
         }
+
+        if (pageName === 'calendar' && window.calendarModule) {
+            await window.calendarModule.init();
+        }
         
         // Reapply translations to new content
         if (window.languageSwitcher) {
@@ -145,6 +149,23 @@ window.addEventListener('resize', () => {
 
 // Prevent default link behavior and handle navigation
 document.addEventListener('click', (e) => {
+    const dialogTrigger = e.target.closest('[data-dialog-open]');
+    if (dialogTrigger) {
+        document.getElementById(dialogTrigger.dataset.dialogOpen)?.showModal();
+        return;
+    }
+
+    const dialogClose = e.target.closest('[data-dialog-close]');
+    if (dialogClose) {
+        dialogClose.closest('dialog')?.close();
+        return;
+    }
+
+    if (e.target.matches('[data-dialog-backdrop-close]')) {
+        e.target.close();
+        return;
+    }
+
     if (e.target.matches('.nav-link')) {
         e.preventDefault();
         const hash = e.target.getAttribute('href');

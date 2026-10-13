@@ -12,7 +12,7 @@
   "about": {
     "header": "Quiénes Somos",
     "description1": "<i>Germanetes Jardins d'Emma</i> es una entidad sin ánimo de lucro ubicada alrededor de la rambla del barrio, el Eje Verde de <i>Consell de Cent</i>. Nos articulamos en base a dos objetivos principales: generar comunidad en el barrio y hacerlo más sostenible, colaborando con el entorno para conseguir una comunidad activa que incluya al vecindario, las escuelas, otras entidades, colectivos y cooperativas del barrio e instituciones públicas con objetivos sociales.",
-    "description2": "Los proyectos de la asociación son los siguientes: el <i>Espai Germanetes</i>, el huerto comunitario; el <i>Espacio Nur</i>, el jardín comunitario; <i>Aula Viva</i>, el proyecto pedagógico; <i>Revolta Eixample</i>, proyecto de compostaje comunitario; <i>Vine a Jugar</i>, espacio de juegos para niños, y el <i>Banco de Recursos</i>, proyecto de cesión de material a las entidades y colectivos del barrio.",
+    "description2": "Los proyectos de la asociación son los siguientes: el <i>Espai Germanetes</i>, el huerto comunitario; el <i>Espai Nur</i>, el jardín comunitario; <i>Aula Viva</i>, el proyecto pedagógico; <i>Revolta Eixample</i>, proyecto de compostaje comunitario; <i>Vine a Jugar</i>, espacio de juegos para niños, y el <i>Banc de Recursos</i>, proyecto de cesión de material a las entidades y colectivos del barrio.",
     "description3": "La asociación busca ser lo más asamblearia, horizontal y transparente posible. Es por eso que cada proyecto tiene su propio órgano de gobernanza, y representantes del conjunto de proyectos se reúnen quincenalmente como equipo de coordinación y motor de la asociación; las asambleas y reuniones están abiertas a todos. Finalmente, cada enero se realiza la asamblea general, que es el órgano con más poder dentro de la asociación.",
     "description4": "¡Si tienes ganas de participar en uno de los proyectos, solo tienes que ponerte en contacto con nosotros!"
   },
@@ -80,7 +80,17 @@
     }
   },
   "calendar": {
-    "header": "Próximos Eventos",
+    "header": "Calendario de actividades",
+    "previous": "Mes anterior",
+    "next": "Mes siguiente",
+    "today": "Hoy",
+    "loading": "Cargando calendario…",
+    "notConfigured": "El calendario aún no está conectado.",
+    "stale": "Mostrando la última actualización del calendario.",
+    "noEvents": "No hay actividades este mes.",
+    "error": "No se pudieron cargar las actividades.",
+    "allDay": "Todo el día",
+    "untitled": "Actividad sin título",
     "event1": {
       "title": "Taller de Jardinería",
       "date": "Fecha: 15 de marzo de 2023",
@@ -103,6 +113,12 @@
   "footer": {
     "copyright": "© 2026 Jardín Comunitario. Todos los derechos reservados.",
     "solar": "Alimentado por energía solar",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "mapTitle": "Mapa de la zona comunitaria",
+    "openMap": "Ampliar el mapa de la zona",
+    "closeMap": "Cerrar el mapa",
+    "privacy": "Política de privacidad",
+    "privacyTitle": "Política de privacidad",
+    "closePrivacy": "Cerrar la política de privacidad"
   }
 }

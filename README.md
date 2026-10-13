@@ -1,50 +1,25 @@
-# Community Garden Website
+# Germanetes Jardins d'Emma Website
 
-Welcome to the Community Garden Website project! This static website serves as an online platform for our community garden, providing information, updates, and resources for our members and visitors.
+The site is a vanilla HTML/CSS/JavaScript single-page website with Catalan, Spanish, and English translations. The Node.js service serves the site and project CMS; SQLite is the runtime source of truth for editable project content.
 
-## Project Structure
+## Local development
 
-The project is organized as follows:
-
-```
-community-garden-website
-├── index.html          # Main entry point of the website
-├── about.html          # Information about the community garden
-├── projects.html       # Showcases various projects
-├── contact.html        # Contact form and information
-├── calendar.html       # Events calendar
-├── css
-│   ├── main.css        # Main styles for the website
-│   ├── responsive.css   # Responsive styles for different devices
-│   └── variables.css    # CSS variables for consistent design
-├── js
-│   ├── main.js         # Main JavaScript functionality
-│   └── language-switcher.js # Language switching functionality
-├── lang
-│   ├── en.json        # English translations
-│   ├── es.json        # Spanish translations
-│   └── fr.json        # French translations
-├── assets
-│   └── fonts          # Directory for font files
-└── README.md          # Project documentation
+```sh
+cd server
+npm ci
+npm start
 ```
 
-## Features
+The site is available at `http://localhost:3000` and the CMS at `http://localhost:3000/admin`. The database is created in `server/data/` and seeded from `data/projects.json` only on first run. CMS edits are stored in SQLite.
 
-- **Multi-language Support**: The website supports English, Spanish, and French, allowing users to switch languages easily.
-- **Responsive Design**: The website is designed to be fully responsive, ensuring a great user experience on desktop, tablet, and mobile devices.
-- **Community Engagement**: Users can learn about ongoing projects, upcoming events, and how to get involved with the community garden.
+## Raspberry Pi
 
-## Setup Instructions
+See [server/DEPLOYMENT.md](server/DEPLOYMENT.md) for persistent storage migration, systemd service and timers, database backups, automatic fast-forward updates, and security requirements. Keep the Pi's database and uploads outside the Git checkout.
 
-1. Clone the repository to your local machine.
-2. Open the `index.html` file in your web browser to view the website.
-3. Customize the content in the HTML files as needed to reflect your community garden's information.
+## Project layout
 
-## Contributing
-
-We welcome contributions to improve the website! Please feel free to submit issues or pull requests.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for more details.
+- `pages/`, `components/`: SPA page fragments and shared navigation/footer
+- `js/`, `css/`, `lang/`: browser behavior, styles, and translations
+- `admin/`: standalone project editor
+- `server/`: Express API, SQLite persistence, migration/backup tools, and Pi service files
+- `data/projects.json`: initial project seed data

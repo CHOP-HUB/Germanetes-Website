@@ -80,7 +80,17 @@
     }
   },
   "calendar": {
-    "header": "Propers Esdeveniments",
+    "header": "Calendari d'activitats",
+    "previous": "Mes anterior",
+    "next": "Mes següent",
+    "today": "Avui",
+    "loading": "Carregant calendari…",
+    "notConfigured": "El calendari encara no està connectat.",
+    "stale": "Mostrant l'última actualització del calendari.",
+    "noEvents": "No hi ha activitats aquest mes.",
+    "error": "No s'han pogut carregar les activitats.",
+    "allDay": "Tot el dia",
+    "untitled": "Activitat sense títol",
     "event1": {
       "title": "Taller de Jardineria",
       "date": "Data: 15 de març de 2023",
@@ -103,6 +113,12 @@
   "footer": {
     "copyright": "© 2026 Hort Comunitari. Tots els drets reservats.",
     "solar": "Alimentat per energia solar",
-    "contact": "Contacte"
+    "contact": "Contacte",
+    "mapTitle": "Mapa de la zona comunitària",
+    "openMap": "Amplia el mapa de la zona",
+    "closeMap": "Tanca el mapa",
+    "privacy": "Política de privacitat",
+    "privacyTitle": "Política de privacitat",
+    "closePrivacy": "Tanca la política de privacitat"
   }
 }

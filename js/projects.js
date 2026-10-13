@@ -4,6 +4,8 @@
 
     let projectsData = [];
     let currentLang = 'ca';
+    const isLiveServer = ['localhost', '127.0.0.1'].includes(location.hostname) && location.port === '5500';
+    const API_ORIGIN = isLiveServer ? 'http://localhost:3000' : location.origin;
 
     // Get current language from the language switcher
     function getLang() {
@@ -21,6 +23,61 @@
         return obj[lang] || obj['ca'] || obj['en'] || '';
     }
 
+    function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, character => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[character]);
+    }
+
+    function assetUrl(path) {
+        if (typeof path === 'string' && path.startsWith('/uploads/')) {
+            return `${API_ORIGIN}${path}`;
+        }
+        return path || '';
+    }
+
+    function safeInlineHtml(text) {
+        const template = document.createElement('template');
+        template.innerHTML = text;
+        const output = document.createElement('span');
+        const allowedTags = new Set(['A', 'BR', 'STRONG', 'EM', 'B', 'I']);
+        const blockedTags = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'SVG', 'MATH']);
+
+        function copySafeNodes(source, destination) {
+            source.childNodes.forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    destination.appendChild(document.createTextNode(node.textContent));
+                    return;
+                }
+                if (node.nodeType !== Node.ELEMENT_NODE || blockedTags.has(node.tagName)) return;
+                if (!allowedTags.has(node.tagName)) {
+                    copySafeNodes(node, destination);
+                    return;
+                }
+
+                const safeElement = document.createElement(node.tagName.toLowerCase());
+                if (node.tagName === 'A') {
+                    const href = node.getAttribute('href') || '';
+                    try {
+                        const parsedUrl = new URL(href, location.origin);
+                        if (['http:', 'https:', 'mailto:'].includes(parsedUrl.protocol)) {
+                            safeElement.href = parsedUrl.href;
+                            if (node.getAttribute('target') === '_blank') {
+                                safeElement.target = '_blank';
+                                safeElement.rel = 'noopener noreferrer';
+                            }
+                        }
+                    } catch {}
+                }
+                copySafeNodes(node, safeElement);
+                destination.appendChild(safeElement);
+            });
+        }
+
+        copySafeNodes(template.content, output);
+        return output.innerHTML;
+    }
+
     // Convert plain text with newlines into HTML paragraphs
     function paragraphs(text) {
         if (!text) return '';
@@ -28,28 +85,21 @@
             .split(/\n\s*\n/)          // split on blank lines → paragraphs
             .map(p => p.trim())
             .filter(Boolean)
-            .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+            .map(p => `<p>${safeInlineHtml(p.replace(/\n/g, '<br>'))}</p>`)
             .join('');
     }
 
-    // Fetch project data from API (falls back to static JSON)
+    // SQLite-backed API is the runtime source of truth.
     async function fetchProjects() {
         try {
-            const res = await fetch('/api/projects');
-            if (!res.ok) throw new Error('API not available');
+            const res = await fetch(`${API_ORIGIN}/api/projects`);
+            if (!res.ok) throw new Error(`API returned ${res.status}`);
             projectsData = await res.json();
             return projectsData;
         } catch (err) {
-            console.warn('API unavailable, falling back to static JSON:', err.message);
-            try {
-                const res = await fetch('data/projects.json');
-                if (!res.ok) throw new Error('Failed to load projects');
-                projectsData = await res.json();
-                return projectsData;
-            } catch (fallbackErr) {
-                console.error('Error loading projects:', fallbackErr);
-                return [];
-            }
+            console.error('Error loading projects from the CMS API:', err);
+            projectsData = [];
+            return projectsData;
         }
     }
 
@@ -63,7 +113,7 @@
         imgWrap.className = 'card-img-wrap';
 
         const img = document.createElement('img');
-        img.src = project.thumbnail || '';
+        img.src = assetUrl(project.thumbnail);
         img.alt = t(project.title);
         img.loading = 'lazy';
         imgWrap.appendChild(img);
@@ -184,11 +234,11 @@
         let html = '';
 
         // Title
-        html += `<h2 class="modal-project-title">${t(project.title)}</h2>`;
+        html += `<h2 class="modal-project-title">${escapeHtml(t(project.title))}</h2>`;
 
         // Thumbnail at top
         if (project.thumbnail) {
-            html += `<img class="modal-hero-img" src="${project.thumbnail}" alt="${t(project.title)}">`;
+            html += `<img class="modal-hero-img" src="${escapeHtml(assetUrl(project.thumbnail))}" alt="${escapeHtml(t(project.title))}">`;
         }
 
         // Description
@@ -200,11 +250,11 @@
         if (project.detail && project.detail.images && project.detail.images.length > 0) {
             html += '<div class="modal-gallery">';
             project.detail.images.forEach(img => {
-                const src = typeof img === 'string' ? img : img.src;
+                const src = assetUrl(typeof img === 'string' ? img : img.src);
                 const caption = typeof img === 'string' ? '' : t(img.caption);
                 html += `<figure class="modal-gallery-item">`;
-                html += `<img src="${src}" alt="${caption}" loading="lazy">`;
-                if (caption) html += `<figcaption>${caption}</figcaption>`;
+                html += `<img src="${escapeHtml(src)}" alt="${escapeHtml(caption)}" loading="lazy">`;
+                if (caption) html += `<figcaption>${escapeHtml(caption)}</figcaption>`;
                 html += `</figure>`;
             });
             html += '</div>';

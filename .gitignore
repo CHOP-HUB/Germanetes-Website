@@ -1,5 +1,9 @@
-.DS_Store
 node_modules/
-.envnode_modules/
 .env
 .DS_Store
+Germanetes_Resources/
+/server/data/*.db
+/server/data/*.db-*
+/server/data/uploads/
+/server/data/backups/
+/server/uploads/
