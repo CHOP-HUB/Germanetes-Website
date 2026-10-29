@@ -20,9 +20,12 @@ db.pragma('foreign_keys = ON');
 db.exec(`
     CREATE TABLE IF NOT EXISTS projects (
         id TEXT PRIMARY KEY,
-        category TEXT NOT NULL CHECK(category IN ('ongoing', 'temporal', 'archive')),
+        category TEXT NOT NULL CHECK(category IN ('permanent', 'temporal', 'collaborations', 'historic')),
         thumbnail TEXT DEFAULT '',
         title TEXT NOT NULL DEFAULT '',
+        subtitle_ca TEXT NOT NULL DEFAULT '',
+        subtitle_es TEXT NOT NULL DEFAULT '',
+        subtitle_en TEXT NOT NULL DEFAULT '',
         short_desc_ca TEXT NOT NULL DEFAULT '',
         short_desc_es TEXT NOT NULL DEFAULT '',
         short_desc_en TEXT NOT NULL DEFAULT '',
@@ -45,6 +48,108 @@ db.exec(`
     );
 `);
 
+function migrateProjectsTable() {
+    const columns = new Set(db.pragma('table_info(projects)').map(column => column.name));
+    const tableSql = db.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'projects'").get().sql;
+    const hasNewCategoryCheck = tableSql.includes("'permanent'") && tableSql.includes("'collaborations'") && tableSql.includes("'historic'");
+    const hasSubtitles = ['subtitle_ca', 'subtitle_es', 'subtitle_en'].every(column => columns.has(column));
+    if (hasNewCategoryCheck && hasSubtitles) return;
+
+    const subtitleValue = column => columns.has(column) ? column : "''";
+    db.pragma('foreign_keys = OFF');
+    try {
+        db.transaction(() => {
+            db.exec(`
+                CREATE TABLE projects_migration (
+                    id TEXT PRIMARY KEY,
+                    category TEXT NOT NULL CHECK(category IN ('permanent', 'temporal', 'collaborations', 'historic')),
+                    thumbnail TEXT DEFAULT '',
+                    title TEXT NOT NULL DEFAULT '',
+                    subtitle_ca TEXT NOT NULL DEFAULT '',
+                    subtitle_es TEXT NOT NULL DEFAULT '',
+                    subtitle_en TEXT NOT NULL DEFAULT '',
+                    short_desc_ca TEXT NOT NULL DEFAULT '',
+                    short_desc_es TEXT NOT NULL DEFAULT '',
+                    short_desc_en TEXT NOT NULL DEFAULT '',
+                    detail_desc_ca TEXT NOT NULL DEFAULT '',
+                    detail_desc_es TEXT NOT NULL DEFAULT '',
+                    detail_desc_en TEXT NOT NULL DEFAULT '',
+                    sort_order INTEGER NOT NULL DEFAULT 0,
+                    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+                    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+                );
+
+                INSERT INTO projects_migration (
+                    id, category, thumbnail, title, subtitle_ca, subtitle_es, subtitle_en,
+                    short_desc_ca, short_desc_es, short_desc_en,
+                    detail_desc_ca, detail_desc_es, detail_desc_en,
+                    sort_order, created_at, updated_at
+                )
+                SELECT
+                    id,
+                    CASE category
+                        WHEN 'ongoing' THEN 'permanent'
+                        WHEN 'archive' THEN 'historic'
+                        ELSE category
+                    END,
+                    thumbnail, title,
+                    ${subtitleValue('subtitle_ca')}, ${subtitleValue('subtitle_es')}, ${subtitleValue('subtitle_en')},
+                    short_desc_ca, short_desc_es, short_desc_en,
+                    detail_desc_ca, detail_desc_es, detail_desc_en,
+                    sort_order, created_at, updated_at
+                FROM projects;
+
+                DROP TABLE projects;
+                ALTER TABLE projects_migration RENAME TO projects;
+            `);
+        })();
+    } finally {
+        db.pragma('foreign_keys = ON');
+    }
+
+    const foreignKeyErrors = db.pragma('foreign_key_check');
+    if (foreignKeyErrors.length) {
+        throw new Error('Project table migration left invalid image references.');
+    }
+}
+
+migrateProjectsTable();
+
+db.exec(`
+    CREATE TABLE IF NOT EXISTS gallery_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        image_path TEXT NOT NULL,
+        size INTEGER NOT NULL DEFAULT 1 CHECK(size IN (1, 2, 3)),
+        caption_ca TEXT NOT NULL DEFAULT '',
+        caption_es TEXT NOT NULL DEFAULT '',
+        caption_en TEXT NOT NULL DEFAULT '',
+        sort_order INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS material_nodes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        parent_id INTEGER REFERENCES material_nodes(id) ON DELETE CASCADE,
+        type TEXT NOT NULL CHECK(type IN ('folder', 'file')),
+        name_ca TEXT NOT NULL DEFAULT '',
+        name_es TEXT NOT NULL DEFAULT '',
+        name_en TEXT NOT NULL DEFAULT '',
+        file_path TEXT NOT NULL DEFAULT '',
+        file_size INTEGER NOT NULL DEFAULT 0,
+        file_ext TEXT NOT NULL DEFAULT '',
+        created_at TEXT NOT NULL DEFAULT (datetime('now')),
+        updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+`);
+
+const PROJECT_CATEGORIES = new Set(['permanent', 'temporal', 'collaborations', 'historic']);
+
+function normalizeCategory(category) {
+    const mapped = { ongoing: 'permanent', archive: 'historic' }[category] || category || 'permanent';
+    if (!PROJECT_CATEGORIES.has(mapped)) throw new Error('Invalid project category');
+    return mapped;
+}
+
 // ── Prepared Statements ────────────────────────────────
 
 const stmts = {
@@ -61,10 +166,10 @@ const stmts = {
     `),
 
     insertProject: db.prepare(`
-        INSERT INTO projects (id, category, thumbnail, title,
+        INSERT INTO projects (id, category, thumbnail, title, subtitle_ca, subtitle_es, subtitle_en,
             short_desc_ca, short_desc_es, short_desc_en,
             detail_desc_ca, detail_desc_es, detail_desc_en, sort_order)
-        VALUES (@id, @category, @thumbnail, @title,
+        VALUES (@id, @category, @thumbnail, @title, @subtitle_ca, @subtitle_es, @subtitle_en,
             @short_desc_ca, @short_desc_es, @short_desc_en,
             @detail_desc_ca, @detail_desc_es, @detail_desc_en, @sort_order)
     `),
@@ -74,6 +179,9 @@ const stmts = {
             category = @category,
             thumbnail = @thumbnail,
             title = @title,
+            subtitle_ca = @subtitle_ca,
+            subtitle_es = @subtitle_es,
+            subtitle_en = @subtitle_en,
             short_desc_ca = @short_desc_ca,
             short_desc_es = @short_desc_es,
             short_desc_en = @short_desc_en,
@@ -115,6 +223,11 @@ function rowToProject(row) {
         category: row.category,
         thumbnail: row.thumbnail,
         title: row.title,
+        subtitle: {
+            ca: row.subtitle_ca,
+            es: row.subtitle_es,
+            en: row.subtitle_en
+        },
         shortDescription: {
             ca: row.short_desc_ca,
             es: row.short_desc_es,
@@ -172,9 +285,12 @@ function createProject(data) {
     const maxOrder = stmts.getMaxSortOrder.get().max_order;
     const params = {
         id: data.id || slugify(data.title || 'project'),
-        category: data.category || 'ongoing',
+        category: normalizeCategory(data.category),
         thumbnail: data.thumbnail || '',
         title: data.title || '',
+        subtitle_ca: data.subtitle_ca || '',
+        subtitle_es: data.subtitle_es || '',
+        subtitle_en: data.subtitle_en || '',
         short_desc_ca: data.short_desc_ca || '',
         short_desc_es: data.short_desc_es || '',
         short_desc_en: data.short_desc_en || '',
@@ -193,9 +309,12 @@ function updateProject(id, data) {
 
     const params = {
         id: id,
-        category: data.category ?? existing.category,
+        category: normalizeCategory(data.category ?? existing.category),
         thumbnail: data.thumbnail ?? existing.thumbnail,
         title: data.title ?? existing.title,
+        subtitle_ca: data.subtitle_ca ?? existing.subtitle_ca,
+        subtitle_es: data.subtitle_es ?? existing.subtitle_es,
+        subtitle_en: data.subtitle_en ?? existing.subtitle_en,
         short_desc_ca: data.short_desc_ca ?? existing.short_desc_ca,
         short_desc_es: data.short_desc_es ?? existing.short_desc_es,
         short_desc_en: data.short_desc_en ?? existing.short_desc_en,
@@ -263,9 +382,12 @@ function seedFromJson(jsonPath) {
             projects.forEach((p, index) => {
                 stmts.insertProject.run({
                     id: p.id,
-                    category: p.category,
+                    category: normalizeCategory(p.category),
                     thumbnail: p.thumbnail || '',
                     title: p.title || '',
+                    subtitle_ca: p.subtitle?.ca || '',
+                    subtitle_es: p.subtitle?.es || '',
+                    subtitle_en: p.subtitle?.en || '',
                     short_desc_ca: p.shortDescription?.ca || '',
                     short_desc_es: p.shortDescription?.es || '',
                     short_desc_en: p.shortDescription?.en || '',
@@ -297,6 +419,104 @@ function seedFromJson(jsonPath) {
     }
 }
 
+// ── Gallery ────────────────────────────────────────────
+
+function galleryRowToJson(row) {
+    return {
+        id: row.id,
+        src: row.image_path,
+        size: row.size,
+        caption: { ca: row.caption_ca, es: row.caption_es, en: row.caption_en },
+        sortOrder: row.sort_order
+    };
+}
+
+function getGallery() {
+    return db.prepare('SELECT * FROM gallery_items ORDER BY sort_order ASC, id ASC').all().map(galleryRowToJson);
+}
+
+const replaceGalleryTransaction = db.transaction(items => {
+    db.prepare('DELETE FROM gallery_items').run();
+    const insert = db.prepare(`
+        INSERT INTO gallery_items (image_path, size, caption_ca, caption_es, caption_en, sort_order)
+        VALUES (@src, @size, @caption_ca, @caption_es, @caption_en, @sort_order)
+    `);
+    items.forEach((item, index) => insert.run({ ...item, sort_order: index }));
+});
+
+function replaceGallery(items) {
+    replaceGalleryTransaction(items);
+    return getGallery();
+}
+
+// ── Materials (folder tree) ────────────────────────────
+
+function materialRowToJson(row) {
+    return {
+        id: row.id,
+        parentId: row.parent_id,
+        type: row.type,
+        name: { ca: row.name_ca, es: row.name_es, en: row.name_en },
+        src: row.file_path,
+        size: row.file_size,
+        ext: row.file_ext,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at
+    };
+}
+
+function getMaterials() {
+    return db.prepare('SELECT * FROM material_nodes ORDER BY id ASC').all().map(materialRowToJson);
+}
+
+function getMaterialNode(id) {
+    const row = db.prepare('SELECT * FROM material_nodes WHERE id = ?').get(id);
+    return row ? materialRowToJson(row) : null;
+}
+
+function getMaterialDepth(id) {
+    let depth = 0;
+    let current = id;
+    while (current !== null && current !== undefined) {
+        const row = db.prepare('SELECT parent_id FROM material_nodes WHERE id = ?').get(current);
+        if (!row) break;
+        depth += 1;
+        current = row.parent_id;
+    }
+    return depth;
+}
+
+function createMaterialNode({ parentId, type, names, filePath = '', fileSize = 0, ext = '' }) {
+    const result = db.prepare(`
+        INSERT INTO material_nodes (parent_id, type, name_ca, name_es, name_en, file_path, file_size, file_ext)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(parentId, type, names.ca, names.es, names.en, filePath, fileSize, ext);
+    return getMaterialNode(result.lastInsertRowid);
+}
+
+function renameMaterialNode(id, names) {
+    const result = db.prepare(`
+        UPDATE material_nodes SET name_ca = ?, name_es = ?, name_en = ?, updated_at = datetime('now')
+        WHERE id = ?
+    `).run(names.ca, names.es, names.en, id);
+    return result.changes ? getMaterialNode(id) : null;
+}
+
+// Returns the stored file paths of the removed subtree, or null when the node does not exist.
+function deleteMaterialNode(id) {
+    if (!getMaterialNode(id)) return null;
+    const files = db.prepare(`
+        WITH RECURSIVE subtree(id) AS (
+            SELECT id FROM material_nodes WHERE id = ?
+            UNION ALL
+            SELECT m.id FROM material_nodes m JOIN subtree s ON m.parent_id = s.id
+        )
+        SELECT file_path FROM material_nodes WHERE type = 'file' AND id IN (SELECT id FROM subtree)
+    `).all(id).map(row => row.file_path);
+    db.prepare('DELETE FROM material_nodes WHERE id = ?').run(id);
+    return files;
+}
+
 // ── Utility ────────────────────────────────────────────
 
 function slugify(text) {
@@ -321,6 +541,14 @@ module.exports = {
     addProjectImage,
     deleteProjectImage,
     replaceProjectImages,
+    getGallery,
+    replaceGallery,
+    getMaterials,
+    getMaterialNode,
+    getMaterialDepth,
+    createMaterialNode,
+    renameMaterialNode,
+    deleteMaterialNode,
     seedFromJson,
     close
 };

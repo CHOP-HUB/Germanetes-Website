@@ -12,15 +12,17 @@
   "about": {
     "header": "Quiénes Somos",
     "description1": "<i>Germanetes Jardins d'Emma</i> es una entidad sin ánimo de lucro ubicada alrededor de la rambla del barrio, el Eje Verde de <i>Consell de Cent</i>. Nos articulamos en base a dos objetivos principales: generar comunidad en el barrio y hacerlo más sostenible, colaborando con el entorno para conseguir una comunidad activa que incluya al vecindario, las escuelas, otras entidades, colectivos y cooperativas del barrio e instituciones públicas con objetivos sociales.",
-    "description2": "Los proyectos de la asociación son los siguientes: el <i>Espai Germanetes</i>, el huerto comunitario; el <i>Espai Nur</i>, el jardín comunitario; <i>Aula Viva</i>, el proyecto pedagógico; <i>Revolta Eixample</i>, proyecto de compostaje comunitario; <i>Vine a Jugar</i>, espacio de juegos para niños, y el <i>Banc de Recursos</i>, proyecto de cesión de material a las entidades y colectivos del barrio.",
+    "projectsIntro": "Los <a href=\"#projects\">proyectos</a> de la asociación son los siguientes:",
+    "collaborators": "Nuestros Colaboradores",
     "description3": "La asociación busca ser lo más asamblearia, horizontal y transparente posible. Es por eso que cada proyecto tiene su propio órgano de gobernanza, y representantes del conjunto de proyectos se reúnen quincenalmente como equipo de coordinación y motor de la asociación; las asambleas y reuniones están abiertas a todos. Finalmente, cada enero se realiza la asamblea general, que es el órgano con más poder dentro de la asociación.",
     "description4": "¡Si tienes ganas de participar en uno de los proyectos, solo tienes que ponerte en contacto con nosotros!"
   },
   "projects": {
     "header": "Proyectos",
-    "ongoing": "Proyectos en Curso",
-    "temporal": "Proyectos Temporales",
-    "archive": "Archivo de Proyectos"
+    "permanent": "Permanente",
+    "temporal": "Temporal",
+    "collaborations": "Colaboraciones",
+    "historic": "Histórico"
   },
   "contact": {
     "header": "Ponte en Contacto",
@@ -40,43 +42,30 @@
   },
   "gallery": {
     "header": "Galería",
-    "description": "Explora fotos de nuestras actividades y eventos del jardín comunitario.",
-    "spring": {
-      "title": "Plantación de Primavera 2024",
-      "description": "Miembros de la comunidad trabajando juntos para preparar los parterres para la nueva temporada.",
-      "alt": "Plantación de Primavera"
-    },
-    "summer": {
-      "title": "Cosecha de Verano",
-      "description": "El jardín en plena floración durante el pico del verano.",
-      "alt": "Cosecha de Verano"
-    },
-    "workshop": {
-      "title": "Taller Comunitario",
-      "description": "Aprendiendo sobre compostaje y prácticas de jardinería sostenible.",
-      "alt": "Taller"
-    }
+    "empty": "Todavía no hay ninguna foto.",
+    "close": "Cerrar la foto"
   },
   "materials": {
-    "header": "Materiales y Recursos",
-    "intro": "Encuentra guías útiles, documentos y recursos para la jardinería comunitaria.",
-    "guides": {
-      "title": "Guías de Jardinería",
-      "description": "Descarga nuestras guías completas sobre jardinería orgánica, compostaje y calendarios de plantación estacional.",
-      "item1": "Guía para Principiantes de Jardinería Orgánica (PDF)",
-      "item2": "Mejores Prácticas de Compostaje (PDF)",
-      "item3": "Calendario de Plantación Estacional (PDF)"
-    },
-    "tools": {
-      "title": "Biblioteca de Herramientas",
-      "description": "Tenemos una variedad de herramientas de jardinería disponibles para los miembros de la comunidad.",
-      "item1": "Palas, rastrillos y azadas",
-      "item2": "Regaderas y mangueras",
-      "item3": "Carretillas y carritos"
-    },
-    "seeds": {
-      "title": "Intercambio de Semillas",
-      "description": "Comparte e intercambia semillas con otros miembros de la comunidad. ¡Trae tus semillas extra y llévate algo nuevo!"
+    "header": "Materiales",
+    "intro": "Documentos, guías e imágenes de la asociación para consultar y descargar.",
+    "empty": "Todavía no hay materiales.",
+    "emptyFolder": "Carpeta vacía",
+    "name": "Nombre",
+    "modified": "Modificado",
+    "size": "Tamaño",
+    "kind": "Tipo",
+    "close": "Cerrar la vista previa",
+    "download": "Descargar",
+    "kinds": {
+      "folder": "Carpeta",
+      "pdf": "Documento PDF",
+      "image": "Imagen",
+      "document": "Documento",
+      "spreadsheet": "Hoja de cálculo",
+      "presentation": "Presentación",
+      "text": "Texto",
+      "archive": "Archivo ZIP",
+      "file": "Archivo"
     }
   },
   "calendar": {

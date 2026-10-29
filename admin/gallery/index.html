@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria — Admin Germanetes</title>
+    <link rel="icon" type="image/png" href="/assets/icons/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+
+<div class="topbar">
+    <h1>Germanetes Admin</h1>
+    <nav class="topnav">
+        <a href="/admin/">Projectes</a>
+        <a href="/admin/gallery/" aria-current="page">Galeria</a>
+        <a href="/admin/materials/">Materials</a>
+    </nav>
+    <a href="/">← Tornar al web</a>
+</div>
+
+<div class="container">
+    <div class="toolbar">
+        <h2>Galeria</h2>
+        <div class="toolbar-actions">
+            <span class="unsaved" id="unsaved" hidden>Hi ha canvis sense desar</span>
+            <input type="file" id="photo-input" accept="image/*" multiple hidden>
+            <button type="button" class="btn" id="btn-upload">+ Puja fotos</button>
+            <button type="button" class="btn btn-primary" id="btn-save" disabled>Desar canvis</button>
+        </div>
+    </div>
+    <p class="hint">La mida decideix quant espai ocupa la foto a la quadrícula: petita (1×1), mitjana (2×2) o gran (3×3). L'ordre d'aquí és l'ordre al web.</p>
+
+    <div class="gallery-admin-grid" id="grid"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/admin/admin.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    const { apiFetch, apiJson, escapeHtml, assetUrl, toast } = window.adminTools;
+    const sizeLabels = { 1: 'Petita (1×1)', 2: 'Mitjana (2×2)', 3: 'Gran (3×3)' };
+    const languages = [['ca', 'Català'], ['es', 'Español'], ['en', 'English']];
+
+    const grid = document.getElementById('grid');
+    const saveButton = document.getElementById('btn-save');
+    const unsavedLabel = document.getElementById('unsaved');
+    const photoInput = document.getElementById('photo-input');
+    let items = [];
+    let dirty = false;
+
+    function setDirty(value) {
+        dirty = value;
+        saveButton.disabled = !value;
+        unsavedLabel.hidden = !value;
+    }
+
+    function render() {
+        if (!items.length) {
+            grid.innerHTML = '<p class="hint">Encara no hi ha cap foto. Puja-n\'hi unes quantes!</p>';
+            return;
+        }
+        grid.innerHTML = items.map((item, index) => `
+            <div class="gallery-card" data-index="${index}">
+                <img src="${escapeHtml(assetUrl(item.src))}" alt="">
+                <div class="field">
+                    <label for="size-${index}">Mida</label>
+                    <select id="size-${index}" data-size>
+                        ${[1, 2, 3].map(size => `<option value="${size}"${item.size === size ? ' selected' : ''}>${sizeLabels[size]}</option>`).join('')}
+                    </select>
+                </div>
+                <details>
+                    <summary>Peu de foto (opcional)</summary>
+                    ${languages.map(([code, label]) => `
+                        <div class="field">
+                            <label for="caption-${code}-${index}">${label}</label>
+                            <input type="text" id="caption-${code}-${index}" data-caption="${code}" value="${escapeHtml(item.caption?.[code] || '')}">
+                        </div>`).join('')}
+                </details>
+                <div class="card-actions">
+                    <button type="button" class="btn btn-sm" data-move="-1" aria-label="Mou cap enrere"${index === 0 ? ' disabled' : ''}>←</button>
+                    <button type="button" class="btn btn-sm" data-move="1" aria-label="Mou cap endavant"${index === items.length - 1 ? ' disabled' : ''}>→</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-remove>Treure</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function save() {
+        try {
+            items = await apiJson('/gallery', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items })
+            });
+            setDirty(false);
+            render();
+            toast('Galeria desada');
+        } catch (error) {
+            toast(error.message, true);
+        }
+    }
+
+    async function uploadPhotos(files) {
+        let added = 0;
+        for (const file of files) {
+            const body = new FormData();
+            body.append('image', file);
+            try {
+                const response = await apiFetch('/upload', { method: 'POST', body });
+                if (!response.ok) throw new Error();
+                const { path } = await response.json();
+                items.push({ src: path, size: 1, caption: { ca: '', es: '', en: '' } });
+                added += 1;
+            } catch {
+                toast(`No s'ha pogut pujar ${file.name}`, true);
+            }
+        }
+        if (added) {
+            setDirty(true);
+            render();
+            await save();
+        }
+    }
+
+    grid.addEventListener('input', event => {
+        const input = event.target.closest('[data-caption]');
+        if (!input) return;
+        const index = Number(input.closest('.gallery-card').dataset.index);
+        items[index].caption = { ...items[index].caption, [input.dataset.caption]: input.value };
+        setDirty(true);
+    });
+
+    grid.addEventListener('change', event => {
+        const select = event.target.closest('[data-size]');
+        if (!select) return;
+        items[Number(select.closest('.gallery-card').dataset.index)].size = Number(select.value);
+        setDirty(true);
+    });
+
+    grid.addEventListener('click', event => {
+        const card = event.target.closest('.gallery-card');
+        if (!card) return;
+        const index = Number(card.dataset.index);
+        const move = event.target.closest('[data-move]');
+        if (move) {
+            const target = index + Number(move.dataset.move);
+            [items[index], items[target]] = [items[target], items[index]];
+        } else if (event.target.closest('[data-remove]')) {
+            items.splice(index, 1);
+        } else {
+            return;
+        }
+        setDirty(true);
+        render();
+    });
+
+    document.getElementById('btn-upload').addEventListener('click', () => photoInput.click());
+    photoInput.addEventListener('change', () => {
+        const files = [...photoInput.files];
+        photoInput.value = '';
+        if (files.length) uploadPhotos(files);
+    });
+    saveButton.addEventListener('click', save);
+    window.addEventListener('beforeunload', event => {
+        if (dirty) event.preventDefault();
+    });
+
+    apiJson('/gallery').then(data => { items = data; render(); }).catch(error => toast(error.message, true));
+})();
+</script>
+</body>
+</html>

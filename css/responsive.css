@@ -12,6 +12,14 @@
         padding: 0.4rem 0.7rem;
     }
 
+    .language-switcher {
+        position: relative;
+        right: auto;
+        top: auto;
+        transform: none;
+        margin-left: 0.75rem;
+    }
+
     main {
         width: auto;
         max-width: none;
@@ -43,20 +51,31 @@
         padding: 1rem;
     }
 
-    .language-switcher {
-        right: 4vw;
+    /* About page stacks on tablet */
+    body.about-page main {
+        margin-left: var(--about-gutter);
+        margin-right: var(--about-gutter);
     }
 
-    /* Grid system reverts to block layout on tablet */
-    .about-grid {
-        display: block;
+    .about-intro,
+    .about-governance {
+        grid-template-columns: 1fr;
     }
 
-    .about-grid .grid-full,
-    .about-grid .grid-3,
-    .about-grid .grid-5 {
-        grid-column: auto;
-        margin-bottom: 2rem;
+    .about-intro .about-photo,
+    .about-intro .about-projects,
+    .about-governance .about-photo:first-child,
+    .about-governance p,
+    .about-governance .about-photo:last-child {
+        grid-column: 1;
+    }
+
+    .about-intro .about-photo {
+        order: -1;
+    }
+
+    .collaborator-logos {
+        justify-content: center;
     }
 
     /* Projects grid — 2 columns on tablet */
@@ -71,6 +90,10 @@
         width: calc(100vw - 4rem);
         max-width: none;
         padding: 2rem;
+    }
+
+    .modal-description .project-content-split {
+        grid-template-columns: 1fr;
     }
 
     .footer-container {
@@ -143,15 +166,6 @@
     form button {
         width: 100%;
         padding: 0.875rem;
-    }
-
-    .language-switcher {
-        right: 2rem;
-    }
-
-    .language-switcher .current-lang {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
     }
 
     /* Projects grid — 1 column on mobile */

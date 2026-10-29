@@ -1,0 +1,120 @@
+/* Gallery: square cells, tiles span 1, 2 or 3 cells so sizes are multiples of each other. */
+.gallery-wrap {
+    container-type: inline-size;
+}
+
+.gallery-grid {
+    --cols: 6;
+    --gap: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    /* One row height equals one column width, which keeps every cell square. */
+    grid-auto-rows: calc((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols));
+    grid-auto-flow: dense;
+    gap: var(--gap);
+}
+
+.gallery-tile {
+    min-width: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    background: #e6e6e1;
+    cursor: zoom-in;
+}
+
+.gallery-tile img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.2s ease;
+}
+
+.gallery-tile:hover img,
+.gallery-tile:focus-visible img {
+    opacity: 0.85;
+}
+
+.gallery-tile:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.gallery-tile.size-2 {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.gallery-tile.size-3 {
+    grid-column: span 3;
+    grid-row: span 3;
+}
+
+.gallery-empty {
+    color: var(--color-text-light);
+}
+
+.gallery-dialog {
+    max-width: 94vw;
+    max-height: 94vh;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+}
+
+.gallery-dialog[open] {
+    margin: auto;
+}
+
+.gallery-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.85);
+}
+
+.gallery-dialog figure {
+    margin: 0;
+}
+
+.gallery-dialog img {
+    display: block;
+    max-width: 94vw;
+    max-height: 82vh;
+    margin: 0 auto;
+}
+
+.gallery-dialog figcaption {
+    padding: 0.75rem 0 0;
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.gallery-dialog-close {
+    position: fixed;
+    top: 0.75rem;
+    right: 1.25rem;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-size: 2.25rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .gallery-grid {
+        --cols: 4;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-grid {
+        --cols: 2;
+    }
+
+    /* Three columns do not fit in two, so the largest size shrinks to the medium one. */
+    .gallery-tile.size-3 {
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+}

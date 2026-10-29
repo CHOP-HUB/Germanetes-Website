@@ -12,15 +12,17 @@
   "about": {
     "header": "About Us",
     "description1": "<i>Germanetes Jardins d'Emma</i> is a non-profit organization located around the boulevard of the neighborhood, the Green Axis of <i>Consell de Cent</i>. We organize around two main objectives: generating community in the neighborhood and making it more sustainable, collaborating with the environment to achieve an active community that includes residents, schools, other entities, collectives and cooperatives in the neighborhood and public institutions with social objectives.",
-    "description2": "The association's projects are as follows: <i>Espai Germanetes</i>, the community garden; <i>Espai Nur</i>, the community garden; <i>Aula Viva</i>, the pedagogical project; <i>Revolta Eixample</i>, community composting project; <i>Vine a Jugar</i>, children's play space, and the <i>Banc de Recursos</i>, a project for lending materials to neighborhood entities and collectives.",
+    "projectsIntro": "The association's <a href=\"#projects\">projects</a> are the following:",
+    "collaborators": "Our Collaborators",
     "description3": "The association seeks to be as democratic, horizontal and transparent as possible. This is why each project has its own governance body, and representatives from all projects meet biweekly as a coordination team and the engine of the association; assemblies and meetings are open to everyone. Finally, each January the general assembly is held, which is the body with the most power within the association.",
     "description4": "If you feel like participating in one of the projects, just get in touch with us!"
   },
   "projects": {
     "header": "Projects",
-    "ongoing": "Ongoing Projects",
-    "temporal": "Temporal Projects",
-    "archive": "Project Archive"
+    "permanent": "Permanent",
+    "temporal": "Temporal",
+    "collaborations": "Collaborations",
+    "historic": "Historic"
   },
   "contact": {
     "header": "Get in Touch",
@@ -40,43 +42,30 @@
   },
   "gallery": {
     "header": "Gallery",
-    "description": "Explore photos from our community garden activities and events.",
-    "spring": {
-      "title": "Spring Planting 2024",
-      "description": "Community members working together to prepare the beds for the new season.",
-      "alt": "Spring Planting"
-    },
-    "summer": {
-      "title": "Summer Harvest",
-      "description": "The garden in full bloom during the peak of summer.",
-      "alt": "Summer Harvest"
-    },
-    "workshop": {
-      "title": "Community Workshop",
-      "description": "Learning about composting and sustainable gardening practices.",
-      "alt": "Workshop"
-    }
+    "empty": "There are no photos yet.",
+    "close": "Close photo"
   },
   "materials": {
-    "header": "Materials & Resources",
-    "intro": "Find useful guides, documents, and resources for community gardening.",
-    "guides": {
-      "title": "Gardening Guides",
-      "description": "Download our comprehensive guides on organic gardening, composting, and seasonal planting schedules.",
-      "item1": "Beginner's Guide to Organic Gardening (PDF)",
-      "item2": "Composting Best Practices (PDF)",
-      "item3": "Seasonal Planting Calendar (PDF)"
-    },
-    "tools": {
-      "title": "Tool Library",
-      "description": "We have a variety of gardening tools available for community members to borrow.",
-      "item1": "Shovels, rakes, and hoes",
-      "item2": "Watering cans and hoses",
-      "item3": "Wheelbarrows and carts"
-    },
-    "seeds": {
-      "title": "Seed Exchange",
-      "description": "Share and exchange seeds with other community members. Bring your extra seeds and take home something new!"
+    "header": "Materials",
+    "intro": "Documents, guides and images from the association to browse and download.",
+    "empty": "There are no materials yet.",
+    "emptyFolder": "Empty folder",
+    "name": "Name",
+    "modified": "Modified",
+    "size": "Size",
+    "kind": "Kind",
+    "close": "Close preview",
+    "download": "Download",
+    "kinds": {
+      "folder": "Folder",
+      "pdf": "PDF document",
+      "image": "Image",
+      "document": "Document",
+      "spreadsheet": "Spreadsheet",
+      "presentation": "Presentation",
+      "text": "Text",
+      "archive": "ZIP archive",
+      "file": "File"
     }
   },
   "calendar": {

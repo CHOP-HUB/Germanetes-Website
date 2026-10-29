@@ -1,8 +1,28 @@
-/* Google Calendar month board */
+/* Google Calendar page */
+body.calendar-page {
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
+    background-color: transparent;
+}
+
+body.calendar-page::before {
+    position: fixed;
+    z-index: -1;
+    inset: 0;
+    background-color: #687747;
+    background-image: linear-gradient(rgba(16, 20, 12, 0.3), rgba(16, 20, 12, 0.3)), var(--calendar-page-background, none);
+    background-position: center;
+    background-size: cover;
+    content: '';
+    pointer-events: none;
+}
+
 .events-calendar {
     --calendar-ink: #464b55;
-    --calendar-paper: #f0efbf;
-    --calendar-edge: #dedda9;
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 2rem;
 }
 
 .calendar-topline,
@@ -15,6 +35,7 @@
 
 .calendar-topline h2 {
     margin: 0;
+    color: #fff;
 }
 
 .calendar-controls {
@@ -47,18 +68,14 @@
 }
 
 .calendar-month-title {
-    position: relative;
-    z-index: 0;
     margin: 0;
-    padding: 0.45rem 1.15rem 0.6rem;
-    color: #10110e;
+    padding: 0.25rem 0;
+    color: #fff;
     font-family: var(--font-heading);
-    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-size: 1.5rem;
     font-weight: 800;
     line-height: 1;
     text-transform: uppercase;
-    background: #e8e9b5;
-    clip-path: polygon(3% 9%, 92% 0, 100% 12%, 97% 83%, 85% 100%, 8% 94%, 0 79%);
 }
 
 .calendar-legend {
@@ -84,10 +101,15 @@
 }
 
 .calendar-status {
+    position: static;
+    order: 10;
     min-height: 1.4rem;
-    margin: 0 0 0.5rem;
-    color: var(--color-text-light);
+    margin: 0.75rem auto 0;
+    align-self: center;
+    color: #fff;
     font-size: 0.85rem;
+    font-weight: 700;
+    text-align: center;
 }
 
 .calendar-scroll {
@@ -99,16 +121,14 @@
 .calendar-board {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 0.6rem;
+    gap: 0.5rem;
     min-width: 650px;
-    padding: 1.1rem;
-    background: var(--calendar-paper);
-    clip-path: polygon(1% 1%, 10% 2%, 18% 0, 31% 2%, 43% 1%, 57% 2%, 70% 0, 84% 2%, 99% 1%, 98% 17%, 100% 31%, 98% 46%, 100% 62%, 98% 76%, 99% 98%, 85% 97%, 70% 100%, 55% 98%, 40% 100%, 26% 98%, 11% 100%, 1% 98%, 2% 83%, 0 68%, 2% 53%, 0 37%, 2% 21%);
+    padding: 0.15rem 0.2rem 0.5rem;
 }
 
 .calendar-weekday {
-    padding: 0.15rem 0.25rem 0.35rem;
-    color: var(--calendar-ink);
+    padding: 0.55rem 0.25rem;
+    color: #fff;
     font: 800 0.95rem var(--font-heading);
     text-align: center;
     text-transform: uppercase;
@@ -122,19 +142,17 @@
     align-items: flex-start;
     gap: 0.35rem;
     padding: 0.5rem;
-    border: 1px solid rgba(95, 99, 68, 0.14);
-    border-radius: 7px 5px 8px 6px;
-    background: rgba(255, 255, 255, 0.38);
+    border: 1px solid rgba(70, 75, 85, 0.12);
+    border-radius: 0;
+    background: #fff;
 }
 
 .calendar-day.outside-month {
-    background: rgba(255, 255, 255, 0.15);
-    opacity: 0.58;
+    background: #fff;
 }
 
-.calendar-day.is-today {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 1px;
+.calendar-day.outside-month .calendar-day-number {
+    color: #969696;
 }
 
 .calendar-day-number {
@@ -143,14 +161,14 @@
     height: 1.8rem;
     flex: 0 0 auto;
     place-items: center;
-    color: var(--calendar-ink);
+    color: var(--color-primary);
     font: 800 1.1rem var(--font-heading);
 }
 
 .calendar-day.is-today .calendar-day-number {
     border-radius: 50%;
     background: var(--color-primary);
-    color: white;
+    color: #fff;
 }
 
 .calendar-event {

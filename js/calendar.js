@@ -65,6 +65,47 @@
         return response.json();
     }
 
+    async function loadRandomBackground() {
+        try {
+            const response = await fetch(`${API_ORIGIN}/api/projects`);
+            if (!response.ok) throw new Error(`Projects API returned ${response.status}`);
+            const projects = await response.json();
+            const imagePaths = [...new Set(projects.flatMap(project => [
+                project.thumbnail,
+                ...(project.detail?.images || []).map(image => typeof image === 'string' ? image : image.src)
+            ]).filter(Boolean))];
+            const imageUrls = imagePaths.map(path => {
+                const url = new URL(path, API_ORIGIN);
+                if (url.origin !== new URL(API_ORIGIN).origin) return null;
+                if (!url.pathname.startsWith('/uploads/') && !url.pathname.startsWith('/assets/images/')) return null;
+                return url.href;
+            }).filter(Boolean);
+            if (!imageUrls.length) return;
+
+            let previousImage = '';
+            try {
+                previousImage = sessionStorage.getItem('calendar-background-image') || '';
+            } catch {}
+            const choices = imageUrls.filter(url => url !== previousImage);
+            const selectedImage = (choices.length ? choices : imageUrls)[Math.floor(Math.random() * (choices.length || imageUrls.length))];
+
+            const image = new Image();
+            await new Promise((resolve, reject) => {
+                image.onload = resolve;
+                image.onerror = reject;
+                image.src = selectedImage;
+            });
+
+            if (!document.body.classList.contains('calendar-page')) return;
+            document.body.style.setProperty('--calendar-page-background', `url(${JSON.stringify(selectedImage)})`);
+            try {
+                sessionStorage.setItem('calendar-background-image', selectedImage);
+            } catch {}
+        } catch (error) {
+            console.warn('Unable to load a calendar background image:', error);
+        }
+    }
+
     function renderLegend(events) {
         const legend = document.getElementById('calendar-legend');
         const categories = [...new Set(events.map(event => event.category).filter(Boolean))];
@@ -204,6 +245,7 @@
 
         document.removeEventListener('site-language-changed', render);
         document.addEventListener('site-language-changed', render);
+        loadRandomBackground();
         render();
     }
 

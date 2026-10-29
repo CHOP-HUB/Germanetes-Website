@@ -41,6 +41,8 @@
         .topbar h1 { font-size: 1rem; font-weight: 600; letter-spacing: 0.02em; }
         .topbar a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; }
         .topbar a:hover { color: #fff; }
+        .topnav { display: flex; gap: 1.25rem; margin-right: auto; margin-left: 1.5rem; }
+        .topnav a[aria-current="page"] { color: #fff; text-decoration: underline; text-underline-offset: 0.3em; }
 
         /* ── Layout ──────────────────────────── */
         .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
@@ -118,6 +120,34 @@
         }
         .field textarea { resize: vertical; min-height: 80px; }
 
+        .rich-toolbar {
+            display: flex; flex-wrap: wrap; gap: 0.35rem;
+            margin: 0.75rem 0 0.5rem;
+        }
+        .rich-toolbar button,
+        .gallery-insert {
+            min-height: 2rem; padding: 0.35rem 0.6rem;
+            border: 1px solid var(--border); border-radius: 4px;
+            background: #fff; color: var(--text); font: inherit;
+            font-size: 0.8rem; cursor: pointer;
+        }
+        .rich-toolbar button:hover,
+        .gallery-insert:hover { border-color: var(--green); color: var(--green); }
+        .rich-toolbar button:focus-visible,
+        .gallery-insert:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+        .rich-editor {
+            min-height: 10rem; max-height: 28rem; overflow-y: auto;
+            padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius);
+            background: #fff; color: var(--text); font-size: 0.9rem; line-height: 1.6;
+        }
+        .rich-editor:focus { outline: none; border-color: var(--green); }
+        .rich-editor:empty::before { content: attr(data-placeholder); color: #999; pointer-events: none; }
+        .rich-editor p { margin: 0 0 0.75rem; }
+        .rich-editor ul, .rich-editor ol { padding-left: 1.5rem; margin: 0.5rem 0; }
+        .rich-editor img { max-width: 100%; height: auto; }
+        .rich-editor .project-content-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+        .rich-editor .project-content-split img { width: 100%; }
+
         .lang-tabs { display: flex; gap: 0; margin-bottom: 0.5rem; }
         .lang-tab {
             font-family: inherit; font-size: 0.78rem; font-weight: 500;
@@ -136,7 +166,7 @@
             display: flex; align-items: flex-start; gap: 1rem;
         }
         .thumb-preview {
-            width: 120px; height: 120px; border-radius: var(--radius);
+            width: 120px; height: 120px;
             object-fit: cover; border: 1px solid var(--border); background: #eee;
         }
         .thumb-preview.empty { display: flex; align-items: center; justify-content: center; color: var(--text-light); font-size: 0.75rem; }
@@ -149,10 +179,11 @@
             gap: 0.75rem; margin-bottom: 0.75rem;
         }
         .gallery-item {
-            position: relative; aspect-ratio: 1; border-radius: var(--radius);
-            overflow: hidden; border: 1px solid var(--border); background: #eee;
+            position: relative; display: flex; flex-direction: column; gap: 0.35rem;
+            padding: 0.35rem;
+            border: 1px solid var(--border); background: #fff;
         }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .gallery-item img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
         .gallery-item .remove-img {
             position: absolute; top: 4px; right: 4px;
             width: 22px; height: 22px; border-radius: 50%;
@@ -162,6 +193,8 @@
             opacity: 0; transition: opacity 0.15s;
         }
         .gallery-item:hover .remove-img { opacity: 1; }
+        .gallery-image-actions { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+        .gallery-insert { flex: 1; padding: 0.3rem 0.35rem; font-size: 0.7rem; }
 
         .gallery-add {
             display: flex; align-items: center; gap: 0.5rem;
@@ -192,6 +225,7 @@
             .container { padding: 1rem; }
             .thumb-area { flex-direction: column; }
             .thumb-preview { width: 100%; height: auto; aspect-ratio: 16/9; }
+            .rich-editor .project-content-split { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -199,6 +233,11 @@
 
 <div class="topbar">
     <h1>Germanetes Admin</h1>
+    <nav class="topnav">
+        <a href="/admin/" aria-current="page">Projectes</a>
+        <a href="/admin/gallery/">Galeria</a>
+        <a href="/admin/materials/">Materials</a>
+    </nav>
     <a href="/">← Tornar al web</a>
 </div>
 
@@ -227,9 +266,10 @@
                 <div class="field">
                     <label for="f-category">Categoria</label>
                     <select id="f-category">
-                        <option value="ongoing">En Curs</option>
+                        <option value="permanent">Permanent</option>
                         <option value="temporal">Temporal</option>
-                        <option value="archive">Arxiu</option>
+                        <option value="collaborations">Collaboracions</option>
+                        <option value="historic">Històric</option>
                     </select>
                 </div>
 
@@ -249,21 +289,42 @@
                     <input type="text" id="f-title" required placeholder="Nom del projecte">
                 </div>
 
+                <div class="section-label">Subtítol</div>
+                <div class="field">
+                    <label for="f-subtitle-ca">Català</label>
+                    <input type="text" id="f-subtitle-ca" placeholder="p. ex. Des de 2012">
+                </div>
+                <div class="field">
+                    <label for="f-subtitle-es">Español</label>
+                    <input type="text" id="f-subtitle-es" placeholder="p. ej. Desde 2012">
+                </div>
+                <div class="field">
+                    <label for="f-subtitle-en">English</label>
+                    <input type="text" id="f-subtitle-en" placeholder="e.g. Since 2012">
+                </div>
+
                 <!-- Description -->
                 <div class="section-label">Descripció</div>
+                <div class="rich-toolbar" role="toolbar" aria-label="Format de text">
+                    <button type="button" data-rich-command="bold" title="Negreta" aria-label="Negreta"><strong>B</strong></button>
+                    <button type="button" data-rich-command="italic" title="Cursiva" aria-label="Cursiva"><em>I</em></button>
+                    <button type="button" data-rich-command="insertUnorderedList" title="Llista amb pics" aria-label="Llista amb pics">• Llista</button>
+                    <button type="button" data-rich-command="insertOrderedList" title="Llista numerada" aria-label="Llista numerada">1. Llista</button>
+                    <button type="button" id="btn-rich-link" title="Insereix un enllaç" aria-label="Insereix un enllaç">Enllaç</button>
+                </div>
                 <div class="lang-tabs" data-group="desc">
                     <button type="button" class="lang-tab active" data-lang="ca">CA</button>
                     <button type="button" class="lang-tab" data-lang="es">ES</button>
                     <button type="button" class="lang-tab" data-lang="en">EN</button>
                 </div>
                 <div class="lang-panel active" data-group="desc" data-lang="ca">
-                    <div class="field"><textarea id="f-desc-ca" rows="5" placeholder="Descripció en català…"></textarea></div>
+                    <div class="field"><div class="rich-editor" id="f-desc-ca" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Descripció en català" data-placeholder="Descripció en català…"></div></div>
                 </div>
                 <div class="lang-panel" data-group="desc" data-lang="es">
-                    <div class="field"><textarea id="f-desc-es" rows="5" placeholder="Descripción en español…"></textarea></div>
+                    <div class="field"><div class="rich-editor" id="f-desc-es" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Descripción en español" data-placeholder="Descripción en español…"></div></div>
                 </div>
                 <div class="lang-panel" data-group="desc" data-lang="en">
-                    <div class="field"><textarea id="f-desc-en" rows="5" placeholder="Description in English…"></textarea></div>
+                    <div class="field"><div class="rich-editor" id="f-desc-en" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Description in English" data-placeholder="Description in English…"></div></div>
                 </div>
 
                 <!-- Image gallery -->
@@ -293,6 +354,7 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="/js/project-content.js"></script>
 <script>
 (function () {
     'use strict';
@@ -313,6 +375,7 @@
     const listEl    = document.getElementById('project-list');
     const editorEl  = document.getElementById('editor');
     const formEl    = document.getElementById('project-form');
+    let activeEditor = document.getElementById('f-desc-ca');
 
     // ── Toast ────────────────────────────────
 
@@ -338,7 +401,12 @@
         }
     }
 
-    const catLabel = { ongoing: 'En Curs', temporal: 'Temporal', archive: 'Arxiu' };
+    const catLabel = {
+        permanent: 'Permanent',
+        temporal: 'Temporal',
+        collaborations: 'Collaboracions',
+        historic: 'Històric'
+    };
 
     function absPath(path) {
         if (!path) return '';
@@ -379,12 +447,16 @@
         document.getElementById('btn-delete').style.display = isNew ? 'none' : 'inline-flex';
 
         document.getElementById('f-id').value         = project?.id || '';
-        document.getElementById('f-category').value   = project?.category || 'ongoing';
+        document.getElementById('f-category').value   = project?.category || 'permanent';
         document.getElementById('f-thumbnail-path').value = project?.thumbnail || '';
         document.getElementById('f-title').value    = project?.title || '';
-        document.getElementById('f-desc-ca').value    = project?.detail?.description?.ca || project?.shortDescription?.ca || '';
-        document.getElementById('f-desc-es').value    = project?.detail?.description?.es || project?.shortDescription?.es || '';
-        document.getElementById('f-desc-en').value    = project?.detail?.description?.en || project?.shortDescription?.en || '';
+        document.getElementById('f-subtitle-ca').value = project?.subtitle?.ca || '';
+        document.getElementById('f-subtitle-es').value = project?.subtitle?.es || '';
+        document.getElementById('f-subtitle-en').value = project?.subtitle?.en || '';
+        document.getElementById('f-desc-ca').innerHTML = window.projectContent.toHtml(project?.detail?.description?.ca || project?.shortDescription?.ca || '');
+        document.getElementById('f-desc-es').innerHTML = window.projectContent.toHtml(project?.detail?.description?.es || project?.shortDescription?.es || '');
+        document.getElementById('f-desc-en').innerHTML = window.projectContent.toHtml(project?.detail?.description?.en || project?.shortDescription?.en || '');
+        activeEditor = document.querySelector('.lang-panel.active .rich-editor') || document.getElementById('f-desc-ca');
         document.getElementById('f-sort').value       = project?.sortOrder ?? 0;
         document.getElementById('f-thumbnail').value  = '';
 
@@ -417,8 +489,27 @@
             <div class="gallery-item">
                 <img src="${escapeHtml(absPath(img.src))}" alt="">
                 <button type="button" class="remove-img" data-idx="${i}">&times;</button>
+                <div class="gallery-image-actions">
+                    <button type="button" class="gallery-insert" data-insert-image="${i}">Insereix imatge</button>
+                    <button type="button" class="gallery-insert" data-insert-split="${i}">Text + imatge</button>
+                </div>
             </div>
         `).join('');
+    }
+
+    function insertGalleryImage(index, splitLayout) {
+        const image = galleryImages[index];
+        if (!image) return;
+        const editor = activeEditor || document.querySelector('.lang-panel.active .rich-editor');
+        if (!editor) return;
+
+        const src = escapeHtml(absPath(image.src));
+        const markup = splitLayout
+            ? `<div class="project-content-split"><img src="${src}" alt=""><p></p></div>`
+            : `<p><img src="${src}" alt=""></p>`;
+        editor.focus();
+        document.execCommand('insertHTML', false, markup);
+        editor.dispatchEvent(new Event('input', { bubbles: true }));
     }
 
     // ── Upload helper ────────────────────────
@@ -444,16 +535,26 @@
             catch { toast('Error pujant thumbnail', true); return; }
         }
 
+        const descriptions = Object.fromEntries(['ca', 'es', 'en'].map(lang => {
+            const editor = document.getElementById(`f-desc-${lang}`);
+            const plainText = editor.innerText.trim();
+            const richText = window.projectContent.toStoredHtml(editor.innerHTML);
+            return [lang, { plainText, richText }];
+        }));
+
         const data = {
             category:    document.getElementById('f-category').value,
             thumbnail:   thumb,
             title:       document.getElementById('f-title').value.trim(),
-            short_desc_ca: document.getElementById('f-desc-ca').value.trim(),
-            short_desc_es: document.getElementById('f-desc-es').value.trim(),
-            short_desc_en: document.getElementById('f-desc-en').value.trim(),
-            detail_desc_ca: document.getElementById('f-desc-ca').value.trim(),
-            detail_desc_es: document.getElementById('f-desc-es').value.trim(),
-            detail_desc_en: document.getElementById('f-desc-en').value.trim(),
+            subtitle_ca: document.getElementById('f-subtitle-ca').value.trim(),
+            subtitle_es: document.getElementById('f-subtitle-es').value.trim(),
+            subtitle_en: document.getElementById('f-subtitle-en').value.trim(),
+            short_desc_ca: descriptions.ca.plainText,
+            short_desc_es: descriptions.es.plainText,
+            short_desc_en: descriptions.en.plainText,
+            detail_desc_ca: descriptions.ca.richText,
+            detail_desc_es: descriptions.es.richText,
+            detail_desc_en: descriptions.en.richText,
             sort_order:  parseInt(document.getElementById('f-sort').value) || 0
         };
 
@@ -541,6 +642,16 @@
 
     // Remove gallery image (delegated)
     document.getElementById('gallery-grid').addEventListener('click', e => {
+        const inlineButton = e.target.closest('[data-insert-image]');
+        if (inlineButton) {
+            insertGalleryImage(parseInt(inlineButton.dataset.insertImage, 10), false);
+            return;
+        }
+        const splitButton = e.target.closest('[data-insert-split]');
+        if (splitButton) {
+            insertGalleryImage(parseInt(splitButton.dataset.insertSplit, 10), true);
+            return;
+        }
         const btn = e.target.closest('.remove-img');
         if (!btn) return;
         galleryImages.splice(parseInt(btn.dataset.idx), 1);
@@ -564,7 +675,41 @@
             document.querySelectorAll(`.lang-panel[data-group="${group}"]`).forEach(p => {
                 p.classList.toggle('active', p.dataset.lang === tab.dataset.lang);
             });
+            activeEditor = document.querySelector('.lang-panel.active .rich-editor');
         });
+    });
+
+    document.querySelectorAll('.rich-editor').forEach(editor => {
+        editor.addEventListener('focus', () => { activeEditor = editor; });
+    });
+
+    document.querySelector('.rich-toolbar').addEventListener('mousedown', event => {
+        if (event.target.closest('button')) event.preventDefault();
+    });
+
+    document.querySelector('.rich-toolbar').addEventListener('click', event => {
+        const button = event.target.closest('[data-rich-command]');
+        if (!button || !activeEditor) return;
+        activeEditor.focus();
+        document.execCommand(button.dataset.richCommand, false);
+    });
+
+    document.getElementById('btn-rich-link').addEventListener('mousedown', event => event.preventDefault());
+    document.getElementById('btn-rich-link').addEventListener('click', () => {
+        if (!activeEditor) return;
+        const selectedText = window.getSelection()?.toString().trim();
+        if (!selectedText) {
+            toast('Selecciona el text que vols enllaçar', true);
+            return;
+        }
+        const url = prompt('Adreça de l’enllaç');
+        if (!url) return;
+        if (!window.projectContent.safeLink(url)) {
+            toast('Adreça d’enllaç no vàlida', true);
+            return;
+        }
+        activeEditor.focus();
+        document.execCommand('createLink', false, url);
     });
 
     // ── Init ─────────────────────────────────

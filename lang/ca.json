@@ -12,15 +12,17 @@
   "about": {
     "header": "Qui som?",
     "description1": "<i>Germanetes Jardins d'Emma</i> som una entitat sense ànim de lucre ubicada al voltant de la rambla del barri, l'Eix Verd de <i>Consell de Cent</i>. Ens articulem en base a dos objectius principals: generar comunitat al barri i fer-lo més sostenible, col·laborant amb l'entorn per aconseguir una comunitat activa que inclogui el veïnat, les escoles, les altres entitats, col·lectius i cooperatives del barri i institucions públiques amb objectius socials.",
-    "description2": "Els projectes de l'associació són els següents: l'<i>Espai Germanetes</i>, l'hort comunitari; l'<i>Espai Nur</i>, el jardí comunitari; <i>Aula Viva</i>, el projecte pedagògic; <i>Revolta Eixample</i>, projecte de compostatge comunitari; <i>Vine a Jugar</i>, espai de jocs per infants, i el <i>Banc de Recursos</i>, projecte de cessió de material a les entitats i col·lectius del barri.",
+    "projectsIntro": "Els <a href=\"#projects\">projectes</a> de l'associació són els següents:",
+    "collaborators": "Nosaltres Col·laboradors",
     "description3": "L'associació busca que ser el més assembleària, horitzontal i transparent possible. És per això que cada projecte té el seu òrgan de governança propi, i representants del conjunt de projectes es reuneixen quinzenalment com a equip de coordinació i motor de l'associació; les assemblees i reunions estan obertes a tothom. Finalment, cada gener es realitza l'assemblea general, que és l'òrgan amb més poder dins de l'associació.",
     "description4": "Si tens ganes de participar en un dels projectes, només cal que et posis en contacte amb nosaltres!"
   },
   "projects": {
     "header": "Projectes",
-    "ongoing": "Projectes en Curs",
-    "temporal": "Projectes Temporals",
-    "archive": "Arxiu de Projectes"
+    "permanent": "Permanent",
+    "temporal": "Temporal",
+    "collaborations": "Collaboracions",
+    "historic": "Històric"
   },
   "contact": {
     "header": "Posa't en Contacte",
@@ -40,43 +42,30 @@
   },
   "gallery": {
     "header": "Galeria",
-    "description": "Explora fotos de les nostres activitats i esdeveniments del hort comunitari.",
-    "spring": {
-      "title": "Plantació de Primavera 2024",
-      "description": "Membres de la comunitat treballant junts per preparar els parterres per a la nova temporada.",
-      "alt": "Plantació de Primavera"
-    },
-    "summer": {
-      "title": "Collita d'Estiu",
-      "description": "L'hort en plena floració durant el màxim de l'estiu.",
-      "alt": "Collita d'Estiu"
-    },
-    "workshop": {
-      "title": "Taller Comunitari",
-      "description": "Aprenent sobre compostatge i pràctiques de jardineria sostenible.",
-      "alt": "Taller"
-    }
+    "empty": "Encara no hi ha cap foto.",
+    "close": "Tanca la foto"
   },
   "materials": {
-    "header": "Materials i Recursos",
-    "intro": "Troba guies útils, documents i recursos per a la jardineria comunitària.",
-    "guides": {
-      "title": "Guies de Jardineria",
-      "description": "Descarrega les nostres guies completes sobre jardineria orgànica, compostatge i calendaris de plantació estacional.",
-      "item1": "Guia per a Principiants de Jardineria Orgànica (PDF)",
-      "item2": "Millors Pràctiques de Compostatge (PDF)",
-      "item3": "Calendari de Plantació Estacional (PDF)"
-    },
-    "tools": {
-      "title": "Biblioteca d'Eines",
-      "description": "Tenim una varietat d'eines de jardineria disponibles per als membres de la comunitat.",
-      "item1": "Pales, rastells i aixades",
-      "item2": "Regadores i mànegues",
-      "item3": "Carretons i carros"
-    },
-    "seeds": {
-      "title": "Intercanvi de Llavors",
-      "description": "Comparteix i intercanvia llavors amb altres membres de la comunitat. Porta les teves llavors extra i enduu-te'n alguna de nova!"
+    "header": "Materials",
+    "intro": "Documents, guies i imatges de l'associació per consultar i descarregar.",
+    "empty": "Encara no hi ha cap material.",
+    "emptyFolder": "Carpeta buida",
+    "name": "Nom",
+    "modified": "Modificat",
+    "size": "Mida",
+    "kind": "Tipus",
+    "close": "Tanca la vista prèvia",
+    "download": "Descarrega",
+    "kinds": {
+      "folder": "Carpeta",
+      "pdf": "Document PDF",
+      "image": "Imatge",
+      "document": "Document",
+      "spreadsheet": "Full de càlcul",
+      "presentation": "Presentació",
+      "text": "Text",
+      "archive": "Arxiu ZIP",
+      "file": "Fitxer"
     }
   },
   "calendar": {

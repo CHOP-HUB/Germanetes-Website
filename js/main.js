@@ -56,23 +56,42 @@ function updateSlider(activeLink) {
     nav.style.setProperty('--slider-width', `${width}px`);
 }
 
-async function loadPage(pageName) {
+async function loadPage(pageName, itemId) {
     const content = document.getElementById('content');
-    
+
+    if (!itemId) window.projectsModule?.closeModal();
     try {
         const response = await fetch(pages[pageName]);
         if (!response.ok) throw new Error('Page not found');
         
         const html = await response.text();
         content.innerHTML = html;
+        document.body.classList.toggle('calendar-page', pageName === 'calendar');
+        document.body.classList.toggle('about-page', pageName === 'about');
+        if (pageName !== 'calendar') {
+            document.body.style.removeProperty('--calendar-page-background');
+        }
         
         // Initialize projects module if on the projects page
         if (pageName === 'projects' && window.projectsModule) {
             await window.projectsModule.init();
+            if (itemId) window.projectsModule.openById(itemId);
+        }
+
+        if (pageName === 'about' && window.aboutModule) {
+            await window.aboutModule.init();
         }
 
         if (pageName === 'calendar' && window.calendarModule) {
             await window.calendarModule.init();
+        }
+
+        if (pageName === 'gallery' && window.galleryModule) {
+            await window.galleryModule.init();
+        }
+
+        if (pageName === 'materials' && window.materialsModule) {
+            await window.materialsModule.init();
         }
         
         // Reapply translations to new content
@@ -101,9 +120,9 @@ async function loadPage(pageName) {
 
 // Handle navigation
 function handleNavigation() {
-    const hash = window.location.hash.slice(1) || 'about';
+    const [hash, itemId] = (window.location.hash.slice(1) || 'about').split('/');
     if (pages[hash]) {
-        loadPage(hash);
+        loadPage(hash, itemId ? decodeURIComponent(itemId) : undefined);
     } else {
         loadPage('about');
     }
@@ -122,7 +141,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 function updateLogoState() {
     const header = document.querySelector('header');
     if (!header) return;
-    const hash = window.location.hash.slice(1) || 'about';
+    const hash = (window.location.hash.slice(1) || 'about').split('/')[0];
     const isAbout = hash === 'about';
     const atTop = window.scrollY < 50;
     header.classList.toggle('logo-expanded', isAbout && atTop);
@@ -131,7 +150,7 @@ function updateLogoState() {
     requestAnimationFrame(() => {
         const main = document.querySelector('main');
         if (main) {
-            main.style.marginTop = (header.offsetHeight + 128) + 'px';
+            main.style.marginTop = (header.offsetHeight + (isAbout ? 48 : 128)) + 'px';
         }
     });
 }

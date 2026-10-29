@@ -1,0 +1,112 @@
+/* Shared styles for the gallery and materials admin pages (the projects page keeps its own inline copy). */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --green: #647c3b;
+    --bg: #f7f7f5;
+    --card: #fff;
+    --border: #e0e0e0;
+    --text: #333;
+    --text-light: #888;
+    --danger: #c0392b;
+    --radius: 6px;
+}
+
+body {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.topbar {
+    background: var(--green);
+    color: #fff;
+    padding: 0.75rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+.topbar h1 { font-size: 1rem; font-weight: 600; letter-spacing: 0.02em; }
+.topbar a { color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.85rem; }
+.topbar a:hover, .topbar a[aria-current="page"] { color: #fff; }
+.topnav { display: flex; gap: 1.25rem; margin-right: auto; }
+.topnav a[aria-current="page"] { text-decoration: underline; text-underline-offset: 0.3em; }
+
+.container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.toolbar h2 { font-size: 1.1rem; font-weight: 600; }
+.toolbar-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.hint { color: var(--text-light); font-size: 0.85rem; margin-bottom: 1.25rem; }
+.unsaved { color: var(--danger); font-size: 0.85rem; font-weight: 600; }
+
+.btn {
+    font-family: inherit; font-size: 0.82rem; font-weight: 500;
+    padding: 0.4rem 0.85rem; border: 1px solid var(--border);
+    border-radius: var(--radius); background: var(--card);
+    cursor: pointer; white-space: nowrap;
+}
+.btn:hover { background: #f0f0f0; }
+.btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-primary:hover { background: #55692f; }
+.btn-danger { color: var(--danger); border-color: var(--danger); }
+.btn-danger:hover { background: var(--danger); color: #fff; }
+.btn-sm { padding: 0.28rem 0.6rem; font-size: 0.78rem; }
+.btn[disabled] { opacity: 0.45; cursor: default; }
+
+.field { margin-bottom: 0.75rem; }
+.field label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.2rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.04em; }
+.field input[type="text"], .field select {
+    width: 100%; padding: 0.45rem 0.55rem;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    font-family: inherit; font-size: 0.85rem; color: var(--text); background: #fff;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--green); }
+
+.toast {
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    padding: 0.6rem 1.2rem; border-radius: var(--radius);
+    font-size: 0.85rem; font-weight: 500;
+    color: #fff; background: var(--green);
+    transform: translateY(120%); opacity: 0;
+    transition: transform 0.25s, opacity 0.25s; z-index: 100;
+}
+.toast.error { background: var(--danger); }
+.toast.show { transform: translateY(0); opacity: 1; }
+
+dialog {
+    margin: auto; padding: 1.5rem; width: min(92vw, 460px);
+    border: 1px solid var(--border); border-radius: var(--radius);
+}
+dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
+dialog h3 { font-size: 1rem; margin-bottom: 1rem; }
+.dialog-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
+
+/* Gallery cards */
+.gallery-admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
+.gallery-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.6rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.gallery-card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: #eee; }
+.gallery-card details { font-size: 0.85rem; }
+.gallery-card summary { cursor: pointer; color: var(--green); font-weight: 600; font-size: 0.78rem; margin-bottom: 0.5rem; }
+.card-actions { display: flex; gap: 0.35rem; }
+.card-actions .btn-danger { margin-left: auto; }
+
+/* Materials tree */
+.tree { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+.tree-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; padding-left: calc(0.75rem + var(--depth, 0) * 1.5rem); border-bottom: 1px solid var(--border); }
+.tree-row:last-child { border-bottom: 0; }
+.tree-name { flex: 1; min-width: 0; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tree-name button { all: unset; cursor: pointer; font-weight: 600; }
+.tree-name button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.tree-meta { color: var(--text-light); font-size: 0.78rem; width: 9rem; flex-shrink: 0; }
+.tree-actions { display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: flex-end; }
+.tree-empty { padding: 1.25rem; color: var(--text-light); font-size: 0.9rem; }
+
+@media (max-width: 700px) {
+    .container { padding: 1rem; }
+    .tree-meta { display: none; }
+    .tree-row { flex-wrap: wrap; }
+}

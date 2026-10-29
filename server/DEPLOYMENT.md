@@ -6,14 +6,15 @@ This site is designed to run directly on a Raspberry Pi Zero 2 W without Docker.
 
 - Application checkout: `/opt/germanetes`
 - SQLite database, uploaded images, and local backups: `/var/lib/germanetes`
-- Node listens only on `127.0.0.1:3000`; Caddy terminates HTTPS and reverse-proxies requests
+- Node listens only on `127.0.0.1:3000`; `cloudflared` connects outbound to Cloudflare and no router ports are forwarded
+- The public site and the admin use separate hostnames routed to the same local service
 - The database is the runtime source of truth. `data/projects.json` is used only to seed a new, empty database.
 
-The admin page and all CMS write/upload endpoints require HTTP Basic authentication. Public project reads remain available. The Basic-auth credentials must only travel over HTTPS; do not expose port 3000 directly.
+The admin page and all CMS write/upload endpoints require HTTP Basic authentication. Cloudflare Access adds GitHub sign-in in front of the admin hostname. Public project reads remain available on the public hostname. Keep port 3000 bound to loopback and do not forward router ports to the Pi.
 
 ## Fresh installation
 
-1. Install Raspberry Pi OS Lite (64-bit), update it, and install a supported Node.js LTS release, Git, Caddy, and the native build tools required by `better-sqlite3` if no prebuilt package is available. The Zero 2 W has limited memory; avoid Docker and run `npm ci` only during installation or dependency updates.
+1. Install Raspberry Pi OS Lite (64-bit), update it, and install a supported Node.js LTS release, Git, `cloudflared`, and the native build tools required by `better-sqlite3` if no prebuilt package is available. The Zero 2 W has limited memory; avoid Docker and run `npm ci` only during installation or dependency updates.
 2. Create a dedicated service account and persistent data directory:
 
    ```sh
@@ -39,23 +40,27 @@ The admin page and all CMS write/upload endpoints require HTTP Basic authenticat
    sudo systemctl daemon-reload
    ```
 
-6. Create `/etc/germanetes/germanetes.env` (mode `0600`) with a unique `ADMIN_USER` and strong `ADMIN_PASSWORD`. Set `GOOGLE_CALENDAR_ICS_URL` to the iCal address for a Google Calendar intentionally made public; all its event titles, descriptions, times, and locations are shown to website visitors. Do not use a private URL or a calendar containing sensitive information. Optionally set `UPDATE_BRANCH` and `CORS_ORIGINS`; same-origin requests need no CORS entry. Never put credentials in the Git checkout.
-7. Configure Caddy to reverse-proxy the domain to the local Node service. Replace `{$SITE_DOMAIN}` in the example with the real domain, make sure DNS points to the Pi, and forward only ports 80 and 443 from the router:
+6. Create `/etc/germanetes/germanetes.env` (mode `0600`) with `ADMIN_HOST=admin.example.org`, a unique `ADMIN_USER`, and a strong `ADMIN_PASSWORD`. `ADMIN_HOST` must exactly match the dedicated Cloudflare admin hostname; the server returns 404 for admin and write requests addressed through the public hostname. Set `GOOGLE_CALENDAR_ICS_URL` to the iCal address for a Google Calendar intentionally made public; all its event titles, descriptions, times, and locations are shown to website visitors. Do not use a private URL or a calendar containing sensitive information. Leave `CORS_ORIGINS` empty for the same-origin setup below. Never put credentials in the Git checkout.
+7. Configure GitHub as a Cloudflare Access identity provider:
 
-   ```sh
-   sudo cp /opt/germanetes/server/deploy/Caddyfile.example /etc/caddy/Caddyfile
-   sudoedit /etc/caddy/Caddyfile
-   sudo systemctl enable --now caddy
-   sudo systemctl reload caddy
-   ```
+   - In GitHub, create an OAuth App. Set its homepage to `https://<team-name>.cloudflareaccess.com` and its callback to `https://<team-name>.cloudflareaccess.com/cdn-cgi/access/callback`.
+   - Add that app in Cloudflare Zero Trust under **Integrations > Identity providers > GitHub**. Keep the client secret in Cloudflare, never in this repository or the Pi's public files.
+   - Create a **Self-hosted** Access application for the dedicated admin hostname (for example, `admin.example.org`) and add an **Allow** policy restricted to the garden workers' GitHub organization/team or specific identities. Access applications deny users who do not match an Allow policy.
 
-8. Start the application and scheduled jobs only after credentials and the proxy config are ready:
+8. In Cloudflare Zero Trust, create the tunnel and add two public hostnames, both pointing to `http://127.0.0.1:3000`:
+
+   - `www.example.org`: public website; do not put this hostname behind the admin Access policy.
+   - `admin.example.org`: admin interface; associate it with the Access application and enable **Protect with Access** on the tunnel route so `cloudflared` validates the Access token before forwarding requests.
+
+   Create and test the Access application before publishing the admin hostname. The admin page uses its own origin for API calls, so its API requests stay on the protected admin hostname. The current app also requires its Basic Auth credentials after Cloudflare login; this is intentional defense in depth, though it means two login steps.
+
+9. Start the application and scheduled jobs only after the Access policy, tunnel routes, and credentials are ready:
 
    ```sh
    sudo systemctl enable --now germanetes.service germanetes-backup.timer germanetes-update.timer
    ```
 
-The update timer checks Git every 15 minutes. It deploys fast-forward updates only, refuses a dirty or diverged checkout, installs dependencies only when the server lockfiles change, and restarts the service after an update. Dependency versions live in `/var/lib/germanetes/nodejs`; the installer retains the latest two releases. The updater never resets the checkout. Check logs with `journalctl -u germanetes-update.service` and `journalctl -u germanetes.service`.
+Install and enable the `cloudflared` service using the connector command provided by the Cloudflare dashboard. Store its tunnel token as a root-managed secret, not in the Git checkout. Do not open inbound ports on the router. The update timer checks Git every 15 minutes. It deploys fast-forward updates only, refuses a dirty or diverged checkout, installs dependencies only when the server lockfiles change, and restarts the service after an update. Dependency versions live in `/var/lib/germanetes/nodejs`; the installer retains the latest two releases. The updater never resets the checkout. Check logs with `journalctl -u germanetes-update.service` and `journalctl -u germanetes.service`.
 
 The backup timer creates a consistent SQLite backup daily and retains the latest 14 files under `/var/lib/germanetes/backups`. A second copy should be synced to another device or storage provider; backups on the same SD card do not protect against card failure.
 

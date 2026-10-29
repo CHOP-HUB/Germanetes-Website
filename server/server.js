@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { timingSafeEqual } = require('crypto');
+const { randomBytes, timingSafeEqual } = require('crypto');
 const multer = require('multer');
 const ical = require('node-ical');
 const path = require('path');
@@ -10,11 +10,12 @@ const db = require('./db');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '127.0.0.1';
+const ADMIN_HOST = (process.env.ADMIN_HOST || '').toLowerCase();
 const ADMIN_USER = process.env.ADMIN_USER || '';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 
-if (process.env.NODE_ENV === 'production' && (!ADMIN_USER || !ADMIN_PASSWORD)) {
-    throw new Error('ADMIN_USER and ADMIN_PASSWORD must be configured in production.');
+if (process.env.NODE_ENV === 'production' && (!ADMIN_HOST || !ADMIN_USER || !ADMIN_PASSWORD)) {
+    throw new Error('ADMIN_HOST, ADMIN_USER, and ADMIN_PASSWORD must be configured in production.');
 }
 
 // Root of the website (one level up from server/)
@@ -51,7 +52,8 @@ app.use(cors({
             const hostname = new URL(origin).hostname;
             isLocalDevelopment = ['localhost', '127.0.0.1', '[::1]'].includes(hostname);
         } catch {}
-        callback(null, allowedOrigins.has(origin) || isLocalDevelopment);
+        const allowDevelopmentOrigin = process.env.NODE_ENV !== 'production' && isLocalDevelopment;
+        callback(null, allowedOrigins.has(origin) || allowDevelopmentOrigin);
     }
 }));
 
@@ -90,9 +92,34 @@ function requireAdminAuth(req, res, next) {
     next();
 }
 
-app.use('/admin', requireAdminAuth);
+function requireAdminHost(req, res, next) {
+    if (!ADMIN_HOST) {
+        if (process.env.NODE_ENV !== 'production') return next();
+        return res.status(503).send('Admin hostname is not configured');
+    }
+    if (req.hostname.toLowerCase() !== ADMIN_HOST) {
+        return res.status(404).send('Not found');
+    }
+    next();
+}
+
+app.use('/admin', requireAdminHost, requireAdminAuth);
 
 // Serve the static website
+const MATERIALS_DIR = path.join(UPLOADS_DIR, 'materials');
+fs.mkdirSync(MATERIALS_DIR, { recursive: true });
+
+// Server source and private resources must not be reachable through the static root.
+app.use(['/server', '/Germanetes_Resources'], (req, res) => res.status(404).send('Not found'));
+
+// Uploaded materials are untrusted: stop type sniffing and force download unless it is a PDF or image.
+app.use('/uploads/materials', express.static(MATERIALS_DIR, {
+    index: false,
+    setHeaders(res, filePath) {
+        res.set('X-Content-Type-Options', 'nosniff');
+        if (!/\.(pdf|jpe?g|png|gif|webp)$/i.test(filePath)) res.set('Content-Disposition', 'attachment');
+    }
+}));
 app.use('/assets/images/projects', express.static(UPLOADS_DIR, { index: false }));
 app.use('/uploads', express.static(UPLOADS_DIR, { index: false }));
 app.use(express.static(SITE_ROOT));
@@ -278,7 +305,7 @@ app.get('/api/projects/:id', (req, res) => {
 });
 
 // POST /api/projects — create a new project
-app.post('/api/projects', requireAdminAuth, (req, res) => {
+app.post('/api/projects', requireAdminHost, requireAdminAuth, (req, res) => {
     try {
         const project = db.createProject(req.body);
         res.status(201).json(project);
@@ -292,7 +319,7 @@ app.post('/api/projects', requireAdminAuth, (req, res) => {
 });
 
 // PUT /api/projects/:id — update a project
-app.put('/api/projects/:id', requireAdminAuth, (req, res) => {
+app.put('/api/projects/:id', requireAdminHost, requireAdminAuth, (req, res) => {
     try {
         const project = db.updateProject(req.params.id, req.body);
         if (!project) {
@@ -306,7 +333,7 @@ app.put('/api/projects/:id', requireAdminAuth, (req, res) => {
 });
 
 // DELETE /api/projects/:id — delete a project
-app.delete('/api/projects/:id', requireAdminAuth, (req, res) => {
+app.delete('/api/projects/:id', requireAdminHost, requireAdminAuth, (req, res) => {
     try {
         const deleted = db.deleteProject(req.params.id);
         if (!deleted) {
@@ -320,7 +347,7 @@ app.delete('/api/projects/:id', requireAdminAuth, (req, res) => {
 });
 
 // POST /api/upload — upload an image, return the path
-app.post('/api/upload', requireAdminAuth, upload.single('image'), (req, res) => {
+app.post('/api/upload', requireAdminHost, requireAdminAuth, upload.single('image'), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No image file provided' });
     }
@@ -328,7 +355,7 @@ app.post('/api/upload', requireAdminAuth, upload.single('image'), (req, res) => 
 });
 
 // PUT /api/projects/:id/images — replace all images for a project
-app.put('/api/projects/:id/images', requireAdminAuth, (req, res) => {
+app.put('/api/projects/:id/images', requireAdminHost, requireAdminAuth, (req, res) => {
     try {
         const project = db.replaceProjectImages(req.params.id, req.body.images || []);
         if (!project) {
@@ -342,7 +369,7 @@ app.put('/api/projects/:id/images', requireAdminAuth, (req, res) => {
 });
 
 // POST /api/projects/:id/images — add a single image to a project
-app.post('/api/projects/:id/images', requireAdminAuth, upload.single('image'), (req, res) => {
+app.post('/api/projects/:id/images', requireAdminHost, requireAdminAuth, upload.single('image'), (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No image file provided' });
@@ -365,6 +392,175 @@ app.post('/api/projects/:id/images', requireAdminAuth, upload.single('image'), (
     }
 });
 
+// ── Gallery ────────────────────────────────────────────────────────
+
+const adminOnly = [requireAdminHost, requireAdminAuth];
+
+function cleanText(value, max = 200) {
+    return String(value ?? '').trim().slice(0, max);
+}
+
+function isSiteImagePath(value) {
+    return typeof value === 'string' && /^\/(uploads|assets\/images)\/[^?#]+$/.test(value) && !value.includes('..');
+}
+
+function namesFrom(body) {
+    const names = { ca: cleanText(body.name_ca), es: cleanText(body.name_es), en: cleanText(body.name_en) };
+    const fallback = names.ca || names.es || names.en;
+    return fallback ? { ca: names.ca || fallback, es: names.es || fallback, en: names.en || fallback } : null;
+}
+
+app.get('/api/gallery', (req, res) => {
+    try {
+        res.json(db.getGallery());
+    } catch (err) {
+        console.error('Error fetching gallery:', err);
+        res.status(500).json({ error: 'Failed to fetch gallery' });
+    }
+});
+
+// PUT /api/gallery — replace the whole gallery (order, sizes, captions)
+app.put('/api/gallery', ...adminOnly, (req, res) => {
+    const incoming = req.body?.items;
+    if (!Array.isArray(incoming) || incoming.length > 500) {
+        return res.status(400).json({ error: 'Expected a list of at most 500 items' });
+    }
+    const items = [];
+    for (const item of incoming) {
+        const size = Number(item?.size);
+        if (!isSiteImagePath(item?.src) || ![1, 2, 3].includes(size)) {
+            return res.status(400).json({ error: 'Each item needs a site image path and a size of 1, 2 or 3' });
+        }
+        items.push({
+            src: item.src,
+            size,
+            caption_ca: cleanText(item.caption?.ca, 300),
+            caption_es: cleanText(item.caption?.es, 300),
+            caption_en: cleanText(item.caption?.en, 300)
+        });
+    }
+    try {
+        res.json(db.replaceGallery(items));
+    } catch (err) {
+        console.error('Error saving gallery:', err);
+        res.status(500).json({ error: 'Failed to save gallery' });
+    }
+});
+
+// ── Materials ────────────────────────────────────────────────────────
+
+const MATERIAL_EXTENSIONS = new Set([
+    '.pdf', '.jpg', '.jpeg', '.png', '.gif', '.webp', '.doc', '.docx', '.xls', '.xlsx',
+    '.ppt', '.pptx', '.odt', '.ods', '.odp', '.txt', '.csv', '.zip'
+]);
+const MAX_MATERIAL_DEPTH = 6;
+
+const materialUpload = multer({
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => cb(null, MATERIALS_DIR),
+        filename: (req, file, cb) => cb(null, `${randomBytes(12).toString('hex')}${path.extname(file.originalname).toLowerCase()}`)
+    }),
+    limits: { fileSize: 25 * 1024 * 1024, files: 1 },
+    fileFilter: (req, file, cb) => {
+        if (MATERIAL_EXTENSIONS.has(path.extname(file.originalname).toLowerCase())) cb(null, true);
+        else cb(new Error('This file type is not allowed'));
+    }
+}).single('file');
+
+function receiveMaterialFile(req, res, next) {
+    materialUpload(req, res, err => err ? res.status(400).json({ error: err.message }) : next());
+}
+
+function removeStoredMaterialFiles(filePaths) {
+    for (const filePath of filePaths) {
+        fs.unlink(path.join(MATERIALS_DIR, path.basename(filePath)), error => {
+            if (error && error.code !== 'ENOENT') console.error('Could not remove material file:', error.message);
+        });
+    }
+}
+
+// Resolves a submitted parent id to null (top level) or an existing folder below the depth limit.
+function resolveParentFolder(value) {
+    if (value === undefined || value === null || value === '' || value === 'null') return { parentId: null };
+    const parentId = Number.parseInt(value, 10);
+    const parent = Number.isInteger(parentId) ? db.getMaterialNode(parentId) : null;
+    if (!parent || parent.type !== 'folder') return { error: 'The parent folder does not exist' };
+    if (db.getMaterialDepth(parentId) >= MAX_MATERIAL_DEPTH) return { error: 'Folders are nested too deeply' };
+    return { parentId };
+}
+
+app.get('/api/materials', (req, res) => {
+    try {
+        res.json(db.getMaterials());
+    } catch (err) {
+        console.error('Error fetching materials:', err);
+        res.status(500).json({ error: 'Failed to fetch materials' });
+    }
+});
+
+app.post('/api/materials/folders', ...adminOnly, (req, res) => {
+    const names = namesFrom(req.body || {});
+    const parent = resolveParentFolder(req.body?.parent_id);
+    if (!names) return res.status(400).json({ error: 'A folder name is required' });
+    if (parent.error) return res.status(400).json({ error: parent.error });
+    try {
+        res.status(201).json(db.createMaterialNode({ parentId: parent.parentId, type: 'folder', names }));
+    } catch (err) {
+        console.error('Error creating folder:', err);
+        res.status(500).json({ error: 'Failed to create folder' });
+    }
+});
+
+app.post('/api/materials/files', ...adminOnly, receiveMaterialFile, (req, res) => {
+    const discardUpload = () => req.file && fs.unlink(req.file.path, () => {});
+    const names = namesFrom(req.body || {});
+    const parent = resolveParentFolder(req.body?.parent_id);
+    if (!req.file) return res.status(400).json({ error: 'No file provided' });
+    if (!names || parent.error) {
+        discardUpload();
+        return res.status(400).json({ error: parent.error || 'A file name is required' });
+    }
+    try {
+        res.status(201).json(db.createMaterialNode({
+            parentId: parent.parentId,
+            type: 'file',
+            names,
+            filePath: `/uploads/materials/${req.file.filename}`,
+            fileSize: req.file.size,
+            ext: path.extname(req.file.filename).slice(1)
+        }));
+    } catch (err) {
+        discardUpload();
+        console.error('Error saving material file:', err);
+        res.status(500).json({ error: 'Failed to save file' });
+    }
+});
+
+app.put('/api/materials/:id', ...adminOnly, (req, res) => {
+    const names = namesFrom(req.body || {});
+    if (!names) return res.status(400).json({ error: 'A name is required' });
+    try {
+        const node = db.renameMaterialNode(Number.parseInt(req.params.id, 10), names);
+        if (!node) return res.status(404).json({ error: 'Not found' });
+        res.json(node);
+    } catch (err) {
+        console.error('Error renaming material:', err);
+        res.status(500).json({ error: 'Failed to rename' });
+    }
+});
+
+app.delete('/api/materials/:id', ...adminOnly, (req, res) => {
+    try {
+        const removedFiles = db.deleteMaterialNode(Number.parseInt(req.params.id, 10));
+        if (removedFiles === null) return res.status(404).json({ error: 'Not found' });
+        removeStoredMaterialFiles(removedFiles);
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error deleting material:', err);
+        res.status(500).json({ error: 'Failed to delete' });
+    }
+});
+
 // ── Seed data from existing JSON on first run ──────────
 
 const jsonPath = path.join(SITE_ROOT, 'data', 'projects.json');
@@ -383,7 +579,7 @@ process.on('SIGINT', () => {
     console.log('\nShutting down...');
     db.close();
     process.exit(0);
-});
+}); 
 
 process.on('SIGTERM', () => {
     db.close();

@@ -1,7 +1,7 @@
 [
   {
     "id": "espai-germanetes",
-    "category": "ongoing",
+    "category": "permanent",
     "thumbnail": "assets/images/projects/espai-germanetes-garden.jpg",
     "title": "Espai Germanetes",
     "shortDescription": {
@@ -69,7 +69,7 @@
   },
   {
     "id": "espai-nur",
-    "category": "ongoing",
+    "category": "permanent",
     "thumbnail": "assets/images/projects/espai-nur-garden.jpg",
     "title": "Espai Nur",
     "shortDescription": {
@@ -97,7 +97,7 @@
   },
   {
     "id": "aula-viva",
-    "category": "ongoing",
+    "category": "permanent",
     "thumbnail": "assets/images/projects/aula-viva-activity.jpg",
     "title": "Aula Viva",
     "shortDescription": {
@@ -133,7 +133,7 @@
   },
   {
     "id": "revolta-eixample",
-    "category": "ongoing",
+    "category": "permanent",
     "thumbnail": "assets/images/projects/revolta-composting.jpg",
     "title": "Revolta Eixample",
     "shortDescription": {
@@ -177,7 +177,7 @@
   },
   {
     "id": "vine-a-jugar",
-    "category": "ongoing",
+    "category": "permanent",
     "thumbnail": "assets/images/projects/vine-a-jugar-play.jpg",
     "title": "Vine a Jugar!",
     "shortDescription": {
@@ -196,7 +196,7 @@
   },
   {
     "id": "banc-de-recursos",
-    "category": "ongoing",
+    "category": "permanent",
     "thumbnail": "assets/images/about/bitmap_asemblea-1.png",
     "title": "Banc de Recursos Comunitari",
     "shortDescription": {
@@ -215,7 +215,7 @@
   },
   {
     "id": "comunitats-sembra-aigua",
-    "category": "ongoing",
+    "category": "permanent",
     "thumbnail": "assets/images/projects/sembra-aigua-garden.jpg",
     "title": "Comunitats de Sembra d'Aigua",
     "shortDescription": {
@@ -303,7 +303,7 @@
   },
   {
     "id": "coordinadora-entitats",
-    "category": "ongoing",
+    "category": "permanent",
     "thumbnail": "assets/images/projects/coordinadora-meeting.jpg",
     "title": "Coordinadora d'Entitats de l'Esquerra de l'Eixample",
     "shortDescription": {
@@ -322,7 +322,7 @@
   },
   {
     "id": "mural-comunitari",
-    "category": "archive",
+    "category": "historic",
     "thumbnail": "assets/images/projects/mural-comunitari.jpg",
     "title": "Mural Comunitari",
     "shortDescription": {
@@ -341,7 +341,7 @@
   },
   {
     "id": "apacheta",
-    "category": "archive",
+    "category": "historic",
     "thumbnail": "assets/images/projects/apacheta.jpg",
     "title": "Apacheta",
     "shortDescription": {
@@ -360,7 +360,7 @@
   },
   {
     "id": "cultivem-0-18",
-    "category": "archive",
+    "category": "historic",
     "thumbnail": "assets/images/about/bitmap_asemblea-2.png",
     "title": "Cultivem 0-18",
     "shortDescription": {

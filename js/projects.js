@@ -36,59 +36,6 @@
         return path || '';
     }
 
-    function safeInlineHtml(text) {
-        const template = document.createElement('template');
-        template.innerHTML = text;
-        const output = document.createElement('span');
-        const allowedTags = new Set(['A', 'BR', 'STRONG', 'EM', 'B', 'I']);
-        const blockedTags = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'SVG', 'MATH']);
-
-        function copySafeNodes(source, destination) {
-            source.childNodes.forEach(node => {
-                if (node.nodeType === Node.TEXT_NODE) {
-                    destination.appendChild(document.createTextNode(node.textContent));
-                    return;
-                }
-                if (node.nodeType !== Node.ELEMENT_NODE || blockedTags.has(node.tagName)) return;
-                if (!allowedTags.has(node.tagName)) {
-                    copySafeNodes(node, destination);
-                    return;
-                }
-
-                const safeElement = document.createElement(node.tagName.toLowerCase());
-                if (node.tagName === 'A') {
-                    const href = node.getAttribute('href') || '';
-                    try {
-                        const parsedUrl = new URL(href, location.origin);
-                        if (['http:', 'https:', 'mailto:'].includes(parsedUrl.protocol)) {
-                            safeElement.href = parsedUrl.href;
-                            if (node.getAttribute('target') === '_blank') {
-                                safeElement.target = '_blank';
-                                safeElement.rel = 'noopener noreferrer';
-                            }
-                        }
-                    } catch {}
-                }
-                copySafeNodes(node, safeElement);
-                destination.appendChild(safeElement);
-            });
-        }
-
-        copySafeNodes(template.content, output);
-        return output.innerHTML;
-    }
-
-    // Convert plain text with newlines into HTML paragraphs
-    function paragraphs(text) {
-        if (!text) return '';
-        return text
-            .split(/\n\s*\n/)          // split on blank lines → paragraphs
-            .map(p => p.trim())
-            .filter(Boolean)
-            .map(p => `<p>${safeInlineHtml(p.replace(/\n/g, '<br>'))}</p>`)
-            .join('');
-    }
-
     // SQLite-backed API is the runtime source of truth.
     async function fetchProjects() {
         try {
@@ -233,31 +180,49 @@
         // Build modal content
         let html = '';
 
-        // Title
-        html += `<h2 class="modal-project-title">${escapeHtml(t(project.title))}</h2>`;
-
-        // Thumbnail at top
+        // Thumbnail banner
         if (project.thumbnail) {
             html += `<img class="modal-hero-img" src="${escapeHtml(assetUrl(project.thumbnail))}" alt="${escapeHtml(t(project.title))}">`;
         }
 
-        // Description
-        if (project.detail && project.detail.description) {
-            html += `<div class="modal-description">${paragraphs(t(project.detail.description))}</div>`;
+        // Title and subtitle follow the banner.
+        html += `<h2 class="modal-project-title">${escapeHtml(t(project.title))}</h2>`;
+        if (project.subtitle && t(project.subtitle)) {
+            html += `<p class="modal-project-subtitle">${escapeHtml(t(project.subtitle))}</p>`;
         }
 
-        // Gallery images
+        // Description
+        let descriptionHtml = '';
+        if (project.detail && project.detail.description) {
+            descriptionHtml = window.projectContent.toHtml(t(project.detail.description));
+            html += `<div class="modal-description">${descriptionHtml}</div>`;
+        }
+
+        // Images used in the text are not repeated in the trailing gallery.
         if (project.detail && project.detail.images && project.detail.images.length > 0) {
-            html += '<div class="modal-gallery">';
-            project.detail.images.forEach(img => {
-                const src = assetUrl(typeof img === 'string' ? img : img.src);
-                const caption = typeof img === 'string' ? '' : t(img.caption);
-                html += `<figure class="modal-gallery-item">`;
-                html += `<img src="${escapeHtml(src)}" alt="${escapeHtml(caption)}" loading="lazy">`;
-                if (caption) html += `<figcaption>${escapeHtml(caption)}</figcaption>`;
-                html += `</figure>`;
+            const descriptions = project.detail.description;
+            const allDescriptions = typeof descriptions === 'string'
+                ? [descriptions]
+                : Object.values(descriptions || {});
+            const referencedImages = window.projectContent.referencedImages(
+                allDescriptions.map(description => window.projectContent.toHtml(description)).join('')
+            );
+            const trailingImages = project.detail.images.filter(img => {
+                const src = typeof img === 'string' ? img : img.src;
+                return !referencedImages.has(window.projectContent.imagePath(src));
             });
-            html += '</div>';
+            if (trailingImages.length > 0) {
+                html += '<div class="modal-gallery">';
+                trailingImages.forEach(img => {
+                    const src = assetUrl(typeof img === 'string' ? img : img.src);
+                    const caption = typeof img === 'string' ? '' : t(img.caption);
+                    html += `<figure class="modal-gallery-item">`;
+                    html += `<img src="${escapeHtml(src)}" alt="${escapeHtml(caption)}" loading="lazy">`;
+                    if (caption) html += `<figcaption>${escapeHtml(caption)}</figcaption>`;
+                    html += `</figure>`;
+                });
+                html += '</div>';
+            }
         }
 
         body.innerHTML = html;
@@ -289,9 +254,16 @@
         renderGrids();
     }
 
+    function openById(id) {
+        const project = projectsData.find(p => p.id === id);
+        if (project) openModal(project);
+    }
+
     // Expose for use by main.js
     window.projectsModule = {
         init,
+        openById,
+        closeModal,
         updateCardTexts,
         renderGrids
     };

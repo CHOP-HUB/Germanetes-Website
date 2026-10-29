@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materials — Admin Germanetes</title>
+    <link rel="icon" type="image/png" href="/assets/icons/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+
+<div class="topbar">
+    <h1>Germanetes Admin</h1>
+    <nav class="topnav">
+        <a href="/admin/">Projectes</a>
+        <a href="/admin/gallery/">Galeria</a>
+        <a href="/admin/materials/" aria-current="page">Materials</a>
+    </nav>
+    <a href="/">← Tornar al web</a>
+</div>
+
+<div class="container">
+    <div class="toolbar">
+        <h2>Materials</h2>
+        <div class="toolbar-actions">
+            <button type="button" class="btn" id="btn-root-folder">+ Carpeta</button>
+            <button type="button" class="btn btn-primary" id="btn-root-upload">+ Puja fitxers</button>
+        </div>
+    </div>
+    <p class="hint">Cada carpeta té els botons per crear subcarpetes i pujar-hi fitxers. Tipus permesos: PDF, imatges (JPG, PNG, GIF, WebP), Word, Excel, PowerPoint, OpenDocument, TXT, CSV i ZIP. Màxim 25 MB per fitxer.</p>
+
+    <div class="tree" id="tree"></div>
+    <input type="file" id="file-input" multiple hidden>
+</div>
+
+<dialog id="name-dialog">
+    <form method="dialog" id="name-form" autocomplete="off">
+        <h3 id="dialog-title"></h3>
+        <div class="field">
+            <label for="name-ca">Nom en català</label>
+            <input type="text" id="name-ca" required maxlength="200">
+        </div>
+        <div class="field">
+            <label for="name-es">Nom en castellà (opcional)</label>
+            <input type="text" id="name-es" maxlength="200">
+        </div>
+        <div class="field">
+            <label for="name-en">Nom en anglès (opcional)</label>
+            <input type="text" id="name-en" maxlength="200">
+        </div>
+        <div class="dialog-actions">
+            <button type="button" class="btn" id="dialog-cancel">Cancel·lar</button>
+            <button type="submit" class="btn btn-primary">Desar</button>
+        </div>
+    </form>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script src="/admin/admin.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    const { apiFetch, apiJson, escapeHtml, toast, formatSize } = window.adminTools;
+    const tree = document.getElementById('tree');
+    const fileInput = document.getElementById('file-input');
+    const dialog = document.getElementById('name-dialog');
+    const nameForm = document.getElementById('name-form');
+    const nameFields = { ca: 'name-ca', es: 'name-es', en: 'name-en' };
+
+    let nodes = [];
+    const expanded = new Set();
+    let uploadParent = null;
+    let dialogAction = null;
+
+    const label = node => node.name.ca || node.name.es || node.name.en;
+
+    function childrenOf(parentId) {
+        return nodes
+            .filter(node => node.parentId === parentId)
+            .sort((a, b) => (a.type === b.type ? label(a).localeCompare(label(b), 'ca', { numeric: true }) : a.type === 'folder' ? -1 : 1));
+    }
+
+    function rowsFor(parentId, depth) {
+        return childrenOf(parentId).map(node => {
+            const isFolder = node.type === 'folder';
+            const open = expanded.has(node.id);
+            const name = escapeHtml(label(node));
+            const meta = isFolder
+                ? `${nodes.filter(child => child.parentId === node.id).length} elements`
+                : `${node.ext.toUpperCase()} · ${formatSize(node.size)}`;
+            const nameCell = isFolder
+                ? `<button type="button" data-toggle="${node.id}" aria-expanded="${open}">${open ? '▾' : '▸'} ${name}</button>`
+                : name;
+            const folderActions = isFolder
+                ? `<button type="button" class="btn btn-sm" data-add-folder="${node.id}">+ Carpeta</button>
+                   <button type="button" class="btn btn-sm" data-upload="${node.id}">Puja fitxers</button>`
+                : '';
+            return `
+                <div class="tree-row" style="--depth:${depth}">
+                    <div class="tree-name">${nameCell}</div>
+                    <div class="tree-meta">${meta}</div>
+                    <div class="tree-actions">
+                        ${folderActions}
+                        <button type="button" class="btn btn-sm" data-rename="${node.id}">Canvia el nom</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-delete="${node.id}">Esborra</button>
+                    </div>
+                </div>
+                ${isFolder && open ? rowsFor(node.id, depth + 1) : ''}`;
+        }).join('');
+    }
+
+    function render() {
+        tree.innerHTML = nodes.length ? rowsFor(null, 0) : '<div class="tree-empty">Encara no hi ha cap carpeta ni fitxer.</div>';
+    }
+
+    async function reload() {
+        try {
+            nodes = await apiJson('/materials');
+            render();
+        } catch (error) {
+            toast(error.message, true);
+        }
+    }
+
+    function openDialog(title, names, action) {
+        document.getElementById('dialog-title').textContent = title;
+        for (const [code, id] of Object.entries(nameFields)) document.getElementById(id).value = names?.[code] || '';
+        dialogAction = action;
+        dialog.showModal();
+        document.getElementById('name-ca').focus();
+    }
+
+    nameForm.addEventListener('submit', async event => {
+        event.preventDefault();
+        const payload = Object.fromEntries(Object.entries(nameFields).map(([code, id]) => [`name_${code}`, document.getElementById(id).value.trim()]));
+        if (!payload.name_ca) return;
+        const action = dialogAction;
+        dialog.close();
+        try {
+            if (action.type === 'create') {
+                await apiJson('/materials/folders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...payload, parent_id: action.parentId })
+                });
+                if (action.parentId !== null) expanded.add(action.parentId);
+                toast('Carpeta creada');
+            } else {
+                await apiJson(`/materials/${action.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                toast('Nom actualitzat');
+            }
+            await reload();
+        } catch (error) {
+            toast(error.message, true);
+        }
+    });
+    document.getElementById('dialog-cancel').addEventListener('click', () => dialog.close());
+
+    async function uploadFiles(files, parentId) {
+        let uploaded = 0;
+        for (const file of files) {
+            const base = file.name.replace(/\.[^.]+$/, '');
+            const body = new FormData();
+            if (parentId !== null) body.append('parent_id', parentId);
+            ['ca', 'es', 'en'].forEach(code => body.append(`name_${code}`, base));
+            body.append('file', file);
+            try {
+                const response = await apiFetch('/materials/files', { method: 'POST', body });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || `Error ${response.status}`);
+                uploaded += 1;
+            } catch (error) {
+                toast(`${file.name}: ${error.message}`, true);
+            }
+        }
+        if (uploaded) {
+            if (parentId !== null) expanded.add(parentId);
+            toast(uploaded === 1 ? 'Fitxer pujat' : `${uploaded} fitxers pujats`);
+        }
+        await reload();
+    }
+
+    function chooseFiles(parentId) {
+        uploadParent = parentId;
+        fileInput.click();
+    }
+
+    fileInput.addEventListener('change', () => {
+        const files = [...fileInput.files];
+        fileInput.value = '';
+        if (files.length) uploadFiles(files, uploadParent);
+    });
+
+    document.getElementById('btn-root-folder').addEventListener('click', () => openDialog('Nova carpeta', null, { type: 'create', parentId: null }));
+    document.getElementById('btn-root-upload').addEventListener('click', () => chooseFiles(null));
+
+    tree.addEventListener('click', async event => {
+        const button = event.target.closest('button');
+        if (!button) return;
+        const read = name => (button.dataset[name] === undefined ? null : Number(button.dataset[name]));
+
+        if (read('toggle') !== null) {
+            const id = read('toggle');
+            if (expanded.has(id)) expanded.delete(id); else expanded.add(id);
+            render();
+        } else if (read('addFolder') !== null) {
+            openDialog('Nova subcarpeta', null, { type: 'create', parentId: read('addFolder') });
+        } else if (read('upload') !== null) {
+            chooseFiles(read('upload'));
+        } else if (read('rename') !== null) {
+            const node = nodes.find(item => item.id === read('rename'));
+            openDialog('Canvia el nom', node.name, { type: 'rename', id: node.id });
+        } else if (read('delete') !== null) {
+            const node = nodes.find(item => item.id === read('delete'));
+            const warning = node.type === 'folder' ? ' i tot el seu contingut' : '';
+            if (!confirm(`Esborrar "${label(node)}"${warning}? No es pot desfer.`)) return;
+            try {
+                await apiJson(`/materials/${node.id}`, { method: 'DELETE' });
+                toast('Esborrat');
+                await reload();
+            } catch (error) {
+                toast(error.message, true);
+            }
+        }
+    });
+
+    reload();
+})();
+</script>
+</body>
+</html>
