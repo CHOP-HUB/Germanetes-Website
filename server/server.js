@@ -447,6 +447,41 @@ app.put('/api/gallery', ...adminOnly, (req, res) => {
     }
 });
 
+// ── Bulletins ────────────────────────────────────────────────────────
+
+const BULLETIN_MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
+
+app.get('/api/bulletins', (req, res) => {
+    try {
+        res.json(db.getBulletins());
+    } catch (err) {
+        console.error('Error fetching bulletins:', err);
+        res.status(500).json({ error: 'Failed to fetch bulletins' });
+    }
+});
+
+app.put('/api/bulletins/:month', ...adminOnly, (req, res) => {
+    if (!BULLETIN_MONTH.test(req.params.month) || !isSiteImagePath(req.body?.src)) {
+        return res.status(400).json({ error: 'Expected a month (YYYY-MM) and a site image path' });
+    }
+    try {
+        res.json(db.setBulletin(req.params.month, req.body.src));
+    } catch (err) {
+        console.error('Error saving bulletin:', err);
+        res.status(500).json({ error: 'Failed to save bulletin' });
+    }
+});
+
+app.delete('/api/bulletins/:month', ...adminOnly, (req, res) => {
+    if (!BULLETIN_MONTH.test(req.params.month)) return res.status(400).json({ error: 'Invalid month' });
+    try {
+        res.json(db.deleteBulletin(req.params.month));
+    } catch (err) {
+        console.error('Error deleting bulletin:', err);
+        res.status(500).json({ error: 'Failed to delete bulletin' });
+    }
+});
+
 // ── Materials ────────────────────────────────────────────────────────
 
 const MATERIAL_EXTENSIONS = new Set([

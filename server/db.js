@@ -115,6 +115,21 @@ function migrateProjectsTable() {
 
 migrateProjectsTable();
 
+if (!db.pragma('table_info(projects)').some(column => column.name === 'instagram')) {
+    db.exec("ALTER TABLE projects ADD COLUMN instagram TEXT NOT NULL DEFAULT ''");
+}
+
+// Accepts "@handle", "handle" or an instagram.com profile URL and keeps only the handle.
+function normalizeInstagram(value) {
+    const text = String(value || '').trim();
+    if (!text) return '';
+    const handle = text
+        .replace(/^https?:\/\/(?:www\.)?instagram\.com\//i, '')
+        .replace(/^@/, '')
+        .split(/[/?#]/)[0];
+    return /^[A-Za-z0-9._]{1,30}$/.test(handle) ? handle : '';
+}
+
 db.exec(`
     CREATE TABLE IF NOT EXISTS gallery_items (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -125,6 +140,12 @@ db.exec(`
         caption_en TEXT NOT NULL DEFAULT '',
         sort_order INTEGER NOT NULL DEFAULT 0,
         created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS bulletins (
+        month TEXT PRIMARY KEY CHECK(month GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]'),
+        image_path TEXT NOT NULL,
+        updated_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
 
     CREATE TABLE IF NOT EXISTS material_nodes (
@@ -166,10 +187,10 @@ const stmts = {
     `),
 
     insertProject: db.prepare(`
-        INSERT INTO projects (id, category, thumbnail, title, subtitle_ca, subtitle_es, subtitle_en,
+        INSERT INTO projects (id, category, thumbnail, title, subtitle_ca, subtitle_es, subtitle_en, instagram,
             short_desc_ca, short_desc_es, short_desc_en,
             detail_desc_ca, detail_desc_es, detail_desc_en, sort_order)
-        VALUES (@id, @category, @thumbnail, @title, @subtitle_ca, @subtitle_es, @subtitle_en,
+        VALUES (@id, @category, @thumbnail, @title, @subtitle_ca, @subtitle_es, @subtitle_en, @instagram,
             @short_desc_ca, @short_desc_es, @short_desc_en,
             @detail_desc_ca, @detail_desc_es, @detail_desc_en, @sort_order)
     `),
@@ -182,6 +203,7 @@ const stmts = {
             subtitle_ca = @subtitle_ca,
             subtitle_es = @subtitle_es,
             subtitle_en = @subtitle_en,
+            instagram = @instagram,
             short_desc_ca = @short_desc_ca,
             short_desc_es = @short_desc_es,
             short_desc_en = @short_desc_en,
@@ -228,6 +250,7 @@ function rowToProject(row) {
             es: row.subtitle_es,
             en: row.subtitle_en
         },
+        instagram: row.instagram || '',
         shortDescription: {
             ca: row.short_desc_ca,
             es: row.short_desc_es,
@@ -291,6 +314,7 @@ function createProject(data) {
         subtitle_ca: data.subtitle_ca || '',
         subtitle_es: data.subtitle_es || '',
         subtitle_en: data.subtitle_en || '',
+        instagram: normalizeInstagram(data.instagram),
         short_desc_ca: data.short_desc_ca || '',
         short_desc_es: data.short_desc_es || '',
         short_desc_en: data.short_desc_en || '',
@@ -315,6 +339,7 @@ function updateProject(id, data) {
         subtitle_ca: data.subtitle_ca ?? existing.subtitle_ca,
         subtitle_es: data.subtitle_es ?? existing.subtitle_es,
         subtitle_en: data.subtitle_en ?? existing.subtitle_en,
+        instagram: data.instagram === undefined ? existing.instagram : normalizeInstagram(data.instagram),
         short_desc_ca: data.short_desc_ca ?? existing.short_desc_ca,
         short_desc_es: data.short_desc_es ?? existing.short_desc_es,
         short_desc_en: data.short_desc_en ?? existing.short_desc_en,
@@ -388,6 +413,7 @@ function seedFromJson(jsonPath) {
                     subtitle_ca: p.subtitle?.ca || '',
                     subtitle_es: p.subtitle?.es || '',
                     subtitle_en: p.subtitle?.en || '',
+                    instagram: normalizeInstagram(p.instagram),
                     short_desc_ca: p.shortDescription?.ca || '',
                     short_desc_es: p.shortDescription?.es || '',
                     short_desc_en: p.shortDescription?.en || '',
@@ -447,6 +473,26 @@ const replaceGalleryTransaction = db.transaction(items => {
 function replaceGallery(items) {
     replaceGalleryTransaction(items);
     return getGallery();
+}
+
+// ── Bulletins (one image per month) ────────────────────
+
+function getBulletins() {
+    return Object.fromEntries(db.prepare('SELECT month, image_path FROM bulletins ORDER BY month').all()
+        .map(row => [row.month, row.image_path]));
+}
+
+function setBulletin(month, imagePath) {
+    db.prepare(`
+        INSERT INTO bulletins (month, image_path) VALUES (?, ?)
+        ON CONFLICT(month) DO UPDATE SET image_path = excluded.image_path, updated_at = datetime('now')
+    `).run(month, imagePath);
+    return getBulletins();
+}
+
+function deleteBulletin(month) {
+    db.prepare('DELETE FROM bulletins WHERE month = ?').run(month);
+    return getBulletins();
 }
 
 // ── Materials (folder tree) ────────────────────────────
@@ -543,6 +589,9 @@ module.exports = {
     replaceProjectImages,
     getGallery,
     replaceGallery,
+    getBulletins,
+    setBulletin,
+    deleteBulletin,
     getMaterials,
     getMaterialNode,
     getMaterialDepth,
