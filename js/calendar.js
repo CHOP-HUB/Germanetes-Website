@@ -1,4 +1,4 @@
-// Google Calendar month view
+// Monthly bulletin: Google Calendar month view plus the uploaded bulletin page
 (function () {
     'use strict';
 
@@ -8,6 +8,8 @@
     const palette = ['#78bd72', '#ff9d3c', '#efc94c', '#ca83d7', '#65afd0', '#e27e72'];
     let displayedMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     let currentEvents = [];
+    let maskImage = null;
+    let bulletins = {};
 
     function language() {
         return window.languageSwitcher?.getCurrentLang?.() || localStorage.getItem('preferredLanguage') || 'ca';
@@ -65,7 +67,7 @@
         return response.json();
     }
 
-    async function loadRandomBackground() {
+    async function loadMaskImage() {
         try {
             const response = await fetch(`${API_ORIGIN}/api/projects`);
             if (!response.ok) throw new Error(`Projects API returned ${response.status}`);
@@ -97,12 +99,62 @@
             });
 
             if (!document.body.classList.contains('calendar-page')) return;
-            document.body.style.setProperty('--calendar-page-background', `url(${JSON.stringify(selectedImage)})`);
+            maskImage = { url: selectedImage, width: image.naturalWidth, height: image.naturalHeight };
+            alignMask();
             try {
                 sessionStorage.setItem('calendar-background-image', selectedImage);
             } catch {}
         } catch (error) {
-            console.warn('Unable to load a calendar background image:', error);
+            console.warn('Unable to load the calendar mask image:', error);
+        }
+    }
+
+    function monthKey(date) {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    }
+
+    // Scale the photo to cover the whole board, then offset it per cell so the squares reveal one continuous picture.
+    function alignMask() {
+        const board = document.getElementById('calendar-board');
+        if (!board || !maskImage) return;
+        const { offsetWidth: width, offsetHeight: height } = board;
+        if (!width || !height) return;
+        const scale = Math.max(width / maskImage.width, height / maskImage.height);
+        const scaledWidth = maskImage.width * scale;
+        const scaledHeight = maskImage.height * scale;
+        const shiftX = (width - scaledWidth) / 2;
+        const shiftY = (height - scaledHeight) / 2;
+        board.querySelectorAll('.calendar-day').forEach(cell => {
+            cell.style.backgroundImage = `url(${JSON.stringify(maskImage.url)})`;
+            cell.style.backgroundSize = `${scaledWidth}px ${scaledHeight}px`;
+            cell.style.backgroundPosition = `${shiftX - cell.offsetLeft}px ${shiftY - cell.offsetTop}px`;
+        });
+    }
+
+    async function loadBulletins() {
+        try {
+            const response = await fetch(`${API_ORIGIN}/api/bulletins`);
+            if (!response.ok) throw new Error(`Bulletins API returned ${response.status}`);
+            bulletins = await response.json();
+        } catch (error) {
+            console.warn('Unable to load bulletins:', error);
+            bulletins = {};
+        }
+    }
+
+    function renderBulletin() {
+        const image = document.getElementById('bulletin-image');
+        const empty = document.getElementById('bulletin-empty');
+        if (!image || !empty) return;
+        // Until the first bulletin is uploaded, show the bundled example.
+        const src = bulletins[monthKey(displayedMonth)] || (Object.keys(bulletins).length ? '' : 'assets/images/butlleti-example.png');
+        image.hidden = !src;
+        empty.hidden = Boolean(src);
+        if (src) {
+            image.src = new URL(src, API_ORIGIN).href;
+            image.alt = document.getElementById('calendar-month-title').textContent;
+        } else {
+            image.removeAttribute('src');
         }
     }
 
@@ -189,6 +241,8 @@
         }
 
         renderLegend(currentEvents);
+        renderBulletin();
+        alignMask();
         if (payload.configured === false) {
             status.textContent = translation('notConfigured', 'The calendar feed has not been connected yet.');
         } else if (payload.stale) {
@@ -245,7 +299,9 @@
 
         document.removeEventListener('site-language-changed', render);
         document.addEventListener('site-language-changed', render);
-        loadRandomBackground();
+        if ('ResizeObserver' in window) new ResizeObserver(alignMask).observe(document.getElementById('calendar-board'));
+        loadMaskImage();
+        loadBulletins().then(renderBulletin);
         render();
     }
 

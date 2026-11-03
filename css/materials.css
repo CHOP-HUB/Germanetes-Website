@@ -1,11 +1,11 @@
-/* Materials: a Finder-style list view in the site's green with square outlines. */
+/* Materials: a Finder-style list view drawn only with green outlines. */
 .materials-intro {
     margin-bottom: 1.5rem;
 }
 
 .finder {
-    background: var(--color-primary);
-    color: #fff;
+    border: 1.5px solid var(--color-primary);
+    color: var(--color-primary);
     font-family: var(--font-dm-sans);
 }
 
@@ -17,7 +17,7 @@
     width: 100%;
     padding: 0.55rem 1rem;
     border: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid var(--color-primary);
     background: transparent;
     color: inherit;
     font: inherit;
@@ -26,7 +26,7 @@
 
 .finder-head {
     padding-block: 0.7rem;
-    border-bottom: 1px solid #fff;
+    border-bottom: 1.5px solid var(--color-primary);
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -37,16 +37,20 @@ button.finder-row {
     cursor: pointer;
 }
 
+.finder-body > .finder-row:last-child {
+    border-bottom: 0;
+}
+
 .finder-row.is-striped {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(100, 124, 59, 0.07);
 }
 
 button.finder-row:hover {
-    background: rgba(255, 255, 255, 0.18);
+    background: rgba(100, 124, 59, 0.15);
 }
 
 button.finder-row:focus-visible {
-    outline: 2px solid #fff;
+    outline: 2px solid var(--color-primary);
     outline-offset: -4px;
 }
 
@@ -96,7 +100,7 @@ button.finder-row:focus-visible {
     left: 3px;
     border-top: 4px solid transparent;
     border-bottom: 4px solid transparent;
-    border-left: 6px solid #fff;
+    border-left: 6px solid var(--color-primary);
     content: '';
     transition: transform 0.15s ease;
 }
@@ -108,7 +112,7 @@ button.finder-row:focus-visible {
 .finder-icon {
     position: relative;
     flex: 0 0 auto;
-    border: 1.5px solid #fff;
+    border: 1.5px solid var(--color-primary);
 }
 
 .is-folder .finder-icon {
@@ -122,7 +126,7 @@ button.finder-row:focus-visible {
     left: -1.5px;
     width: 0.5rem;
     height: 4px;
-    border: 1.5px solid #fff;
+    border: 1.5px solid var(--color-primary);
     border-bottom: 0;
     content: '';
 }

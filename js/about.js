@@ -33,7 +33,7 @@
             link.textContent = t(project.title);
             item.appendChild(link);
 
-            const description = t(project.shortDescription);
+            const description = project.subtitle ? t(project.subtitle) : '';
             if (description) {
                 const text = document.createElement('span');
                 text.className = 'about-project-desc';

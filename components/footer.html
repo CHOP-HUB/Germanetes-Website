@@ -1,9 +1,5 @@
 <footer>
     <div class="footer-container">
-        <div class="footer-column footer-logo">
-            <img src="assets/images/white_logo-JardinsEmma.png" alt="Germanetes Logo">
-            <span class="copyright-symbol">&copy;</span>
-        </div>
         <div class="footer-column footer-contact">
             <h3 data-i18n="footer.contact">Contact</h3>
             <div class="social-icons">
@@ -29,8 +25,21 @@
                 <img src="assets/icons/jardinsdemma-map.svg" data-i18n-alt="footer.mapTitle" alt="Map of the Germanetes community area and points of interest">
             </dialog>
         </div>
+        <div class="footer-column footer-stats">
+            <h3 data-i18n="footer.stats.title">Servidor solar</h3>
+            <dl class="server-stats">
+                <div><dt data-i18n="footer.stats.source">Font d'energia</dt><dd class="server-stats-source"><span class="stats-dot"></span><span data-i18n="footer.stats.sourceSolar">Solar</span></dd></div>
+                <div><dt data-i18n="footer.stats.solarMonth">Solar aquest mes</dt><dd>78 %</dd></div>
+                <div><dt data-i18n="footer.stats.power">Consum</dt><dd>4,2 W</dd></div>
+                <div><dt data-i18n="footer.stats.uptime">Temps en línia</dt><dd>23 d 14 h</dd></div>
+                <div><dt data-i18n="footer.stats.pageSize">Mida de la pàgina</dt><dd>1,8 MB</dd></div>
+            </dl>
+            <p class="server-stats-note" data-i18n="footer.stats.placeholder">Dades d'exemple</p>
+        </div>
         <div class="footer-privacy">
             <button type="button" class="footer-privacy-trigger" data-dialog-open="privacy-policy-dialog" data-i18n="footer.privacy">Política de privacitat</button>
+            <span class="footer-privacy-separator" aria-hidden="true">|</span>
+            <button type="button" class="footer-privacy-trigger" data-dialog-open="solar-server-dialog" data-i18n="footer.solarServer">Sobre el Servidor solar</button>
             <dialog class="footer-privacy-dialog" id="privacy-policy-dialog" aria-labelledby="privacy-policy-title">
                 <div class="footer-privacy-heading">
                     <h2 id="privacy-policy-title" data-i18n="footer.privacyTitle">Política de privacitat</h2>
@@ -57,6 +66,15 @@
                     <p><strong>Nom:</strong> Associació Germanetes Jardins d’Emma<br>
                     <strong>Direcció:</strong> C/ Viladomat 149 baixos<br>
                     <strong>Correu electrònic:</strong> <a href="mailto:germanetesje@gmail.com">germanetesje@gmail.com</a></p>
+                </div>
+            </dialog>
+            <dialog class="footer-privacy-dialog" id="solar-server-dialog" aria-labelledby="solar-server-title">
+                <div class="footer-privacy-heading">
+                    <h2 id="solar-server-title" data-i18n="footer.solarServerTitle">Sobre el Servidor solar</h2>
+                    <button type="button" class="footer-map-close" data-dialog-close data-i18n-aria-label="footer.closeSolar">&times;</button>
+                </div>
+                <div class="footer-privacy-content">
+                    <p data-i18n="footer.solarServerText">Aquesta web s'allotja en un petit servidor alimentat amb energia solar. Aquí hi anirà una explicació de com funciona, quins panells i bateries l'alimenten i què passa quan no hi ha prou sol.</p>
                 </div>
             </dialog>
         </div>

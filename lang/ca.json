@@ -4,7 +4,7 @@
   },
   "nav": {
     "about": "Qui som?",
-    "calendar": "Calendari",
+    "calendar": "Butlletí",
     "gallery": "Galeria",
     "projects": "Projectes",
     "materials": "Materials"
@@ -13,7 +13,7 @@
     "header": "Qui som?",
     "description1": "<i>Germanetes Jardins d'Emma</i> som una entitat sense ànim de lucre ubicada al voltant de la rambla del barri, l'Eix Verd de <i>Consell de Cent</i>. Ens articulem en base a dos objectius principals: generar comunitat al barri i fer-lo més sostenible, col·laborant amb l'entorn per aconseguir una comunitat activa que inclogui el veïnat, les escoles, les altres entitats, col·lectius i cooperatives del barri i institucions públiques amb objectius socials.",
     "projectsIntro": "Els <a href=\"#projects\">projectes</a> de l'associació són els següents:",
-    "collaborators": "Nosaltres Col·laboradors",
+    "collaborators": "Els nostres col·laboradors",
     "description3": "L'associació busca que ser el més assembleària, horitzontal i transparent possible. És per això que cada projecte té el seu òrgan de governança propi, i representants del conjunt de projectes es reuneixen quinzenalment com a equip de coordinació i motor de l'associació; les assemblees i reunions estan obertes a tothom. Finalment, cada gener es realitza l'assemblea general, que és l'òrgan amb més poder dins de l'associació.",
     "description4": "Si tens ganes de participar en un dels projectes, només cal que et posis en contacte amb nosaltres!"
   },
@@ -53,7 +53,7 @@
     "name": "Nom",
     "modified": "Modificat",
     "size": "Mida",
-    "kind": "Tipus",
+    "kind": "Format",
     "close": "Tanca la vista prèvia",
     "download": "Descarrega",
     "kinds": {
@@ -69,7 +69,8 @@
     }
   },
   "calendar": {
-    "header": "Calendari d'activitats",
+    "header": "El Butlletí de Germanetes Jardins d'Emma",
+    "noBulletin": "Encara no hi ha butlletí d'aquest mes.",
     "previous": "Mes anterior",
     "next": "Mes següent",
     "today": "Avui",
@@ -108,6 +109,20 @@
     "closeMap": "Tanca el mapa",
     "privacy": "Política de privacitat",
     "privacyTitle": "Política de privacitat",
-    "closePrivacy": "Tanca la política de privacitat"
+    "closePrivacy": "Tanca la política de privacitat",
+    "solarServer": "Sobre el Servidor solar",
+    "solarServerTitle": "Sobre el Servidor solar",
+    "closeSolar": "Tanca la informació del servidor solar",
+    "solarServerText": "Aquesta web s'allotja en un petit servidor alimentat amb energia solar. Aquí hi anirà una explicació de com funciona, quins panells i bateries l'alimenten i què passa quan no hi ha prou sol.",
+    "stats": {
+      "title": "Servidor solar",
+      "source": "Font d'energia",
+      "sourceSolar": "Solar",
+      "solarMonth": "Solar aquest mes",
+      "power": "Consum",
+      "uptime": "Temps en línia",
+      "pageSize": "Mida de la pàgina",
+      "placeholder": "Dades d'exemple"
+    }
   }
 }

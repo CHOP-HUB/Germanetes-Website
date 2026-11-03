@@ -4,7 +4,7 @@
   },
   "nav": {
     "about": "Quien Somos?",
-    "calendar": "Calendario",
+    "calendar": "Boletín",
     "gallery": "Galería",
     "projects": "Proyectos",
     "materials": "Materiales"
@@ -53,7 +53,7 @@
     "name": "Nombre",
     "modified": "Modificado",
     "size": "Tamaño",
-    "kind": "Tipo",
+    "kind": "Formato",
     "close": "Cerrar la vista previa",
     "download": "Descargar",
     "kinds": {
@@ -69,7 +69,8 @@
     }
   },
   "calendar": {
-    "header": "Calendario de actividades",
+    "header": "El Butlletí de Germanetes Jardins d'Emma",
+    "noBulletin": "Todavía no hay boletín de este mes.",
     "previous": "Mes anterior",
     "next": "Mes siguiente",
     "today": "Hoy",
@@ -108,6 +109,20 @@
     "closeMap": "Cerrar el mapa",
     "privacy": "Política de privacidad",
     "privacyTitle": "Política de privacidad",
-    "closePrivacy": "Cerrar la política de privacidad"
+    "closePrivacy": "Cerrar la política de privacidad",
+    "solarServer": "Sobre el Servidor solar",
+    "solarServerTitle": "Sobre el Servidor solar",
+    "closeSolar": "Cerrar la información del servidor solar",
+    "solarServerText": "Esta web se aloja en un pequeño servidor alimentado con energía solar. Aquí irá una explicación de cómo funciona, qué paneles y baterías lo alimentan y qué pasa cuando no hay suficiente sol.",
+    "stats": {
+      "title": "Servidor solar",
+      "source": "Fuente de energía",
+      "sourceSolar": "Solar",
+      "solarMonth": "Solar este mes",
+      "power": "Consumo",
+      "uptime": "Tiempo en línea",
+      "pageSize": "Tamaño de la página",
+      "placeholder": "Datos de ejemplo"
+    }
   }
 }

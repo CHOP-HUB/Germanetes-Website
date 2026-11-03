@@ -1,30 +1,37 @@
-<section class="events-calendar" aria-labelledby="calendar-heading">
-    <div class="calendar-topline">
-        <h2 id="calendar-heading" data-i18n="calendar.header">Calendari d'activitats</h2>
-        <div class="calendar-controls" aria-label="Calendar navigation">
-            <button type="button" class="calendar-control" id="calendar-previous" aria-label="Previous month">&#8592;</button>
-            <button type="button" class="calendar-control calendar-today" id="calendar-today" data-i18n="calendar.today">Avui</button>
-            <button type="button" class="calendar-control" id="calendar-next" aria-label="Next month">&#8594;</button>
+<section class="events-calendar" aria-labelledby="calendar-month-title">
+    <div class="bulletin-layout">
+        <div class="bulletin-column">
+            <div class="bulletin-heading">
+                <div class="calendar-controls" aria-label="Calendar navigation">
+                    <button type="button" class="calendar-control" id="calendar-previous" aria-label="Previous month"><svg viewBox="0 0 12 16" width="12" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1" ><path d="M9.14 1L1.5 8l7.64 7"/></svg></button>
+                    <button type="button" class="calendar-control calendar-today" id="calendar-today" data-i18n="calendar.today">avui</button>
+                    <button type="button" class="calendar-control" id="calendar-next" aria-label="Next month"><svg viewBox="0 0 12 16" width="12" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1" ><path d="M2.86 1l7.64 7-7.64 7"/></svg></button>
+                </div>
+                <h2 class="calendar-month-title" id="calendar-month-title"></h2>
+            </div>
+            <figure class="bulletin-page">
+                <img id="bulletin-image" alt="" hidden>
+                <p class="bulletin-empty" id="bulletin-empty" data-i18n="calendar.noBulletin" hidden></p>
+            </figure>
+        </div>
+
+        <div class="bulletin-calendar">
+            <div class="calendar-legend" id="calendar-legend" aria-label="Event categories"></div>
+
+            <div class="calendar-scroll" tabindex="0" aria-label="Monthly events calendar">
+                <div class="calendar-board" id="calendar-board" role="grid" aria-labelledby="calendar-month-title"></div>
+            </div>
+
+            <p class="calendar-status" id="calendar-status" role="status" aria-live="polite"></p>
+
+            <aside class="calendar-event-detail" id="calendar-event-detail" hidden aria-live="polite">
+                <button type="button" class="calendar-detail-close" id="calendar-detail-close" aria-label="Close event details">&times;</button>
+                <p class="calendar-detail-date" id="calendar-detail-date"></p>
+                <h3 id="calendar-detail-title"></h3>
+                <p id="calendar-detail-time"></p>
+                <p id="calendar-detail-location"></p>
+                <p class="calendar-detail-description" id="calendar-detail-description"></p>
+            </aside>
         </div>
     </div>
-
-    <div class="calendar-month-row">
-        <h3 class="calendar-month-title" id="calendar-month-title"></h3>
-        <div class="calendar-legend" id="calendar-legend" aria-label="Event categories"></div>
-    </div>
-
-    <div class="calendar-scroll" tabindex="0" aria-label="Monthly events calendar">
-        <div class="calendar-board" id="calendar-board" role="grid" aria-labelledby="calendar-month-title"></div>
-    </div>
-
-    <aside class="calendar-event-detail" id="calendar-event-detail" hidden aria-live="polite">
-        <button type="button" class="calendar-detail-close" id="calendar-detail-close" aria-label="Close event details">&times;</button>
-        <p class="calendar-detail-date" id="calendar-detail-date"></p>
-        <h3 id="calendar-detail-title"></h3>
-        <p id="calendar-detail-time"></p>
-        <p id="calendar-detail-location"></p>
-        <p class="calendar-detail-description" id="calendar-detail-description"></p>
-    </aside>
-
-    <p class="calendar-status" id="calendar-status" role="status" aria-live="polite"></p>
 </section>

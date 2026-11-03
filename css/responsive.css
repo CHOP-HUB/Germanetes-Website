@@ -7,9 +7,14 @@
         max-width: none;
     }
 
-    nav a {
+    nav a,
+    .projects-tab {
         font-size: 1rem;
         padding: 0.4rem 0.7rem;
+    }
+
+    .projects-tabs {
+        width: calc(100vw - 8rem);
     }
 
     .language-switcher {
@@ -52,7 +57,11 @@
     }
 
     /* About page stacks on tablet */
-    body.about-page main {
+    body.about-page main,
+    body.calendar-page main,
+    body.projects-page main,
+    body.gallery-view main,
+    body.materials-view main {
         margin-left: var(--about-gutter);
         margin-right: var(--about-gutter);
     }
@@ -86,10 +95,24 @@
         margin: 0;
     }
 
-    .project-modal-content {
+    .project-modal-dialog {
         width: calc(100vw - 4rem);
         max-width: none;
-        padding: 2rem;
+    }
+
+    .project-modal-content {
+        padding: 0 2rem 2rem;
+    }
+
+    .modal-hero-img {
+        width: calc(100% + 4rem);
+        margin: 0 -2rem 1.5rem;
+    }
+
+    .modal-close {
+        top: -3rem;
+        left: auto;
+        right: 0;
     }
 
     .modal-description .project-content-split {
@@ -99,7 +122,7 @@
     .footer-container {
         width: calc(100vw - 8rem);
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1.5rem;
+        gap: 3.5rem;
     }
 
     .footer-contact {
@@ -117,6 +140,11 @@
         margin: 0 auto;
     }
 
+    .footer-stats {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
     .footer-privacy {
         grid-row: 3;
     }
@@ -128,9 +156,14 @@
         width: calc(100vw - 4rem);
     }
 
-    nav a {
+    nav a,
+    .projects-tab {
         font-size: 0.85rem;
         padding: 0.3rem 0.4rem;
+    }
+
+    .projects-tabs {
+        width: 100%;
     }
 
     main {
@@ -176,10 +209,18 @@
         margin: 0;
     }
 
-    .project-modal-content {
+    .project-modal-dialog {
         width: calc(100vw - 2rem);
-        padding: 1.5rem;
-        max-height: 90vh;
+    }
+
+    .project-modal-content {
+        padding: 0 1.5rem 1.5rem;
+        max-height: 85vh;
+    }
+
+    .modal-hero-img {
+        width: calc(100% + 3rem);
+        margin: 0 -1.5rem 1.25rem;
     }
 
     .modal-project-title {
@@ -198,7 +239,8 @@
     }
 
     .footer-contact,
-    .footer-map {
+    .footer-map,
+    .footer-stats {
         grid-column: auto;
         grid-row: auto;
     }
@@ -220,10 +262,5 @@
     .footer-privacy-content {
         max-height: calc(100vh - 6rem);
         padding: 0.75rem 1.25rem 1.5rem;
-    }
-
-    .footer-logo {
-        width: 100%;
-        justify-content: center;
     }
 }

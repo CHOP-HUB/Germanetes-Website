@@ -4,6 +4,7 @@
 
     let projectsData = [];
     let currentLang = 'ca';
+    let activeCategory = 'permanent';
     const isLiveServer = ['localhost', '127.0.0.1'].includes(location.hostname) && location.port === '5500';
     const API_ORIGIN = isLiveServer ? 'http://localhost:3000' : location.origin;
 
@@ -100,29 +101,46 @@
         }
     }
 
+    // Show only the selected category; tabs of empty categories are hidden.
+    function showCategory(category) {
+        const tabs = [...document.querySelectorAll('.projects-tab')];
+        const available = tabs.filter(tab => !tab.hidden).map(tab => tab.dataset.category);
+        activeCategory = available.includes(category) ? category : (available[0] || category);
+        tabs.forEach(tab => {
+            const selected = tab.dataset.category === activeCategory;
+            tab.classList.toggle('active', selected);
+            tab.setAttribute('aria-selected', String(selected));
+        });
+        const activeTab = tabs.find(tab => tab.classList.contains('active'));
+        const bar = document.querySelector('.projects-tabs');
+        if (activeTab && bar && activeTab.offsetWidth) {
+            bar.style.setProperty('--slider-left', `${activeTab.offsetLeft}px`);
+            bar.style.setProperty('--slider-width', `${activeTab.offsetWidth}px`);
+        }
+        document.querySelectorAll('.projects-section').forEach(section => {
+            section.hidden = section.querySelector('.project-grid').dataset.category !== activeCategory;
+        });
+        const grid = document.querySelector(`.project-grid[data-category="${activeCategory}"]`);
+        if (grid) {
+            grid.querySelectorAll('.filler').forEach(filler => filler.remove());
+            addFillerCells(grid, grid.querySelectorAll('.project-card').length);
+        }
+    }
+
+    function onResize() {
+        if (document.querySelector('.projects-tabs')) showCategory(activeCategory);
+    }
+
     // Render all project grids on the page
     function renderGrids() {
-        const grids = document.querySelectorAll('.project-grid[data-category]');
-        grids.forEach(grid => {
-            const category = grid.dataset.category;
-            const filtered = projectsData.filter(p => p.category === category);
+        document.querySelectorAll('.project-grid[data-category]').forEach(grid => {
+            const filtered = projectsData.filter(p => p.category === grid.dataset.category);
             grid.innerHTML = '';
-
-            if (filtered.length === 0) {
-                const section = grid.closest('.projects-section');
-                if (section) section.style.display = 'none';
-                return;
-            }
-
-            const section = grid.closest('.projects-section');
-            if (section) section.style.display = '';
-
-            filtered.forEach(project => {
-                grid.appendChild(createCard(project));
-            });
-
-            addFillerCells(grid, filtered.length);
+            const tab = document.querySelector(`.projects-tab[data-category="${grid.dataset.category}"]`);
+            if (tab) tab.hidden = filtered.length === 0;
+            filtered.forEach(project => grid.appendChild(createCard(project)));
         });
+        showCategory(activeCategory);
     }
 
     // Re-render all card texts (called on language change)
@@ -155,9 +173,11 @@
 
         modal.innerHTML = `
             <div class="project-modal-backdrop"></div>
-            <div class="project-modal-content">
+            <div class="project-modal-dialog">
                 <button class="modal-close" aria-label="Close">&times;</button>
-                <div class="modal-body"></div>
+                <div class="project-modal-content">
+                    <div class="modal-body"></div>
+                </div>
             </div>
         `;
 
@@ -187,8 +207,15 @@
 
         // Title and subtitle follow the banner.
         html += `<h2 class="modal-project-title">${escapeHtml(t(project.title))}</h2>`;
-        if (project.subtitle && t(project.subtitle)) {
-            html += `<p class="modal-project-subtitle">${escapeHtml(t(project.subtitle))}</p>`;
+        const subtitle = project.subtitle ? t(project.subtitle) : '';
+        const instagram = /^[A-Za-z0-9._]{1,30}$/.test(project.instagram || '') ? project.instagram : '';
+        if (subtitle || instagram) {
+            html += '<p class="modal-project-subtitle">';
+            if (instagram) {
+                html += `<a class="modal-instagram" href="https://www.instagram.com/${escapeHtml(instagram)}/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @${escapeHtml(instagram)}" title="@${escapeHtml(instagram)}"><img src="${escapeHtml(assetUrl('assets/icons/insta-icon.svg'))}" alt="" width="22" height="22"></a>`;
+            }
+            if (subtitle) html += `<span>${escapeHtml(subtitle)}</span>`;
+            html += '</p>';
         }
 
         // Description
@@ -251,12 +278,22 @@
 
     async function init() {
         await fetchProjects();
+        activeCategory = 'permanent';
+        const tabs = document.querySelector('.projects-tabs');
+        if (tabs) tabs.addEventListener('click', event => {
+            const tab = event.target.closest('.projects-tab');
+            if (tab) showCategory(tab.dataset.category);
+        });
         renderGrids();
+        window.removeEventListener('resize', onResize);
+        window.addEventListener('resize', onResize);
     }
 
     function openById(id) {
         const project = projectsData.find(p => p.id === id);
-        if (project) openModal(project);
+        if (!project) return;
+        showCategory(project.category);
+        openModal(project);
     }
 
     // Expose for use by main.js

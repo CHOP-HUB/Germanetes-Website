@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Butlletí — Admin Germanetes</title>
+    <link rel="icon" type="image/png" href="/assets/icons/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+
+<div class="topbar">
+    <h1>Germanetes Admin</h1>
+    <nav class="topnav">
+        <a href="/admin/">Projectes</a>
+        <a href="/admin/gallery/">Galeria</a>
+        <a href="/admin/bulletin/" aria-current="page">Butlletí</a>
+        <a href="/admin/materials/">Materials</a>
+    </nav>
+    <a href="/">← Tornar al web</a>
+</div>
+
+<div class="container">
+    <div class="toolbar">
+        <h2>Butlletí</h2>
+        <div class="toolbar-actions">
+            <div class="field">
+                <label for="month">Mes</label>
+                <input type="month" id="month">
+            </div>
+            <input type="file" id="bulletin-input" accept="image/*" hidden>
+            <button type="button" class="btn btn-primary" id="btn-upload">Puja el butlletí</button>
+        </div>
+    </div>
+    <p class="hint">Puja la meitat esquerra del butlletí del mes triat (imatge). Si ja n'hi ha un per a aquest mes, es substitueix. El calendari es mostra automàticament al costat.</p>
+
+    <div class="gallery-admin-grid" id="grid"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/admin/admin.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    const { apiFetch, apiJson, escapeHtml, assetUrl, toast } = window.adminTools;
+    const grid = document.getElementById('grid');
+    const monthInput = document.getElementById('month');
+    const fileInput = document.getElementById('bulletin-input');
+    let bulletins = {};
+
+    function monthLabel(month) {
+        const [year, number] = month.split('-').map(Number);
+        const label = new Intl.DateTimeFormat('ca-ES', { month: 'long', year: 'numeric' }).format(new Date(year, number - 1, 1));
+        return label.charAt(0).toLocaleUpperCase('ca-ES') + label.slice(1);
+    }
+
+    function render() {
+        const months = Object.keys(bulletins).sort().reverse();
+        if (!months.length) {
+            grid.innerHTML = '<p class="hint">Encara no hi ha cap butlletí.</p>';
+            return;
+        }
+        grid.innerHTML = months.map(month => `
+            <div class="gallery-card" data-month="${escapeHtml(month)}">
+                <img src="${escapeHtml(assetUrl(bulletins[month]))}" alt="" style="aspect-ratio: auto; object-fit: contain;">
+                <strong>${escapeHtml(monthLabel(month))}</strong>
+                <div class="card-actions">
+                    <button type="button" class="btn btn-sm btn-danger" data-remove>Treure</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function upload(file) {
+        const month = monthInput.value;
+        if (!month) return toast('Tria primer un mes', true);
+        const body = new FormData();
+        body.append('image', file);
+        try {
+            const response = await apiFetch('/upload', { method: 'POST', body });
+            if (!response.ok) throw new Error('No s\'ha pogut pujar la imatge');
+            const { path } = await response.json();
+            bulletins = await apiJson(`/bulletins/${month}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ src: path })
+            });
+            render();
+            toast(`Butlletí de ${monthLabel(month)} desat`);
+        } catch (error) {
+            toast(error.message, true);
+        }
+    }
+
+    grid.addEventListener('click', async event => {
+        const card = event.target.closest('[data-month]');
+        if (!card || !event.target.closest('[data-remove]')) return;
+        const month = card.dataset.month;
+        if (!confirm(`Vols treure el butlletí de ${monthLabel(month)}?`)) return;
+        try {
+            bulletins = await apiJson(`/bulletins/${month}`, { method: 'DELETE' });
+            render();
+        } catch (error) {
+            toast(error.message, true);
+        }
+    });
+
+    document.getElementById('btn-upload').addEventListener('click', () => {
+        if (!monthInput.value) return toast('Tria primer un mes', true);
+        fileInput.click();
+    });
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        fileInput.value = '';
+        if (file) upload(file);
+    });
+
+    const now = new Date();
+    monthInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    apiJson('/bulletins').then(data => { bulletins = data; render(); }).catch(error => toast(error.message, true));
+})();
+</script>
+</body>
+</html>

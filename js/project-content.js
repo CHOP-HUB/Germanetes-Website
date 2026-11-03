@@ -19,6 +19,41 @@
         }
     }
 
+    // Returns the 11-character video id of a YouTube watch, share, shorts or embed link.
+    function youtubeId(value) {
+        const text = String(value || '').trim();
+        if (/^[\w-]{11}$/.test(text)) return text;
+        try {
+            const url = new URL(text);
+            const host = url.hostname.replace(/^(www|m)\./, '');
+            let id = '';
+            if (host === 'youtu.be') id = url.pathname.slice(1);
+            else if (['youtube.com', 'youtube-nocookie.com'].includes(host)) {
+                const match = url.pathname.match(/^\/(?:embed|shorts|live|v)\/([^/]+)/);
+                id = match ? match[1] : url.searchParams.get('v') || '';
+            }
+            return /^[\w-]{11}$/.test(id) ? id : null;
+        } catch {
+            return null;
+        }
+    }
+
+    function videoElement(id) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'project-video';
+        wrapper.dataset.youtube = id;
+        wrapper.contentEditable = 'false';
+        const frame = document.createElement('iframe');
+        frame.src = `https://www.youtube-nocookie.com/embed/${id}`;
+        frame.title = 'YouTube';
+        frame.loading = 'lazy';
+        frame.allow = 'accelerometer; encrypted-media; picture-in-picture; fullscreen';
+        frame.referrerPolicy = 'strict-origin-when-cross-origin';
+        frame.allowFullscreen = true;
+        wrapper.appendChild(frame);
+        return wrapper;
+    }
+
     function safeImage(value) {
         try {
             const url = new URL(value, assetOrigin);
@@ -41,7 +76,13 @@
                     destination.appendChild(document.createTextNode(node.textContent));
                     return;
                 }
-                if (node.nodeType !== Node.ELEMENT_NODE || blockedTags.has(node.tagName)) return;
+                if (node.nodeType !== Node.ELEMENT_NODE) return;
+                if (node.tagName === 'DIV' && node.classList.contains('project-video')) {
+                    const id = youtubeId(node.dataset.youtube);
+                    if (id) destination.appendChild(videoElement(id));
+                    return;
+                }
+                if (blockedTags.has(node.tagName)) return;
                 if (!allowedTags.has(node.tagName)) {
                     copySafeNodes(node, destination);
                     return;
@@ -121,6 +162,7 @@
         toHtml,
         toStoredHtml,
         safeLink,
+        youtubeId,
         imagePath,
         referencedImages
     };

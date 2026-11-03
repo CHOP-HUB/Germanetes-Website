@@ -145,6 +145,8 @@
         .rich-editor p { margin: 0 0 0.75rem; }
         .rich-editor ul, .rich-editor ol { padding-left: 1.5rem; margin: 0.5rem 0; }
         .rich-editor img { max-width: 100%; height: auto; }
+        .rich-editor .project-video, .project-video { position: relative; aspect-ratio: 16 / 9; margin: 1rem 0; }
+        .rich-editor .project-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
         .rich-editor .project-content-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
         .rich-editor .project-content-split img { width: 100%; }
 
@@ -236,6 +238,7 @@
     <nav class="topnav">
         <a href="/admin/" aria-current="page">Projectes</a>
         <a href="/admin/gallery/">Galeria</a>
+        <a href="/admin/bulletin/">Butlletí</a>
         <a href="/admin/materials/">Materials</a>
     </nav>
     <a href="/">← Tornar al web</a>
@@ -303,6 +306,11 @@
                     <input type="text" id="f-subtitle-en" placeholder="e.g. Since 2012">
                 </div>
 
+                <div class="section-label">Instagram</div>
+                <div class="field">
+                    <input type="text" id="f-instagram" placeholder="@usuari o enllaç del perfil (opcional)" autocomplete="off">
+                </div>
+
                 <!-- Description -->
                 <div class="section-label">Descripció</div>
                 <div class="rich-toolbar" role="toolbar" aria-label="Format de text">
@@ -311,6 +319,7 @@
                     <button type="button" data-rich-command="insertUnorderedList" title="Llista amb pics" aria-label="Llista amb pics">• Llista</button>
                     <button type="button" data-rich-command="insertOrderedList" title="Llista numerada" aria-label="Llista numerada">1. Llista</button>
                     <button type="button" id="btn-rich-link" title="Insereix un enllaç" aria-label="Insereix un enllaç">Enllaç</button>
+                    <button type="button" id="btn-rich-video" title="Insereix un vídeo de YouTube" aria-label="Insereix un vídeo de YouTube">Vídeo</button>
                 </div>
                 <div class="lang-tabs" data-group="desc">
                     <button type="button" class="lang-tab active" data-lang="ca">CA</button>
@@ -453,6 +462,7 @@
         document.getElementById('f-subtitle-ca').value = project?.subtitle?.ca || '';
         document.getElementById('f-subtitle-es').value = project?.subtitle?.es || '';
         document.getElementById('f-subtitle-en').value = project?.subtitle?.en || '';
+        document.getElementById('f-instagram').value = project?.instagram || '';
         document.getElementById('f-desc-ca').innerHTML = window.projectContent.toHtml(project?.detail?.description?.ca || project?.shortDescription?.ca || '');
         document.getElementById('f-desc-es').innerHTML = window.projectContent.toHtml(project?.detail?.description?.es || project?.shortDescription?.es || '');
         document.getElementById('f-desc-en').innerHTML = window.projectContent.toHtml(project?.detail?.description?.en || project?.shortDescription?.en || '');
@@ -549,6 +559,7 @@
             subtitle_ca: document.getElementById('f-subtitle-ca').value.trim(),
             subtitle_es: document.getElementById('f-subtitle-es').value.trim(),
             subtitle_en: document.getElementById('f-subtitle-en').value.trim(),
+            instagram:   document.getElementById('f-instagram').value.trim(),
             short_desc_ca: descriptions.ca.plainText,
             short_desc_es: descriptions.es.plainText,
             short_desc_en: descriptions.en.plainText,
@@ -710,6 +721,21 @@
         }
         activeEditor.focus();
         document.execCommand('createLink', false, url);
+    });
+
+    document.getElementById('btn-rich-video').addEventListener('mousedown', event => event.preventDefault());
+    document.getElementById('btn-rich-video').addEventListener('click', () => {
+        if (!activeEditor) return;
+        const url = prompt('Adreça del vídeo de YouTube');
+        if (!url) return;
+        const id = window.projectContent.youtubeId(url);
+        if (!id) {
+            toast('Adreça de YouTube no vàlida', true);
+            return;
+        }
+        activeEditor.focus();
+        document.execCommand('insertHTML', false, window.projectContent.sanitize(`<div class="project-video" data-youtube="${id}"></div>`) + '<p><br></p>');
+        activeEditor.dispatchEvent(new Event('input', { bubbles: true }));
     });
 
     // ── Init ─────────────────────────────────

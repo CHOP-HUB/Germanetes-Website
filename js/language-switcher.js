@@ -14,10 +14,24 @@ const languageSwitcher = (() => {
         return path.split('.').reduce((current, key) => current?.[key], obj);
     };
 
+    let activeLanguage = 'ca';
+    let loadToken = 0;
+
+    const syncButton = () => {
+        const currentLangBtn = document.querySelector('.current-lang');
+        if (currentLangBtn) {
+            currentLangBtn.textContent = languages[activeLanguage];
+        }
+    };
+
     const loadLanguage = (language) => {
+        activeLanguage = language;
+        syncButton();
+        const token = ++loadToken;
         fetch(`./lang/${language}.json`)
             .then(response => response.json())
             .then(translations => {
+                if (token !== loadToken) return;
                 currentTranslations = translations;
                 applyTranslations();
                 document.documentElement.lang = language;
@@ -27,6 +41,7 @@ const languageSwitcher = (() => {
     };
 
     const applyTranslations = () => {
+        syncButton();
         // Handle data-i18n attributes (supports nested keys)
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.getAttribute('data-i18n');
@@ -94,14 +109,8 @@ const languageSwitcher = (() => {
 
     const init = () => {
         // Get saved language or default to Catalan
-        const savedLanguage = localStorage.getItem('preferredLanguage') || 'ca';
-        loadLanguage(savedLanguage);
-
-        // Update button text
-        const currentLangBtn = document.querySelector('.current-lang');
-        if (currentLangBtn) {
-            currentLangBtn.textContent = languages[savedLanguage];
-        }
+        const stored = localStorage.getItem('preferredLanguage');
+        loadLanguage(languages[stored] ? stored : 'ca');
 
         // Set up language dropdown clicks
         document.addEventListener('click', (e) => {

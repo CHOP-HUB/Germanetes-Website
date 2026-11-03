@@ -68,9 +68,9 @@ async function loadPage(pageName, itemId) {
         content.innerHTML = html;
         document.body.classList.toggle('calendar-page', pageName === 'calendar');
         document.body.classList.toggle('about-page', pageName === 'about');
-        if (pageName !== 'calendar') {
-            document.body.style.removeProperty('--calendar-page-background');
-        }
+        document.body.classList.toggle('projects-page', pageName === 'projects');
+        document.body.classList.toggle('gallery-view', pageName === 'gallery');
+        document.body.classList.toggle('materials-view', pageName === 'materials');
         
         // Initialize projects module if on the projects page
         if (pageName === 'projects' && window.projectsModule) {
@@ -138,21 +138,33 @@ window.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Logo expand/collapse based on page and scroll
+function expandedHeaderHeight(header) {
+    // Measured with the logo expanded so the content offset never depends on the scroll position.
+    const wasExpanded = header.classList.contains('logo-expanded');
+    header.classList.add('logo-expanded');
+    const height = header.offsetHeight;
+    header.classList.toggle('logo-expanded', wasExpanded);
+    return height;
+}
+
 function updateLogoState() {
     const header = document.querySelector('header');
     if (!header) return;
     const hash = (window.location.hash.slice(1) || 'about').split('/')[0];
     const isAbout = hash === 'about';
-    const atTop = window.scrollY < 50;
+    // Hysteresis keeps the header from flickering around a single threshold.
+    const wasExpanded = header.classList.contains('logo-expanded');
+    const atTop = window.scrollY < (wasExpanded ? 50 : 10);
     header.classList.toggle('logo-expanded', isAbout && atTop);
 
-    // Adjust main top margin to match header height
-    requestAnimationFrame(() => {
-        const main = document.querySelector('main');
-        if (main) {
-            main.style.marginTop = (header.offsetHeight + (isAbout ? 48 : 128)) + 'px';
-        }
-    });
+    // Content offset stays constant while the header collapses, so the page doesn't jump.
+    const main = document.querySelector('main');
+    if (main) {
+        // The projects tabs sit as far below the divider as the main nav sits above it (header padding, 1rem).
+        const gap = isAbout ? 48 : ['calendar', 'gallery', 'materials'].includes(hash) ? 40 : hash === 'projects' ? 16 : 128;
+        const height = isAbout ? expandedHeaderHeight(header) : header.offsetHeight;
+        main.style.marginTop = (height + gap) + 'px';
+    }
 }
 
 window.addEventListener('scroll', updateLogoState, { passive: true });
