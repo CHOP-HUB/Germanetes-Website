@@ -6,6 +6,7 @@ After=network.target
 Type=simple
 User=germanetes
 Group=germanetes
+SupplementaryGroups=gpio
 WorkingDirectory=/opt/germanetes/server
 EnvironmentFile=-/etc/germanetes/germanetes.env
 Environment=NODE_ENV=production

@@ -6,6 +6,7 @@ const ical = require('node-ical');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+const { execFile } = require('child_process');
 const db = require('./db');
 
 const app = express();
@@ -504,10 +505,27 @@ app.put('/api/gallery', ...adminOnly, (req, res) => {
 
 // ── Server stats (footer) ───────────────────────────────────────────
 
-// source ('solar' | 'grid') and powerWatts stay null until the Pi has a way to measure them.
-app.get('/api/server-stats', (req, res) => {
-    res.set('Cache-Control', 'public, max-age=30');
-    res.json({ uptimeSeconds: Math.floor(os.uptime()), source: null, powerWatts: null });
+// The Pi reads the grid/solar mux on a GPIO pin; elsewhere (or on any error) the source is simply unknown.
+const POWER_SOURCE_PIN = process.env.POWER_SOURCE_PIN || '4';
+const POWER_SOLAR_LEVEL = process.env.POWER_SOLAR_LEVEL === '0' ? '0' : '1';
+let sourceCache = { at: 0, value: null };
+
+function readPowerSource() {
+    return new Promise(resolve => {
+        if (Date.now() - sourceCache.at < 5000) return resolve(sourceCache.value);
+        execFile('pinctrl', ['lev', POWER_SOURCE_PIN], { timeout: 2000 }, (error, stdout) => {
+            const level = String(stdout || '').trim();
+            const value = error || !['0', '1'].includes(level) ? null : (level === POWER_SOLAR_LEVEL ? 'solar' : 'grid');
+            sourceCache = { at: Date.now(), value };
+            resolve(value);
+        });
+    });
+}
+
+// powerWatts stays null until the Pi has a way to measure it.
+app.get('/api/server-stats', async (req, res) => {
+    res.set('Cache-Control', 'public, max-age=5');
+    res.json({ uptimeSeconds: Math.floor(os.uptime()), source: await readPowerSource(), powerWatts: null });
 });
 
 // ── Bulletins ────────────────────────────────────────────────────────

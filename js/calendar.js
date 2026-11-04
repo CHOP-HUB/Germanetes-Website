@@ -47,9 +47,15 @@
         }
     }
 
-    function currentMonthStart() {
-        const now = new Date();
-        return new Date(now.getFullYear(), now.getMonth(), 1);
+    // The newest month that has a bulletin; before the first upload it is the current month.
+    function latestMonthStart() {
+        const keys = Object.keys(bulletins).sort();
+        if (!keys.length) {
+            const now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), 1);
+        }
+        const [year, month] = keys[keys.length - 1].split('-').map(Number);
+        return new Date(year, month - 1, 1);
     }
 
     function render() {
@@ -59,8 +65,8 @@
         title.textContent = formatted.charAt(0).toLocaleUpperCase(locale) + formatted.slice(1);
         document.getElementById('calendar-previous').setAttribute('aria-label', translation('previous', 'Previous month'));
         document.getElementById('calendar-next').setAttribute('aria-label', translation('next', 'Next month'));
-        // Bulletins for future months don't exist, so the next arrow disappears at the current month.
-        document.getElementById('calendar-next').style.visibility = displayedMonth >= currentMonthStart() ? 'hidden' : 'visible';
+        // There is nothing newer than the latest bulletin, so the next arrow disappears there.
+        document.getElementById('calendar-next').style.visibility = displayedMonth >= latestMonthStart() ? 'hidden' : 'visible';
         renderBulletin();
     }
 
@@ -73,18 +79,21 @@
             render();
         });
         document.getElementById('calendar-next').addEventListener('click', () => {
-            if (displayedMonth >= currentMonthStart()) return;
+            if (displayedMonth >= latestMonthStart()) return;
             displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + 1, 1);
             render();
         });
         document.getElementById('calendar-today').addEventListener('click', () => {
-            displayedMonth = currentMonthStart();
+            displayedMonth = latestMonthStart();
             render();
         });
         document.removeEventListener('site-language-changed', render);
         document.addEventListener('site-language-changed', render);
         render();
-        loadBulletins().then(renderBulletin);
+        loadBulletins().then(() => {
+            displayedMonth = latestMonthStart();
+            render();
+        });
     }
 
     window.calendarModule = { init };
