@@ -7,6 +7,7 @@
     const locales = { ca: 'ca-ES', es: 'es-ES', en: 'en-GB' };
     let displayedMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     let bulletins = {};
+    let bulletinsLoaded = false;
 
     function language() {
         return window.languageSwitcher?.getCurrentLang?.() || localStorage.getItem('preferredLanguage') || 'ca';
@@ -29,16 +30,17 @@
             console.warn('Unable to load bulletins:', error);
             bulletins = {};
         }
+        bulletinsLoaded = true;
     }
 
     function renderBulletin() {
         const image = document.getElementById('bulletin-image');
         const empty = document.getElementById('bulletin-empty');
         if (!image || !empty) return;
-        // Until the first bulletin is uploaded, show the bundled example.
-        const src = bulletins[monthKey(displayedMonth)] || (Object.keys(bulletins).length ? '' : 'assets/images/butlleti-example.png');
+        // Show nothing until the bulletins have loaded, so no wrong image or message flashes.
+        const src = bulletinsLoaded ? bulletins[monthKey(displayedMonth)] : '';
         image.hidden = !src;
-        empty.hidden = Boolean(src);
+        empty.hidden = !bulletinsLoaded || Boolean(src);
         if (src) {
             image.src = new URL(src, API_ORIGIN).href;
             image.alt = document.getElementById('calendar-month-title').textContent;
