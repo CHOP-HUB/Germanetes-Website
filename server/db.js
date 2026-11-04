@@ -8,6 +8,8 @@ if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
 }
 
+const siteRoot = path.join(__dirname, '..');
+const uploadsDir = path.resolve(process.env.UPLOADS_DIR || path.join(dataDir, 'uploads'));
 const dbPath = path.join(dataDir, 'projects.db');
 const db = new Database(dbPath);
 
@@ -174,6 +176,10 @@ function normalizeCategory(category) {
     if (!PROJECT_CATEGORIES.has(mapped)) throw new Error('Invalid project category');
     return mapped;
 }
+
+// An early seed used a lowercase filename that doesn't exist on case-sensitive systems.
+db.prepare("UPDATE projects SET thumbnail = ? WHERE thumbnail = ?").run('assets/images/about/Bitmap_asemblea-2.png', 'assets/images/about/bitmap_asemblea-2.png');
+db.prepare("UPDATE project_images SET image_path = ? WHERE image_path = ?").run('assets/images/about/Bitmap_asemblea-2.png', 'assets/images/about/bitmap_asemblea-2.png');
 
 if (!db.pragma('table_info(gallery_items)').some(column => column.name === 'auto')) {
     db.exec('ALTER TABLE gallery_items ADD COLUMN auto INTEGER NOT NULL DEFAULT 0');
@@ -471,12 +477,32 @@ function normalizeSitePath(value) {
     return /^\/(uploads|assets\/images)\/[^?#]+$/.test(withSlash) && !withSlash.includes('..') ? withSlash : '';
 }
 
+// Exact-case check, because the Pi's filesystem is case-sensitive while a Mac's is not.
+function fileExistsExact(directory, name) {
+    try {
+        return fs.readdirSync(directory).includes(name);
+    } catch {
+        return false;
+    }
+}
+
+function sitePathExists(sitePath) {
+    const relative = sitePath.replace(/^\//, '');
+    const folders = [];
+    if (relative.startsWith('uploads/')) folders.push(path.join(uploadsDir, relative.slice('uploads/'.length)));
+    else {
+        if (relative.startsWith('assets/images/projects/')) folders.push(path.join(uploadsDir, relative.slice('assets/images/projects/'.length)));
+        folders.push(path.join(siteRoot, relative));
+    }
+    return folders.some(file => fileExistsExact(path.dirname(file), path.basename(file)));
+}
+
 // Every image used by a project (thumbnail and photos), with the caption of the photo when it has one.
 function projectImageSources() {
     const sources = new Map();
     const add = (path, caption) => {
         const normalized = normalizeSitePath(path);
-        if (normalized && !sources.has(normalized)) sources.set(normalized, caption || { ca: '', es: '', en: '' });
+        if (normalized && !sources.has(normalized) && sitePathExists(normalized)) sources.set(normalized, caption || { ca: '', es: '', en: '' });
     };
     db.prepare('SELECT thumbnail FROM projects ORDER BY sort_order ASC, id ASC').all().forEach(row => add(row.thumbnail));
     db.prepare('SELECT image_path, caption_ca, caption_es, caption_en FROM project_images ORDER BY project_id, sort_order ASC, id ASC')
