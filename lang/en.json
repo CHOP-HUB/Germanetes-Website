@@ -73,7 +73,7 @@
     "noBulletin": "There is no bulletin for this month yet.",
     "previous": "Previous month",
     "next": "Next month",
-    "today": "Today",
+    "today": "This month",
     "loading": "Loading calendar…",
     "notConfigured": "The calendar feed has not been connected yet.",
     "stale": "Showing the last saved calendar update.",

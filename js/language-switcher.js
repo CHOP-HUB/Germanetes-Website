@@ -28,7 +28,7 @@ const languageSwitcher = (() => {
         activeLanguage = language;
         syncButton();
         const token = ++loadToken;
-        fetch(`./lang/${language}.json`)
+        fetch(`./lang/${language}.json`, { cache: "no-cache" })
             .then(response => response.json())
             .then(translations => {
                 if (token !== loadToken) return;

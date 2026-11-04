@@ -73,7 +73,7 @@
     "noBulletin": "Encara no hi ha butlletí d'aquest mes.",
     "previous": "Mes anterior",
     "next": "Mes següent",
-    "today": "Avui",
+    "today": "Mes actual",
     "loading": "Carregant calendari…",
     "notConfigured": "El calendari encara no està connectat.",
     "stale": "Mostrant l'última actualització del calendari.",

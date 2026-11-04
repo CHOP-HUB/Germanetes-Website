@@ -73,7 +73,7 @@
     "noBulletin": "Todavía no hay boletín de este mes.",
     "previous": "Mes anterior",
     "next": "Mes siguiente",
-    "today": "Hoy",
+    "today": "Mes actual",
     "loading": "Cargando calendario…",
     "notConfigured": "El calendario aún no está conectado.",
     "stale": "Mostrando la última actualización del calendario.",
