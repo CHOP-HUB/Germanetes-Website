@@ -178,7 +178,12 @@ app.use('/uploads/materials', express.static(MATERIALS_DIR, {
 }));
 app.use('/assets/images/projects', express.static(UPLOADS_DIR, { index: false }));
 app.use('/uploads', express.static(UPLOADS_DIR, { index: false }));
-app.use(express.static(SITE_ROOT));
+// Pages, scripts and styles are revalidated on every load (cheap 304s), so a deploy never leaves browsers on mixed old and new files.
+app.use(express.static(SITE_ROOT, {
+    setHeaders(res, filePath) {
+        if (/\.(html|js|css|json)$/i.test(filePath)) res.set('Cache-Control', 'no-cache');
+    }
+}));
 
 // ── File Upload Config ─────────────────────────────────
 
