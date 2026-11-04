@@ -105,6 +105,12 @@ function requireAdminHost(req, res, next) {
 
 app.use('/admin', requireAdminHost, requireAdminAuth);
 
+// On the dedicated admin hostname the editor is the front page.
+app.get('/', (req, res, next) => {
+    if (!ADMIN_HOST || req.hostname.toLowerCase() !== ADMIN_HOST) return next();
+    requireAdminAuth(req, res, () => res.sendFile(path.join(SITE_ROOT, 'admin', 'index.html')));
+});
+
 // Serve the static website
 const MATERIALS_DIR = path.join(UPLOADS_DIR, 'materials');
 fs.mkdirSync(MATERIALS_DIR, { recursive: true });

@@ -32,14 +32,6 @@
             link.href = `#projects/${encodeURIComponent(project.id)}`;
             link.textContent = t(project.title);
             item.appendChild(link);
-
-            const description = project.subtitle ? t(project.subtitle) : '';
-            if (description) {
-                const text = document.createElement('span');
-                text.className = 'about-project-desc';
-                text.textContent = description;
-                item.appendChild(text);
-            }
             return item;
         }));
     }

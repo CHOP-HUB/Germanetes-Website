@@ -487,12 +487,6 @@ body.materials-view header::after {
     font-weight: 600;
 }
 
-.about-project-desc {
-    display: block;
-    font-size: 0.8rem;
-    line-height: 1.35;
-}
-
 .about-collaborators {
     background-color: var(--color-primary);
     color: #fff;
