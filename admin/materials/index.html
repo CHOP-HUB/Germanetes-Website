@@ -18,7 +18,8 @@
         <a href="/admin/bulletin/">Butlletí</a>
         <a href="/admin/materials/" aria-current="page">Materials</a>
     </nav>
-    <a href="/index.html">← Tornar al web</a>
+    <a href="/" id="back-to-site">← Tornar al web</a>
+    <script>(function(){var a=document.getElementById("back-to-site");if(/^admin\./.test(location.hostname)){a.href=location.protocol+"//"+location.host.replace(/^admin\./,"")+"/";}})();</script>
 </div>
 
 <div class="container">
