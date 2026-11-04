@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { randomBytes, timingSafeEqual } = require('crypto');
+const { randomBytes, timingSafeEqual, createPublicKey, verify } = require('crypto');
 const multer = require('multer');
 const ical = require('node-ical');
 const path = require('path');
@@ -14,8 +14,13 @@ const ADMIN_HOST = (process.env.ADMIN_HOST || '').toLowerCase();
 const ADMIN_USER = process.env.ADMIN_USER || '';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 
-if (process.env.NODE_ENV === 'production' && (!ADMIN_HOST || !ADMIN_USER || !ADMIN_PASSWORD)) {
-    throw new Error('ADMIN_HOST, ADMIN_USER, and ADMIN_PASSWORD must be configured in production.');
+// Cloudflare Access: when set, editor requests must carry a valid Access token and no password is asked.
+const CF_ACCESS_TEAM = (process.env.CF_ACCESS_TEAM || '').trim();
+const CF_ACCESS_AUD = (process.env.CF_ACCESS_AUD || '').trim();
+const USE_CF_ACCESS = Boolean(CF_ACCESS_TEAM && CF_ACCESS_AUD);
+
+if (process.env.NODE_ENV === 'production' && (!ADMIN_HOST || (!USE_CF_ACCESS && (!ADMIN_USER || !ADMIN_PASSWORD)))) {
+    throw new Error('ADMIN_HOST and either CF_ACCESS_TEAM + CF_ACCESS_AUD or ADMIN_USER + ADMIN_PASSWORD must be configured in production.');
 }
 
 // Root of the website (one level up from server/)
@@ -63,7 +68,50 @@ function matchesSecret(actual, expected) {
     return actualBuffer.length === expectedBuffer.length && timingSafeEqual(actualBuffer, expectedBuffer);
 }
 
+let accessKeys = { fetchedAt: 0, keys: [] };
+
+async function getAccessKeys(force) {
+    if (!force && accessKeys.keys.length && Date.now() - accessKeys.fetchedAt < 60 * 60 * 1000) return accessKeys.keys;
+    const response = await fetch(`https://${CF_ACCESS_TEAM}.cloudflareaccess.com/cdn-cgi/access/certs`);
+    if (!response.ok) throw new Error(`Access certs returned ${response.status}`);
+    const { keys } = await response.json();
+    accessKeys = { fetchedAt: Date.now(), keys };
+    return keys;
+}
+
+async function verifyAccessToken(token) {
+    const parts = token.split('.');
+    if (parts.length !== 3) return false;
+    const header = JSON.parse(Buffer.from(parts[0], 'base64url').toString());
+    const claims = JSON.parse(Buffer.from(parts[1], 'base64url').toString());
+    if (header.alg !== 'RS256') return false;
+
+    const findKey = keys => keys.find(key => key.kid === header.kid);
+    let jwk = findKey(await getAccessKeys(false));
+    if (!jwk) jwk = findKey(await getAccessKeys(true));
+    if (!jwk) return false;
+
+    const valid = verify('RSA-SHA256', Buffer.from(`${parts[0]}.${parts[1]}`),
+        createPublicKey({ key: jwk, format: 'jwk' }), Buffer.from(parts[2], 'base64url'));
+    const audiences = [].concat(claims.aud || []);
+    return valid
+        && audiences.includes(CF_ACCESS_AUD)
+        && claims.iss === `https://${CF_ACCESS_TEAM}.cloudflareaccess.com`
+        && typeof claims.exp === 'number' && claims.exp * 1000 > Date.now();
+}
+
+async function requireAccessLogin(req, res, next) {
+    try {
+        const token = req.get('cf-access-jwt-assertion') || '';
+        if (token && await verifyAccessToken(token)) return next();
+    } catch (error) {
+        console.error('Access token check failed:', error.message);
+    }
+    res.status(401).send('Authentication required');
+}
+
 function requireAdminAuth(req, res, next) {
+    if (USE_CF_ACCESS) return requireAccessLogin(req, res, next);
     if (!ADMIN_USER || !ADMIN_PASSWORD) {
         if (process.env.NODE_ENV !== 'production') return next();
         return res.status(503).json({ error: 'CMS credentials are not configured' });
