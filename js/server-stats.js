@@ -1,4 +1,4 @@
-// Footer "Servidor solar" figures: uptime and power from the server, page size measured in this browser.
+// Footer "Servidor solar" figures: uptime and power source from the server, page size measured in this browser.
 (function () {
     'use strict';
 
@@ -56,12 +56,6 @@
                 setText('stats-source', label);
                 sourceRow.querySelector('.stats-dot').dataset.source = stats.source;
             }
-        }
-
-        const powerRow = document.getElementById('stats-power-row');
-        if (powerRow) {
-            powerRow.hidden = !Number.isFinite(stats.powerWatts);
-            if (!powerRow.hidden) setText('stats-power', `${new Intl.NumberFormat(locale(), { maximumFractionDigits: 1 }).format(stats.powerWatts)} W`);
         }
     }
 

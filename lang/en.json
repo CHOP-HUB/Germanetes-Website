@@ -121,7 +121,6 @@
       "source_solar": "Solar",
       "source_grid": "Grid",
       "solarMonth": "Solar this month",
-      "power": "Power draw",
       "uptime": "Uptime",
       "pageSize": "Page size",
       "placeholder": "Sample data"

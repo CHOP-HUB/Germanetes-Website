@@ -536,19 +536,19 @@ body.materials-view header::after {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .about-intro p {
+    .about-intro .about-intro-text {
         grid-column: 1;
         grid-row: 1;
+    }
+
+    .about-intro p:not(.about-intro-text) {
+        grid-column: 1 / -1;
+        grid-row: 2;
     }
 
     .about-intro .about-photo {
         grid-column: 2;
         grid-row: 1;
-    }
-
-    .about-intro .about-projects {
-        grid-column: 1 / -1;
-        grid-row: 2;
     }
 
     .about-governance p {

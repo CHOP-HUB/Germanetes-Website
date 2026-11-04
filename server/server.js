@@ -514,12 +514,17 @@ app.put('/api/gallery', ...adminOnly, (req, res) => {
 const POWER_SOURCE_PIN = process.env.POWER_SOURCE_PIN || '4';
 const POWER_SOLAR_LEVEL = process.env.POWER_SOLAR_LEVEL === '0' ? '0' : '1';
 let sourceCache = { at: 0, value: null };
+let sourceWarned = false;
 
 function readPowerSource() {
     return new Promise(resolve => {
         if (Date.now() - sourceCache.at < 5000) return resolve(sourceCache.value);
         execFile('pinctrl', ['lev', POWER_SOURCE_PIN], { timeout: 2000 }, (error, stdout) => {
             const level = String(stdout || '').trim();
+            if (error && !sourceWarned) {
+                sourceWarned = true;
+                console.warn(`Power source unavailable (pinctrl lev ${POWER_SOURCE_PIN}): ${error.message}`);
+            }
             const value = error || !['0', '1'].includes(level) ? null : (level === POWER_SOLAR_LEVEL ? 'solar' : 'grid');
             sourceCache = { at: Date.now(), value };
             resolve(value);
@@ -527,10 +532,9 @@ function readPowerSource() {
     });
 }
 
-// powerWatts stays null until the Pi has a way to measure it.
 app.get('/api/server-stats', async (req, res) => {
     res.set('Cache-Control', 'public, max-age=5');
-    res.json({ uptimeSeconds: Math.floor(os.uptime()), source: await readPowerSource(), powerWatts: null });
+    res.json({ uptimeSeconds: Math.floor(os.uptime()), source: await readPowerSource() });
 });
 
 // ── Bulletins ────────────────────────────────────────────────────────
