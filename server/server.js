@@ -512,7 +512,7 @@ app.put('/api/gallery', ...adminOnly, (req, res) => {
 
 // The Pi reads the grid/solar mux on a GPIO pin; elsewhere (or on any error) the source is simply unknown.
 const POWER_SOURCE_PIN = process.env.POWER_SOURCE_PIN || '4';
-const POWER_SOLAR_LEVEL = process.env.POWER_SOLAR_LEVEL === '0' ? '0' : '1';
+const POWER_SOLAR_LEVEL = process.env.POWER_SOLAR_LEVEL === '1' ? '1' : '0';
 let sourceCache = { at: 0, value: null };
 let sourceWarned = false;
 
