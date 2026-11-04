@@ -28,13 +28,14 @@
         <div class="footer-column footer-stats">
             <h3 data-i18n="footer.stats.title">Servidor solar</h3>
             <dl class="server-stats">
-                <div><dt data-i18n="footer.stats.source">Font d'energia</dt><dd class="server-stats-source"><span class="stats-dot"></span><span data-i18n="footer.stats.sourceSolar">Solar</span></dd></div>
-                <div><dt data-i18n="footer.stats.solarMonth">Solar aquest mes</dt><dd>78 %</dd></div>
-                <div><dt data-i18n="footer.stats.power">Consum</dt><dd>4,2 W</dd></div>
-                <div><dt data-i18n="footer.stats.uptime">Temps en línia</dt><dd>23 d 14 h</dd></div>
-                <div><dt data-i18n="footer.stats.pageSize">Mida de la pàgina</dt><dd>1,8 MB</dd></div>
+                <div id="stats-source-row" hidden><dt data-i18n="footer.stats.source">Font d'energia</dt><dd class="server-stats-source"><span class="stats-dot"></span><span id="stats-source"></span></dd></div>
+                <!-- Solar share of the month: enable once the solar log has enough data.
+                <div><dt data-i18n="footer.stats.solarMonth">Solar aquest mes</dt><dd id="stats-solar-month"></dd></div>
+                -->
+                <div id="stats-power-row" hidden><dt data-i18n="footer.stats.power">Consum</dt><dd id="stats-power"></dd></div>
+                <div><dt data-i18n="footer.stats.uptime">Temps en línia</dt><dd id="stats-uptime">–</dd></div>
+                <div><dt data-i18n="footer.stats.pageSize">Mida de la pàgina</dt><dd id="stats-page-size">–</dd></div>
             </dl>
-            <p class="server-stats-note" data-i18n="footer.stats.placeholder">Dades d'exemple</p>
         </div>
         <div class="footer-privacy">
             <button type="button" class="footer-privacy-trigger" data-dialog-open="privacy-policy-dialog" data-i18n="footer.privacy">Política de privacitat</button>

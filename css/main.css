@@ -1074,6 +1074,10 @@ footer {
     gap: 0.75rem;
 }
 
+.server-stats div[hidden] {
+    display: none;
+}
+
 .server-stats dt,
 .server-stats dd {
     margin: 0;
@@ -1096,6 +1100,10 @@ footer {
     height: 0.55rem;
     border-radius: 50%;
     background: #ffd54a;
+}
+
+.stats-dot[data-source="grid"] {
+    background: #b8b8b8;
 }
 
 .server-stats-note {

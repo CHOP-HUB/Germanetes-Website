@@ -38,6 +38,7 @@ async function loadFooter() {
         if (window.languageSwitcher) {
             window.languageSwitcher.reapply();
         }
+        window.serverStats?.init();
     } catch (error) {
         console.error('Error loading footer:', error);
     }

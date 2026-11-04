@@ -118,6 +118,8 @@
       "title": "Servidor solar",
       "source": "Fuente de energía",
       "sourceSolar": "Solar",
+      "source_solar": "Solar",
+      "source_grid": "Red eléctrica",
       "solarMonth": "Solar este mes",
       "power": "Consumo",
       "uptime": "Tiempo en línea",

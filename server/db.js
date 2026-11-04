@@ -142,6 +142,10 @@ db.exec(`
         created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
 
+    CREATE TABLE IF NOT EXISTS gallery_dismissed (
+        image_path TEXT PRIMARY KEY
+    );
+
     CREATE TABLE IF NOT EXISTS bulletins (
         month TEXT PRIMARY KEY CHECK(month GLOB '[0-9][0-9][0-9][0-9]-[0-1][0-9]'),
         image_path TEXT NOT NULL,
@@ -169,6 +173,10 @@ function normalizeCategory(category) {
     const mapped = { ongoing: 'permanent', archive: 'historic' }[category] || category || 'permanent';
     if (!PROJECT_CATEGORIES.has(mapped)) throw new Error('Invalid project category');
     return mapped;
+}
+
+if (!db.pragma('table_info(gallery_items)').some(column => column.name === 'auto')) {
+    db.exec('ALTER TABLE gallery_items ADD COLUMN auto INTEGER NOT NULL DEFAULT 0');
 }
 
 // ── Prepared Statements ────────────────────────────────
@@ -457,17 +465,75 @@ function galleryRowToJson(row) {
     };
 }
 
+function normalizeSitePath(value) {
+    const path = String(value || '').trim();
+    const withSlash = path.startsWith('/') ? path : `/${path}`;
+    return /^\/(uploads|assets\/images)\/[^?#]+$/.test(withSlash) && !withSlash.includes('..') ? withSlash : '';
+}
+
+// Every image used by a project (thumbnail and photos), with the caption of the photo when it has one.
+function projectImageSources() {
+    const sources = new Map();
+    const add = (path, caption) => {
+        const normalized = normalizeSitePath(path);
+        if (normalized && !sources.has(normalized)) sources.set(normalized, caption || { ca: '', es: '', en: '' });
+    };
+    db.prepare('SELECT thumbnail FROM projects ORDER BY sort_order ASC, id ASC').all().forEach(row => add(row.thumbnail));
+    db.prepare('SELECT image_path, caption_ca, caption_es, caption_en FROM project_images ORDER BY project_id, sort_order ASC, id ASC')
+        .all()
+        .forEach(row => add(row.image_path, { ca: row.caption_ca || '', es: row.caption_es || '', en: row.caption_en || '' }));
+    return sources;
+}
+
+// Small tiles are common, big ones rare, so the grid looks varied.
+function randomGallerySize() {
+    const roll = Math.random();
+    return roll < 0.6 ? 1 : roll < 0.9 ? 2 : 3;
+}
+
+// Adds new project images to the gallery with a random size and drops automatic ones no project uses any more.
+const syncGalleryTransaction = db.transaction(() => {
+    const sources = projectImageSources();
+    const existing = db.prepare('SELECT id, image_path, auto FROM gallery_items').all();
+    const known = new Set(existing.map(row => row.image_path));
+    const dismissed = new Set(db.prepare('SELECT image_path FROM gallery_dismissed').all().map(row => row.image_path));
+
+    const remove = db.prepare('DELETE FROM gallery_items WHERE id = ?');
+    existing.filter(row => row.auto && !sources.has(row.image_path)).forEach(row => remove.run(row.id));
+
+    let nextOrder = db.prepare('SELECT COALESCE(MAX(sort_order), -1) + 1 AS next FROM gallery_items').get().next;
+    const insert = db.prepare(`
+        INSERT INTO gallery_items (image_path, size, caption_ca, caption_es, caption_en, sort_order, auto)
+        VALUES (?, ?, ?, ?, ?, ?, 1)
+    `);
+    for (const [path, caption] of sources) {
+        if (known.has(path) || dismissed.has(path)) continue;
+        insert.run(path, randomGallerySize(), caption.ca, caption.es, caption.en, nextOrder++);
+    }
+});
+
 function getGallery() {
+    syncGalleryTransaction();
     return db.prepare('SELECT * FROM gallery_items ORDER BY sort_order ASC, id ASC').all().map(galleryRowToJson);
 }
 
 const replaceGalleryTransaction = db.transaction(items => {
+    const sources = projectImageSources();
+    const previouslyAuto = new Set(db.prepare('SELECT image_path FROM gallery_items WHERE auto = 1').all().map(row => row.image_path));
+    const kept = new Set(items.map(item => item.src));
+
+    // Removing an automatic photo in the editor keeps it out of the gallery; putting it back clears that.
+    const dismiss = db.prepare('INSERT OR IGNORE INTO gallery_dismissed (image_path) VALUES (?)');
+    for (const path of sources.keys()) if (!kept.has(path)) dismiss.run(path);
+    const undismiss = db.prepare('DELETE FROM gallery_dismissed WHERE image_path = ?');
+    kept.forEach(path => undismiss.run(path));
+
     db.prepare('DELETE FROM gallery_items').run();
     const insert = db.prepare(`
-        INSERT INTO gallery_items (image_path, size, caption_ca, caption_es, caption_en, sort_order)
-        VALUES (@src, @size, @caption_ca, @caption_es, @caption_en, @sort_order)
+        INSERT INTO gallery_items (image_path, size, caption_ca, caption_es, caption_en, sort_order, auto)
+        VALUES (@src, @size, @caption_ca, @caption_es, @caption_en, @sort_order, @auto)
     `);
-    items.forEach((item, index) => insert.run({ ...item, sort_order: index }));
+    items.forEach((item, index) => insert.run({ ...item, sort_order: index, auto: previouslyAuto.has(item.src) ? 1 : 0 }));
 });
 
 function replaceGallery(items) {

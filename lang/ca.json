@@ -118,6 +118,8 @@
       "title": "Servidor solar",
       "source": "Font d'energia",
       "sourceSolar": "Solar",
+      "source_solar": "Solar",
+      "source_grid": "Xarxa elèctrica",
       "solarMonth": "Solar aquest mes",
       "power": "Consum",
       "uptime": "Temps en línia",

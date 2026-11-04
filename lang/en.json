@@ -118,6 +118,8 @@
       "title": "Solar server",
       "source": "Power source",
       "sourceSolar": "Solar",
+      "source_solar": "Solar",
+      "source_grid": "Grid",
       "solarMonth": "Solar this month",
       "power": "Power draw",
       "uptime": "Uptime",

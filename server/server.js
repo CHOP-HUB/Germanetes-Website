@@ -5,6 +5,7 @@ const multer = require('multer');
 const ical = require('node-ical');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const db = require('./db');
 
 const app = express();
@@ -499,6 +500,14 @@ app.put('/api/gallery', ...adminOnly, (req, res) => {
         console.error('Error saving gallery:', err);
         res.status(500).json({ error: 'Failed to save gallery' });
     }
+});
+
+// ── Server stats (footer) ───────────────────────────────────────────
+
+// source ('solar' | 'grid') and powerWatts stay null until the Pi has a way to measure them.
+app.get('/api/server-stats', (req, res) => {
+    res.set('Cache-Control', 'public, max-age=30');
+    res.json({ uptimeSeconds: Math.floor(os.uptime()), source: null, powerWatts: null });
 });
 
 // ── Bulletins ────────────────────────────────────────────────────────
