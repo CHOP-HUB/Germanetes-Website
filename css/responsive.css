@@ -154,11 +154,6 @@
         grid-row: 1;
     }
 
-    .footer-map img {
-        width: min(100%, 24rem);
-        margin: 0 auto;
-    }
-
     .footer-stats {
         grid-column: 1;
         grid-row: 2;
@@ -219,7 +214,6 @@
 @media (max-width: 580px) {
     .footer-container {
         grid-template-columns: 1fr;
-        justify-items: center;
     }
 
     .footer-map {

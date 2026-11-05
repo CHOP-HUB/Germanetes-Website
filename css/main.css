@@ -1125,6 +1125,7 @@ footer {
     background: transparent;
     color: white;
     font: inherit;
+    font-size: 0.9rem;
     text-transform: lowercase;
     text-decoration: underline;
     text-underline-offset: 0.2em;
