@@ -7,6 +7,12 @@
     }
 }
 
+@media (max-width: 900px) {
+    nav a {
+        font-size: 0.95rem;
+    }
+}
+
 /* Tablet portrait and below - 4rem side margins */
 @media (max-width: 768px) {
     header {
