@@ -965,6 +965,7 @@ footer {
 }
 
 .footer-contact a {
+    font-size: 0.95rem;
     color: white;
     text-decoration: none;
     transition: opacity 0.3s ease;
@@ -1069,7 +1070,7 @@ footer {
 
 .server-stats {
     margin: 0.5rem 0;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     line-height: 1.5;
 }
 
@@ -1125,7 +1126,7 @@ footer {
     background: transparent;
     color: white;
     font: inherit;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     text-transform: lowercase;
     text-decoration: underline;
     text-underline-offset: 0.2em;
