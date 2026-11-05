@@ -19,8 +19,7 @@
         width: 100%;
     }
 
-    .nav-logo-img,
-    header.logo-expanded .nav-logo-img {
+    header:not(.logo-expanded) .nav-logo-img {
         display: none;
     }
 
