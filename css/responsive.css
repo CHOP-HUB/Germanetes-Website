@@ -175,6 +175,13 @@
     }
 }
 
+@media (max-width: 666px) {
+    nav a {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.5rem;
+    }
+}
+
 /* Mobile - smaller margins */
 @media (max-width: 480px) {
     .language-switcher {
