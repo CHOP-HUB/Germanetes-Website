@@ -31,13 +31,18 @@
         display: none;
     }
 
-    nav {
+    header:not(.logo-expanded) nav {
         width: calc(100% - 2rem);
         max-width: none;
     }
 
-    header::after {
+    header:not(.logo-expanded)::after {
         width: calc(100% - 2rem);
+    }
+
+    /* Expanded header keeps shrinking smoothly from the desktop width (65vw at 768px is about 31rem) */
+    header.logo-expanded nav {
+        width: min(calc(100% - 2rem), max(65vw, 31rem));
     }
 
     nav a,
@@ -204,11 +209,8 @@
         margin-left: 1rem;
     }
 
-    nav {
-        width: calc(100% - 1rem);
-    }
-
-    header::after {
+    header:not(.logo-expanded) nav,
+    header:not(.logo-expanded)::after {
         width: calc(100% - 1rem);
     }
 
