@@ -47,12 +47,11 @@
 
     nav a,
     .projects-tab {
-        font-size: 1rem;
         padding: 0.4rem 0.7rem;
     }
 
-    .language-switcher .current-lang {
-        font-size: 0.92rem;
+    .projects-tab {
+        font-size: 1rem;
     }
 
     .projects-tabs {
@@ -98,7 +97,7 @@
         padding: 1rem;
     }
 
-    /* About page stacks on tablet */
+    /* About page: wide-page margins on tablet */
     body.about-page main,
     body.calendar-page main,
     body.projects-page main,
@@ -106,23 +105,6 @@
     body.materials-view main {
         margin-left: var(--about-gutter);
         margin-right: var(--about-gutter);
-    }
-
-    .about-intro,
-    .about-governance {
-        grid-template-columns: 1fr;
-    }
-
-    .about-intro .about-photo,
-    .about-intro .about-projects,
-    .about-governance .about-photo:first-child,
-    .about-governance p,
-    .about-governance .about-photo:last-child {
-        grid-column: 1;
-    }
-
-    .about-intro .about-photo {
-        order: -1;
     }
 
     .collaborator-logos {
@@ -189,6 +171,26 @@
 
     .footer-privacy {
         grid-row: 3;
+    }
+}
+
+/* About page stacks into one column */
+@media (max-width: 680px) {
+    .about-intro,
+    .about-governance {
+        grid-template-columns: 1fr;
+    }
+
+    .about-intro .about-photo,
+    .about-intro .about-projects,
+    .about-governance .about-photo:first-child,
+    .about-governance p,
+    .about-governance .about-photo:last-child {
+        grid-column: 1;
+    }
+
+    .about-intro .about-photo {
+        order: -1;
     }
 }
 
