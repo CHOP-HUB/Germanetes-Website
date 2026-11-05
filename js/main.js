@@ -58,16 +58,19 @@ function updateSlider(activeLink) {
     centerActiveLink(activeLink);
 }
 
-// On narrow screens the nav list scrolls horizontally between chevrons
+// On narrow screens the chevrons step to the previous / next page
+function navLinks() {
+    return [...document.querySelectorAll('nav .nav-link')];
+}
+
 function updateNavChevrons() {
-    const list = document.querySelector('nav ul');
-    if (!list) return;
+    const links = navLinks();
+    const index = links.findIndex(link => link.classList.contains('active'));
     const prev = document.querySelector('.nav-prev');
     const next = document.querySelector('.nav-next');
-    const overflowing = list.scrollWidth > list.clientWidth + 1;
-    prev.hidden = next.hidden = !overflowing;
-    prev.disabled = list.scrollLeft <= 1;
-    next.disabled = list.scrollLeft + list.clientWidth >= list.scrollWidth - 1;
+    if (!prev || !next || index < 0) return;
+    prev.disabled = index === 0;
+    next.disabled = index === links.length - 1;
 }
 
 function centerActiveLink(link) {
@@ -81,14 +84,12 @@ function centerActiveLink(link) {
 
 document.addEventListener('click', (e) => {
     const chevron = e.target.closest('.nav-chevron');
-    if (!chevron) return;
-    const list = document.querySelector('nav ul');
-    list.scrollBy({ left: (chevron.classList.contains('nav-prev') ? -1 : 1) * list.clientWidth * 0.7, behavior: 'smooth' });
+    if (!chevron || chevron.disabled) return;
+    const links = navLinks();
+    const index = links.findIndex(link => link.classList.contains('active'));
+    const target = links[index + (chevron.classList.contains('nav-prev') ? -1 : 1)];
+    if (target) window.location.hash = target.getAttribute('href');
 });
-
-document.addEventListener('scroll', (e) => {
-    if (e.target.matches?.('nav ul')) updateNavChevrons();
-}, true);
 
 async function loadPage(pageName, itemId) {
     const content = document.getElementById('content');

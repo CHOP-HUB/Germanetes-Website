@@ -253,10 +253,6 @@
         z-index: 1;
     }
 
-    .nav-chevron[hidden] {
-        display: none;
-    }
-
     .nav-chevron::before {
         content: '';
         position: absolute;
