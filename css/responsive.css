@@ -203,10 +203,44 @@
     .language-switcher .current-lang {
         font-size: 0.83rem;
     }
+
+    .footer-contact h3,
+    .footer-stats h3 {
+        font-size: 1.05rem;
+    }
 }
 
 /* Narrow phones: the nav becomes a carousel with chevrons instead of shrinking further */
 @media (max-width: 580px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    .footer-map {
+        grid-row: 1;
+    }
+
+    .footer-contact {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .footer-stats {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+    .footer-privacy {
+        grid-column: 1;
+        grid-row: 4;
+    }
+
+    .footer-contact h3,
+    .footer-stats h3 {
+        font-size: 0.92rem;
+    }
+
     nav::before {
         display: none;
     }
@@ -365,21 +399,7 @@
 
     .footer-container {
         width: calc(100vw - 4rem);
-        grid-template-columns: 1fr;
-        justify-items: center;
         gap: 1.5rem;
-    }
-
-    .footer-contact,
-    .footer-map,
-    .footer-stats {
-        grid-column: auto;
-        grid-row: auto;
-    }
-
-    .footer-privacy {
-        grid-column: auto;
-        grid-row: auto;
     }
 
     .footer-privacy-dialog {
