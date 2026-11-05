@@ -1,10 +1,30 @@
 /* Responsive styles for the community garden website */
 
+/* Narrower desktop - slightly smaller nav type */
+@media (max-width: 1000px) {
+    nav a {
+        font-size: 1.05rem;
+    }
+}
+
 /* Tablet portrait and below - 4rem side margins */
 @media (max-width: 768px) {
     header {
-        width: calc(100vw - 8rem);
+        width: 100%;
+    }
+
+    .nav-logo-img,
+    header.logo-expanded .nav-logo-img {
+        display: none;
+    }
+
+    nav {
+        width: calc(100% - 2rem);
         max-width: none;
+    }
+
+    header::after {
+        width: calc(100% - 2rem);
     }
 
     nav a,
@@ -152,8 +172,12 @@
 
 /* Mobile - smaller margins */
 @media (max-width: 480px) {
-    header {
-        width: calc(100vw - 4rem);
+    nav {
+        width: calc(100% - 1rem);
+    }
+
+    header::after {
+        width: calc(100% - 1rem);
     }
 
     nav a,
