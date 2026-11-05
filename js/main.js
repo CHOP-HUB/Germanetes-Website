@@ -55,7 +55,40 @@ function updateSlider(activeLink) {
     
     nav.style.setProperty('--slider-left', `${left}px`);
     nav.style.setProperty('--slider-width', `${width}px`);
+    centerActiveLink(activeLink);
 }
+
+// On narrow screens the nav list scrolls horizontally between chevrons
+function updateNavChevrons() {
+    const list = document.querySelector('nav ul');
+    if (!list) return;
+    const prev = document.querySelector('.nav-prev');
+    const next = document.querySelector('.nav-next');
+    const overflowing = list.scrollWidth > list.clientWidth + 1;
+    prev.hidden = next.hidden = !overflowing;
+    prev.disabled = list.scrollLeft <= 1;
+    next.disabled = list.scrollLeft + list.clientWidth >= list.scrollWidth - 1;
+}
+
+function centerActiveLink(link) {
+    const list = link.closest('ul');
+    if (list && list.scrollWidth > list.clientWidth) {
+        const item = link.parentElement;
+        list.scrollTo({ left: item.offsetLeft - (list.clientWidth - item.offsetWidth) / 2, behavior: 'smooth' });
+    }
+    updateNavChevrons();
+}
+
+document.addEventListener('click', (e) => {
+    const chevron = e.target.closest('.nav-chevron');
+    if (!chevron) return;
+    const list = document.querySelector('nav ul');
+    list.scrollBy({ left: (chevron.classList.contains('nav-prev') ? -1 : 1) * list.clientWidth * 0.7, behavior: 'smooth' });
+});
+
+document.addEventListener('scroll', (e) => {
+    if (e.target.matches?.('nav ul')) updateNavChevrons();
+}, true);
 
 async function loadPage(pageName, itemId) {
     const content = document.getElementById('content');
@@ -173,6 +206,7 @@ window.addEventListener('hashchange', updateLogoState);
 
 // Update slider on window resize
 window.addEventListener('resize', () => {
+    updateNavChevrons();
     const activeLink = document.querySelector('.nav-link.active');
     if (activeLink) {
         updateSlider(activeLink);

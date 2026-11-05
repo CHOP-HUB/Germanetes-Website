@@ -89,6 +89,10 @@ nav ul {
     flex: 1;
 }
 
+.nav-chevron {
+    display: none;
+}
+
 nav li {
     margin: 0;
     padding: 0;
