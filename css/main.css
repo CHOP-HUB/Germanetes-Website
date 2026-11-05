@@ -530,7 +530,7 @@ body.materials-view header::after {
 }
 
 /* Two columns between the one-column tablet layout and the five-column desktop layout */
-@media (min-width: 769px) and (max-width: 1100px) {
+@media (min-width: 801px) and (max-width: 1100px) {
     .about-intro,
     .about-governance {
         grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -22,7 +22,7 @@
 }
 
 /* Tablet portrait and below - 4rem side margins */
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     header {
         width: 100%;
     }
@@ -40,9 +40,9 @@
         width: calc(100% - 2rem);
     }
 
-    /* Expanded header keeps shrinking smoothly from the desktop width (65vw at 768px is about 31rem) */
+    /* Expanded header keeps shrinking smoothly from the desktop width (65vw at 800px is 32.5rem) */
     header.logo-expanded nav {
-        width: min(calc(100% - 2rem), max(65vw, 31rem));
+        width: min(calc(100% - 2rem), max(65vw, 32.5rem));
     }
 
     nav a,
