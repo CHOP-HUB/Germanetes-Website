@@ -107,6 +107,30 @@
     text-transform: uppercase;
 }
 
+@media (max-width: 1000px) {
+    .calendar-month-title { font-size: 1.35rem; }
+    .calendar-today { font-size: 1rem; }
+}
+
+@media (max-width: 800px) {
+    .calendar-month-title { font-size: 1.2rem; }
+    .calendar-today { font-size: 0.92rem; }
+    .bulletin-heading { gap: 1.4rem; }
+}
+
+@media (max-width: 666px) {
+    .calendar-month-title { font-size: 1.08rem; }
+    .calendar-today { font-size: 0.85rem; }
+    .calendar-controls { gap: 0.9rem; }
+}
+
+@media (max-width: 580px) {
+    .calendar-month-title { font-size: 0.95rem; }
+    .calendar-today { font-size: 0.78rem; }
+    .bulletin-heading { gap: 1rem; }
+    .calendar-controls::after { height: 1.2rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .calendar-control {
         transition: none;
